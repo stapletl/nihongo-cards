@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { SpeechProvider } from '@/components/providers/speech-provider';
+import DashboardLayout from '@/components/layout/dashboard-layout';
 import './globals.css';
 
 const geistSans = Geist({
@@ -21,8 +22,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
     children,
+    params,
 }: Readonly<{
     children: React.ReactNode;
+    params: { slug?: string[] };
 }>) {
     return (
         <html lang="en" suppressHydrationWarning={true}>
@@ -32,7 +35,9 @@ export default function RootLayout({
                     defaultTheme="system"
                     enableSystem
                     disableTransitionOnChange>
-                    <SpeechProvider>{children}</SpeechProvider>
+                    <SpeechProvider>
+                        <DashboardLayout params={params}>{children}</DashboardLayout>
+                    </SpeechProvider>
                 </ThemeProvider>
             </body>
         </html>
