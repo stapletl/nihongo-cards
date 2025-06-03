@@ -11,10 +11,10 @@ import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 const breadcrumbTitles: Record<string, string> = {
-    '/dashboard': 'Dashboard',
-    '/dashboard/hiragana': 'Hiragana',
-    '/dashboard/katakana': 'Katakana',
-    '/dashboard/beginner-vocab': 'Beginner Vocabulary',
+    '/': 'Home',
+    '/hiragana': 'Hiragana',
+    '/katakana': 'Katakana',
+    '/beginner-vocab': 'Beginner Vocabulary',
 };
 
 interface LayoutProps {
@@ -24,7 +24,7 @@ interface LayoutProps {
 
 export default async function DashboardLayout({ children, params }: LayoutProps) {
     // Build pathname from segments
-    const pathname = `/dashboard${params.slug ? `/${params.slug.join('/')}` : ''}`;
+    const pathname = `/${params.slug ? `/${params.slug.join('/')}` : ''}`;
     const segments = pathname.split('/').filter(Boolean);
     const currentTitle = breadcrumbTitles[pathname] || segments[segments.length - 1];
 
@@ -41,7 +41,7 @@ export default async function DashboardLayout({ children, params }: LayoutProps)
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem className="hidden md:block">
-                                <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
+                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
                             </BreadcrumbItem>
                             {segments.length > 1 && (
                                 <>
@@ -54,9 +54,7 @@ export default async function DashboardLayout({ children, params }: LayoutProps)
                         </BreadcrumbList>
                     </Breadcrumb>
                 </header>
-                <div className="flex flex-1 flex-col gap-4 p-4">
-                    {children}
-                </div>
+                <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
             </SidebarInset>
         </SidebarProvider>
     );
