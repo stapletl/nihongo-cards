@@ -39,18 +39,18 @@ const navMain: NavSection[] = [
         url: '#',
         items: [
             {
+                title: 'Beginner Vocab',
+                url: '/beginner-vocab',
+                isActive: false,
+            },
+            {
                 title: 'Hiragana',
-                url: '/dashboard/hiragana',
+                url: '/hiragana',
                 isActive: false,
             },
             {
                 title: 'Katakana',
-                url: '/dashboard/katakana',
-                isActive: false,
-            },
-            {
-                title: 'Beginner Vocab',
-                url: '/dashboard/beginner-vocab',
+                url: '/katakana',
                 isActive: false,
             },
         ],
@@ -61,17 +61,17 @@ const navMain: NavSection[] = [
         items: [
             {
                 title: 'Intermediate Vocab',
-                url: '#',
+                url: '/intermediate-vocab',
                 isActive: false,
             },
             {
                 title: 'Kanji',
-                url: '#',
+                url: '/kanji',
                 isActive: false,
             },
             {
                 title: 'Quizzes',
-                url: '#',
+                url: '/quizzes',
                 isActive: false,
             },
         ],
@@ -82,22 +82,22 @@ const navMain: NavSection[] = [
         items: [
             {
                 title: 'Dictionary',
-                url: '#',
+                url: '/dictionary',
                 isActive: false,
             },
             {
                 title: 'Stroke Order',
-                url: '#',
+                url: '/stroke-order',
                 isActive: false,
             },
             {
                 title: 'Study Tips',
-                url: '#',
+                url: '/study-tips',
                 isActive: false,
             },
             {
                 title: 'External Resources',
-                url: '#',
+                url: '/external-resources',
                 isActive: false,
             },
         ],
