@@ -1,3 +1,5 @@
+import { ContentCard } from '@/components/content-card';
+
 export default function Page() {
     return (
         <div className="max-w-4xl">
@@ -15,7 +17,7 @@ export default function Page() {
                         Basic Greetings
                     </h2>
                     <div className="rounded-lg border p-4">
-                        {/* Add vocabulary cards/list here */}
+                        <ContentCard japanese="こんにちは" english="Hello" />
                     </div>
                 </section>
             </div>

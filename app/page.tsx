@@ -19,9 +19,21 @@ export default function Page() {
             </div>
 
             <div className="flex gap-4">
-                <Button asChild size="lg">
+                <Button asChild={true} size="lg">
                     <Link href="/beginner-vocab">
                         Go to Vocab
+                        <span className="ml-2">→</span>
+                    </Link>
+                </Button>
+                <Button asChild={true} size="lg">
+                    <Link href="/hiragana">
+                        Go to Hiragana
+                        <span className="ml-2">→</span>
+                    </Link>
+                </Button>
+                <Button asChild={true} size="lg">
+                    <Link href="/katakana">
+                        Go to Katakana
                         <span className="ml-2">→</span>
                     </Link>
                 </Button>
