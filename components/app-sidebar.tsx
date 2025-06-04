@@ -1,8 +1,5 @@
 'use client';
-
 import * as React from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 
 // import { SearchForm } from '@/components/search-form';
 import {
@@ -20,18 +17,21 @@ import {
 } from '@/components/ui/sidebar';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { VoiceDropdown } from '@/components/voice-dropdown';
+import Link from 'next/link';
+import { Badge } from './ui/badge';
+import { usePathname } from 'next/navigation';
 
-interface NavItem {
+type NavItem = {
     title: string;
     url: string;
-    isActive: boolean;
-}
+    enabled: boolean;
+};
 
-interface NavSection {
+type NavSection = {
     title: string;
     url: string;
     items: NavItem[];
-}
+};
 
 const navMain: NavSection[] = [
     {
@@ -41,17 +41,17 @@ const navMain: NavSection[] = [
             {
                 title: 'Beginner Vocab',
                 url: '/beginner-vocab',
-                isActive: false,
+                enabled: true,
             },
             {
                 title: 'Hiragana',
                 url: '/hiragana',
-                isActive: false,
+                enabled: true,
             },
             {
                 title: 'Katakana',
                 url: '/katakana',
-                isActive: false,
+                enabled: true,
             },
         ],
     },
@@ -62,17 +62,17 @@ const navMain: NavSection[] = [
             {
                 title: 'Intermediate Vocab',
                 url: '/intermediate-vocab',
-                isActive: false,
+                enabled: false,
             },
             {
                 title: 'Kanji',
                 url: '/kanji',
-                isActive: false,
+                enabled: false,
             },
             {
                 title: 'Quizzes',
                 url: '/quizzes',
-                isActive: false,
+                enabled: false,
             },
         ],
     },
@@ -83,29 +83,32 @@ const navMain: NavSection[] = [
             {
                 title: 'Dictionary',
                 url: '/dictionary',
-                isActive: false,
+                enabled: false,
             },
             {
                 title: 'Stroke Order',
                 url: '/stroke-order',
-                isActive: false,
+                enabled: false,
             },
             {
                 title: 'Study Tips',
                 url: '/study-tips',
-                isActive: false,
+                enabled: false,
             },
             {
                 title: 'External Resources',
                 url: '/external-resources',
-                isActive: false,
+                enabled: false,
             },
         ],
     },
 ];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+type AppSidebarProps = React.ComponentProps<typeof Sidebar>;
+
+export const AppSidebar = ({ ...props }: AppSidebarProps) => {
     const pathname = usePathname();
+    // const segments = pathname.split('/');
 
     return (
         <Sidebar {...props}>
@@ -126,9 +129,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             <SidebarMenu>
                                 {section.items.map((item) => (
                                     <SidebarMenuItem key={item.title}>
-                                        <SidebarMenuButton asChild isActive={pathname === item.url}>
-                                            <Link href={item.url}>{item.title}</Link>
-                                        </SidebarMenuButton>
+                                        {item.enabled ? (
+                                            <SidebarMenuButton
+                                                asChild={true}
+                                                isActive={pathname === item.url}>
+                                                <Link href={item.url}>{item.title}</Link>
+                                            </SidebarMenuButton>
+                                        ) : (
+                                            <SidebarMenuButton
+                                                disabled={true}
+                                                isActive={pathname === item.url}>
+                                                <>
+                                                    {item.title}
+                                                    <Badge>Soon</Badge>
+                                                </>
+                                            </SidebarMenuButton>
+                                        )}
                                     </SidebarMenuItem>
                                 ))}
                             </SidebarMenu>
@@ -145,4 +161,4 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarRail />
         </Sidebar>
     );
-}
+};

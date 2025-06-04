@@ -19,7 +19,7 @@ export default function NotFound() {
             </div>
 
             <div className="flex gap-4">
-                <Button asChild size="lg">
+                <Button asChild={true} size="lg">
                     <Link href="/">
                         Return Home
                         <span className="ml-2">←</span>

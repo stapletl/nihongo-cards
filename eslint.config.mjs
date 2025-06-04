@@ -14,6 +14,10 @@ const eslintConfig = [
     {
         rules: {
             '@typescript-eslint/no-unused-vars': 'warn',
+            'arrow-body-style': ['warn', 'as-needed'],
+            'react/jsx-boolean-value': ['warn', 'always'],
+            eqeqeq: ['error', 'always'],
+            '@typescript-eslint/consistent-type-definitions': ['warn', 'type'],
         },
     },
 ];
