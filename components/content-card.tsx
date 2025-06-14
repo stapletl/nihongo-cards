@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { ResponsiveDialog } from './responsive-dialog';
 import React from 'react';
-import { SpeechButton } from './ui/speech-button';
+import { SpeechButton } from './speech-button';
 
 type ContentCardProps = {
     japanese: string;
