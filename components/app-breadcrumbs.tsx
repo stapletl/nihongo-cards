@@ -15,6 +15,7 @@ export const breadcrumbTitles: Record<string, string> = {
     hiragana: 'Hiragana',
     katakana: 'Katakana',
     'beginner-vocab': 'Beginner Vocabulary',
+    settings: 'Settings',
 };
 
 // Simplified breadcrumbs logic

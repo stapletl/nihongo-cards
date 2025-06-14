@@ -16,9 +16,7 @@ export default function Page() {
                     <h2 className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight">
                         Basic Greetings
                     </h2>
-                    <div className="rounded-lg border p-4">
-                        <ContentCard japanese="こんにちは" english="Hello" />
-                    </div>
+                    <ContentCard japanese="こんにちは" english="Hello" />
                 </section>
             </div>
         </div>

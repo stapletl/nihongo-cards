@@ -40,7 +40,7 @@ export function VoiceDropdown() {
     return (
         <Select value={selectedVoice?.voiceURI} onValueChange={handleVoiceChange}>
             <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="選択して下さい" />
+                <SelectValue placeholder="Select a voice" />
             </SelectTrigger>
             <SelectContent>
                 {voices.map((voice) => (

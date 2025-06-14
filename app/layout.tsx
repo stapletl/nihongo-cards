@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import { ThemeProvider } from '@/components/providers/theme-provider';
-import { SpeechProvider } from '@/components/providers/speech-provider';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import DashboardLayout from '@/components/layout/dashboard-layout';
@@ -30,19 +28,11 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning={true}>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem={true}
-                    disableTransitionOnChange={true}>
-                    <SpeechProvider>
-                        <DashboardLayout>
-                            {children}
-                            <SpeedInsights />
-                            <Analytics />
-                        </DashboardLayout>
-                    </SpeechProvider>
-                </ThemeProvider>
+                <DashboardLayout>
+                    {children}
+                    <SpeedInsights />
+                    <Analytics />
+                </DashboardLayout>
             </body>
         </html>
     );

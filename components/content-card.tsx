@@ -1,8 +1,9 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useSpeech } from '@/hooks/use-speech';
-import { Volume2 } from 'lucide-react';
+import { ResponsiveDialog } from './responsive-dialog';
+import React from 'react';
+import { SpeechButton } from './ui/speech-button';
 
 type ContentCardProps = {
     japanese: string;
@@ -10,7 +11,7 @@ type ContentCardProps = {
 };
 
 export function ContentCard({ japanese, english }: ContentCardProps) {
-    const { speak, isSpeaking } = useSpeech();
+    const [dialogOpen, setDialogOpen] = React.useState(false);
 
     return (
         <div className="bg-card text-card-foreground rounded-lg border p-4 shadow-sm">
@@ -19,16 +20,23 @@ export function ContentCard({ japanese, english }: ContentCardProps) {
                     <h3 className="text-xl leading-none font-semibold tracking-tight">
                         {japanese}
                     </h3>
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => speak(japanese)}
-                        disabled={isSpeaking}
-                        title="Listen to pronunciation">
-                        <Volume2 className="h-4 w-4" />
-                    </Button>
+                    <SpeechButton text={japanese} />
                 </div>
                 <p className="text-muted-foreground text-sm">{english}</p>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-4"
+                    onClick={() => setDialogOpen(true)}>
+                    More Info
+                </Button>
+                <ResponsiveDialog
+                    open={dialogOpen}
+                    onOpenChange={setDialogOpen}
+                    title="More Information"
+                    description={`Learn more about "${japanese}"`}>
+                    {null}
+                </ResponsiveDialog>
             </div>
         </div>
     );
