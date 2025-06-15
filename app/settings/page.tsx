@@ -15,12 +15,11 @@ const VoiceSettingsContent = dynamic(
         ssr: false,
         loading: () => (
             <div className="space-y-4">
-                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-14 w-full" />
                 <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-32 w-full" />
                 <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-10 w-full" />
-                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-24 w-full" />
             </div>
         ),
     }
