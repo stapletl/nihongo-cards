@@ -20,6 +20,8 @@ import Link from 'next/link';
 import { Badge } from './ui/badge';
 import { usePathname } from 'next/navigation';
 import { Settings } from 'lucide-react';
+import Image from 'next/image';
+import { AppIcon } from './app-icon';
 
 type NavItem = {
     title: string;
@@ -110,13 +112,21 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
     const pathname = usePathname();
     const { toggleSidebar, isMobile } = useSidebar();
 
+    // If the sidebar is open on mobile, clicking a link should close it
+    const handleNavigationClick = () => {
+        if (isMobile) {
+            toggleSidebar();
+        }
+    };
+
     return (
         <Sidebar {...props}>
             <SidebarHeader>
-                <Link href="/" className="block">
-                    <h2 className="text-primary text-center text-2xl font-semibold">
-                        Nihongo Cards
-                    </h2>
+                <Link href="/" className="block" onClick={handleNavigationClick}>
+                    <div className="flex items-center gap-2">
+                        <AppIcon size={32} />
+                        <h2 className="text-primary text-2xl font-semibold">Nihongo Cards</h2>
+                    </div>
                 </Link>
                 {/* todo: implement app search */}
                 {/* <SearchForm /> */}
@@ -134,11 +144,7 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
                                             <SidebarMenuButton
                                                 asChild={true}
                                                 isActive={pathname === item.url}
-                                                onClick={() => {
-                                                    if (isMobile) {
-                                                        toggleSidebar();
-                                                    }
-                                                }}>
+                                                onClick={handleNavigationClick}>
                                                 <Link href={item.url}>{item.title}</Link>
                                             </SidebarMenuButton>
                                         ) : (
@@ -159,7 +165,10 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
                 ))}
             </SidebarContent>
             <SidebarFooter className="border-t">
-                <SidebarMenuButton asChild={true} isActive={pathname === '/settings'}>
+                <SidebarMenuButton
+                    asChild={true}
+                    isActive={pathname === '/settings'}
+                    onClick={handleNavigationClick}>
                     <Link href="/settings" className="flex items-center gap-2">
                         <Settings className="h-4 w-4" />
                         Settings
