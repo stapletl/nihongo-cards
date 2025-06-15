@@ -15,11 +15,10 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from '@/components/ui/sidebar';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { VoiceDropdown } from '@/components/voice-dropdown';
 import Link from 'next/link';
 import { Badge } from './ui/badge';
 import { usePathname } from 'next/navigation';
+import { Settings } from 'lucide-react';
 
 type NavItem = {
     title: string;
@@ -108,15 +107,15 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar>;
 
 export const AppSidebar = ({ ...props }: AppSidebarProps) => {
     const pathname = usePathname();
-    // const segments = pathname.split('/');
 
     return (
         <Sidebar {...props}>
             <SidebarHeader>
-                <h2 className="text-center text-xl font-semibold">Nihongo Cards</h2>
-                <div className="px-4 py-2">
-                    <VoiceDropdown />
-                </div>
+                <Link href="/" className="block">
+                    <h2 className="text-primary text-center text-2xl font-semibold">
+                        Nihongo Cards
+                    </h2>
+                </Link>
                 {/* todo: implement app search */}
                 {/* <SearchForm /> */}
             </SidebarHeader>
@@ -153,10 +152,12 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
                 ))}
             </SidebarContent>
             <SidebarFooter className="border-t">
-                <div className="flex items-center justify-between px-4 py-2">
-                    <span className="text-muted-foreground text-xs">Toggle theme</span>
-                    <ThemeToggle />
-                </div>
+                <SidebarMenuButton asChild={true} isActive={pathname === '/settings'}>
+                    <Link href="/settings" className="flex items-center gap-2">
+                        <Settings className="h-4 w-4" />
+                        Settings
+                    </Link>
+                </SidebarMenuButton>
             </SidebarFooter>
             <SidebarRail />
         </Sidebar>
