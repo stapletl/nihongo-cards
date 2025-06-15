@@ -14,6 +14,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarRail,
+    useSidebar,
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
 import { Badge } from './ui/badge';
@@ -38,11 +39,6 @@ const navMain: NavSection[] = [
         url: '#',
         items: [
             {
-                title: 'Beginner Vocab',
-                url: '/beginner-vocab',
-                enabled: true,
-            },
-            {
                 title: 'Hiragana',
                 url: '/hiragana',
                 enabled: true,
@@ -50,6 +46,11 @@ const navMain: NavSection[] = [
             {
                 title: 'Katakana',
                 url: '/katakana',
+                enabled: true,
+            },
+            {
+                title: 'Beginner Vocab',
+                url: '/beginner-vocab',
                 enabled: true,
             },
         ],
@@ -107,6 +108,7 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar>;
 
 export const AppSidebar = ({ ...props }: AppSidebarProps) => {
     const pathname = usePathname();
+    const { toggleSidebar, isMobile } = useSidebar();
 
     return (
         <Sidebar {...props}>
@@ -131,7 +133,12 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
                                         {item.enabled ? (
                                             <SidebarMenuButton
                                                 asChild={true}
-                                                isActive={pathname === item.url}>
+                                                isActive={pathname === item.url}
+                                                onClick={() => {
+                                                    if (isMobile) {
+                                                        toggleSidebar();
+                                                    }
+                                                }}>
                                                 <Link href={item.url}>{item.title}</Link>
                                             </SidebarMenuButton>
                                         ) : (
