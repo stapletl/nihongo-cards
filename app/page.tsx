@@ -18,13 +18,7 @@ export default function Page() {
                 </p>
             </div>
 
-            <div className="flex gap-4">
-                <Button asChild={true} size="lg">
-                    <Link href="/beginner-vocab">
-                        Go to Vocab
-                        <span className="ml-2">→</span>
-                    </Link>
-                </Button>
+            <div className="flex flex-col gap-4 sm:flex-row">
                 <Button asChild={true} size="lg">
                     <Link href="/hiragana">
                         Go to Hiragana
@@ -34,6 +28,12 @@ export default function Page() {
                 <Button asChild={true} size="lg">
                     <Link href="/katakana">
                         Go to Katakana
+                        <span className="ml-2">→</span>
+                    </Link>
+                </Button>
+                <Button asChild={true} size="lg">
+                    <Link href="/beginner-vocab">
+                        Go to Vocab
                         <span className="ml-2">→</span>
                     </Link>
                 </Button>

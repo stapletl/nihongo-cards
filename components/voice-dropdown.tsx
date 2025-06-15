@@ -18,7 +18,11 @@ export function VoiceDropdown() {
         const loadVoices = () => {
             const availableVoices = window.speechSynthesis.getVoices();
             const japaneseVoices = availableVoices.filter((voice) => voice.lang.startsWith('ja'));
-            setVoices(japaneseVoices);
+            // Remove duplicates by keeping only the first occurrence of each voice name
+            const uniqueVoices = japaneseVoices.filter(
+                (voice, index, self) => index === self.findIndex((v) => v.name === voice.name)
+            );
+            setVoices(uniqueVoices);
         };
 
         // Load voices immediately if available

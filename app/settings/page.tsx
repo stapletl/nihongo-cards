@@ -28,23 +28,25 @@ const VoiceSettingsContent = dynamic(
 
 export default function SettingsPage() {
     return (
-        <div className="container max-w-2xl space-y-4">
-            <section className="space-y-4">
-                <h2 className="text-2xl font-bold">Voice Settings</h2>
-                <Card className="space-y-2 p-6">
-                    <VoiceSettingsContent />
-                </Card>
-            </section>
+        <div className="flex min-h-screen justify-center">
+            <div className="container max-w-2xl space-y-4">
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-bold">Voice Settings</h2>
+                    <Card className="space-y-2 p-6">
+                        <VoiceSettingsContent />
+                    </Card>
+                </section>
 
-            <section className="space-y-4">
-                <h2 className="text-2xl font-bold">Appearance</h2>
-                <Card className="p-6">
-                    <div className="flex items-center justify-between">
-                        <Label>Theme</Label>
-                        <ThemeToggle />
-                    </div>
-                </Card>
-            </section>
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-bold">Appearance</h2>
+                    <Card className="p-6">
+                        <div className="flex items-center justify-between">
+                            <Label>Theme</Label>
+                            <ThemeToggle />
+                        </div>
+                    </Card>
+                </section>
+            </div>
         </div>
     );
 }

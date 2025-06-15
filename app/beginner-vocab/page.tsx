@@ -1,8 +1,9 @@
 import { ContentCard } from '@/components/content-card';
+import { beginnerVocab } from '@/lib/beginner-vocab';
 
 export default function Page() {
     return (
-        <div className="max-w-4xl">
+        <div>
             <h1 className="mb-4 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                 Beginner Vocabulary
             </h1>
@@ -12,11 +13,17 @@ export default function Page() {
                 form the foundation of Japanese conversation.
             </p>
             <div className="mt-8 grid gap-6">
-                <section>
-                    <h2 className="mb-4 scroll-m-20 text-2xl font-semibold tracking-tight">
-                        Basic Greetings
-                    </h2>
-                    <ContentCard japanese="こんにちは" english="Hello" />
+                <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    {beginnerVocab.map((item) => (
+                        <ContentCard
+                            key={item.japanese}
+                            japanese={item.japanese}
+                            english={item.english}
+                            romaji={item.romaji}
+                            japaneseReading={item.japaneseReading}
+                            icon={item.emoji}
+                        />
+                    ))}
                 </section>
             </div>
         </div>
