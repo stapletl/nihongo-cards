@@ -10,7 +10,6 @@ import {
 import React, { useState } from 'react';
 import { SpeechButton } from '@/components/speech-button';
 import { ShowRomanjiButton } from '../show-romanji-button';
-import { Separator } from '../ui/separator';
 
 type FullKanaCardProps = {
     kanaItem: KanaItem;
