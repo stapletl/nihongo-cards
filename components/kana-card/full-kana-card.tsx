@@ -10,6 +10,7 @@ import {
 import React, { useState } from 'react';
 import { SpeechButton } from '@/components/speech-button';
 import { ShowRomanjiButton } from '../show-romanji-button';
+import { Separator } from '../ui/separator';
 
 type FullKanaCardProps = {
     kanaItem: KanaItem;
@@ -36,7 +37,7 @@ export const FullKanaCard: React.FC<FullKanaCardProps> = ({ kanaItem }) => {
                         </CardDescription>
                     </div>
                     <CardAction>
-                        <SpeechButton text={kanaItem.character} variant="ghost" size="xs" />
+                        <SpeechButton text={kanaItem.character} size="xs" />
                     </CardAction>
                 </div>
             </CardHeader>
@@ -49,7 +50,7 @@ export const FullKanaCard: React.FC<FullKanaCardProps> = ({ kanaItem }) => {
                                 {renderExampleWithBoldKana(kanaItem.example, kanaItem.character)}
                             </span>
                             <CardAction>
-                                <SpeechButton text={kanaItem.example} variant="ghost" size="xs" />
+                                <SpeechButton text={kanaItem.example} size="xs" />
                             </CardAction>
                         </div>
                         <div className="flex items-center gap-2">

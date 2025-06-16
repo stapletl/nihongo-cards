@@ -67,7 +67,9 @@ export const FullVocabCard: React.FC<FullVocabCardProps> = ({ vocabItem }) => {
                 </div>
                 <div className="flex items-center gap-2">
                     {vocabItem.emoji && <span className="text-3xl">{vocabItem.emoji}</span>}
-                    <CardDescription className="text-lg">{vocabItem.english}</CardDescription>
+                    <CardDescription className="text-foreground text-lg">
+                        {vocabItem.english}
+                    </CardDescription>
                 </div>
             </CardHeader>
 
