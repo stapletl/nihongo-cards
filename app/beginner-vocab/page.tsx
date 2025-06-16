@@ -1,5 +1,5 @@
-import { ContentCard } from '@/components/content-card';
 import { beginnerVocab } from '@/lib/beginner-vocab';
+import { BeginnerVocabContent } from './beginner-vocab-content';
 
 export default function Page() {
     return (
@@ -12,20 +12,7 @@ export default function Page() {
                 communicate in everyday situations. This section covers basic words and phrases that
                 form the foundation of Japanese conversation.
             </p>
-            <div className="mt-8 grid gap-6">
-                <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    {beginnerVocab.map((item) => (
-                        <ContentCard
-                            key={item.japanese}
-                            japanese={item.japanese}
-                            english={item.english}
-                            romaji={item.romaji}
-                            japaneseReading={item.japaneseReading}
-                            icon={item.emoji}
-                        />
-                    ))}
-                </section>
-            </div>
+            <BeginnerVocabContent vocabItems={beginnerVocab} />
         </div>
     );
 }

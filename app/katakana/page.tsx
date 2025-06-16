@@ -1,3 +1,5 @@
+import { KatakanaContent } from './katakana-content';
+
 export default function Page() {
     return (
         <div>
@@ -10,7 +12,7 @@ export default function Page() {
                 onomatopoeia, scientific terms, and emphasis. Like Hiragana, each character
                 represents a specific syllable sound.
             </p>
-            <div className="my-6 w-full overflow-y-auto">{/* Add katakana chart here */}</div>
+            <KatakanaContent />
         </div>
     );
 }

@@ -19,8 +19,8 @@ export default async function DashboardLayout({ children }: LayoutProps) {
             <SpeechProvider>
                 <SidebarProvider>
                     <AppSidebar />
-                    <SidebarInset>
-                        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+                    <SidebarInset className="flex h-screen flex-col">
+                        <header className="bg-background flex h-16 shrink-0 items-center gap-2 border-b px-4">
                             <SidebarTrigger className="-ml-1" />
                             <Separator
                                 orientation="vertical"
@@ -28,7 +28,9 @@ export default async function DashboardLayout({ children }: LayoutProps) {
                             />
                             <AppBreadcrumbs />
                         </header>
-                        <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
+                        <div className="flex-1 overflow-auto">
+                            <div className="flex min-w-[375px] flex-col gap-4 p-4">{children}</div>
+                        </div>
                     </SidebarInset>
                 </SidebarProvider>
             </SpeechProvider>

@@ -1,20 +1,26 @@
+'use client';
+
 import React from 'react';
 import { useSpeech } from '@/hooks/use-speech';
 import { Volume2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { VariantProps } from 'class-variance-authority';
 
 type SpeechButtonProps = {
     text: string;
-};
+} & VariantProps<typeof buttonVariants>;
 
-// TODO - add props, variants, classname overrides, etc.
-export const SpeechButton: React.FC<SpeechButtonProps> = ({ text }) => {
+export const SpeechButton: React.FC<SpeechButtonProps> = ({
+    text,
+    variant = 'outline',
+    size = 'icon',
+}) => {
     const { speak, isSpeaking } = useSpeech();
 
     return (
         <Button
-            variant="outline"
-            size="icon"
+            variant={variant}
+            size={size}
             onClick={() => speak(text)}
             disabled={isSpeaking}
             title="Listen to pronunciation">

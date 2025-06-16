@@ -1,9 +1,10 @@
 'use client';
 
+import React, { useState } from 'react';
 import { Eye, EyeOff, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ResponsiveDialog } from './responsive-dialog';
-import React from 'react';
 import { SpeechButton } from './speech-button';
 
 type ContentCardProps = {
@@ -11,7 +12,7 @@ type ContentCardProps = {
     japanese: string;
     romaji: string;
     japaneseReading: string;
-    icon?: string | React.ReactNode; // Optional icon for visual representation
+    emoji?: string;
 };
 
 export function ContentCard({
@@ -19,55 +20,49 @@ export function ContentCard({
     english,
     romaji,
     japaneseReading,
-    icon,
+    emoji: icon,
 }: ContentCardProps) {
-    const [dialogOpen, setDialogOpen] = React.useState(false);
-    const [showRomaji, setShowRomaji] = React.useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [showRomaji, setShowRomaji] = useState(false);
 
     const shouldShowReading = japanese !== japaneseReading;
 
     return (
-        <div className="bg-card text-card-foreground rounded-lg border p-4 shadow-sm">
-            <div className="flex flex-col">
-                <div className="flex items-start justify-between">
-                    <div className="flex min-h-[4.5rem] flex-col">
-                        <h3 className="flex items-center text-xl leading-none font-semibold tracking-tight">
-                            {japanese}
-                        </h3>
-                        <div className="mt-1 flex flex-col space-y-0.5">
-                            {shouldShowReading && (
-                                <span className="text-muted-foreground text-sm">
-                                    {japaneseReading}
-                                </span>
+        <Card>
+            <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+                <div className="flex min-h-[4.5rem] flex-col">
+                    <CardTitle className="text-xl">{japanese}</CardTitle>
+                    {shouldShowReading && (
+                        <CardDescription className="mt-1">{japaneseReading}</CardDescription>
+                    )}
+                    <div className="mt-1 flex items-center gap-1.5">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-5 w-5"
+                            title={showRomaji ? 'Hide Romaji' : 'Show Romaji'}
+                            onClick={() => setShowRomaji(!showRomaji)}>
+                            {showRomaji ? (
+                                <EyeOff className="h-4 w-4" />
+                            ) : (
+                                <Eye className="h-4 w-4" />
                             )}
-                            <div className="flex items-center gap-1.5">
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-5 w-5"
-                                    title={showRomaji ? 'Hide Romaji' : 'Show Romaji'}
-                                    onClick={() => setShowRomaji(!showRomaji)}>
-                                    {showRomaji ? (
-                                        <EyeOff className="h-4 w-4" />
-                                    ) : (
-                                        <Eye className="h-4 w-4" />
-                                    )}
-                                    <span className="sr-only">
-                                        {showRomaji ? 'Hide Romaji' : 'Show Romaji'}
-                                    </span>
-                                </Button>
-                                <span className="text-muted-foreground h-[1.25rem] text-sm italic">
-                                    {showRomaji ? romaji : ''}
-                                </span>
-                            </div>
-                        </div>
+                            <span className="sr-only">
+                                {showRomaji ? 'Hide Romaji' : 'Show Romaji'}
+                            </span>
+                        </Button>
+                        <span className="text-muted-foreground h-[1.25rem] text-sm italic">
+                            {showRomaji ? romaji : ''}
+                        </span>
                     </div>
-                    <SpeechButton text={japanese} />
                 </div>
-                <div className="flex items-center justify-between">
+                <SpeechButton text={japanese} />
+            </CardHeader>
+            <CardFooter className="pt-2">
+                <div className="flex w-full items-center justify-between">
                     <div className="flex items-center gap-2">
                         {icon && <span className="text-2xl">{icon}</span>}
-                        <p className="text-muted-foreground text-sm">{english}</p>
+                        <CardDescription>{english}</CardDescription>
                     </div>
                     <Button
                         variant="ghost"
@@ -78,14 +73,14 @@ export function ContentCard({
                         <span className="text-xs">More Info</span>
                     </Button>
                 </div>
-                <ResponsiveDialog
-                    open={dialogOpen}
-                    onOpenChange={setDialogOpen}
-                    title="More Information"
-                    description={`Learn more about "${japanese}"`}>
-                    {null}
-                </ResponsiveDialog>
-            </div>
-        </div>
+            </CardFooter>
+            <ResponsiveDialog
+                open={dialogOpen}
+                onOpenChange={setDialogOpen}
+                title="More Information"
+                description={`Learn more about "${japanese}"`}>
+                {null}
+            </ResponsiveDialog>
+        </Card>
     );
 }
