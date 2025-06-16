@@ -20,7 +20,6 @@ import Link from 'next/link';
 import { Badge } from './ui/badge';
 import { usePathname } from 'next/navigation';
 import { Settings } from 'lucide-react';
-import Image from 'next/image';
 import { AppIcon } from './app-icon';
 
 type NavItem = {
@@ -122,12 +121,14 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
     return (
         <Sidebar {...props}>
             <SidebarHeader>
-                <Link href="/" className="block" onClick={handleNavigationClick}>
-                    <div className="flex items-center gap-2">
-                        <AppIcon size={32} />
-                        <h2 className="text-primary text-2xl font-semibold">Nihongo Cards</h2>
-                    </div>
-                </Link>
+                <SidebarMenuButton className="h-12" asChild={true} isActive={pathname === '/'}>
+                    <Link href="/" className="block" onClick={handleNavigationClick}>
+                        <div className="flex items-center gap-2">
+                            <AppIcon size={32} />
+                            <h2 className="text-primary text-2xl font-semibold">Nihongo Cards</h2>
+                        </div>
+                    </Link>
+                </SidebarMenuButton>
                 {/* todo: implement app search */}
                 {/* <SearchForm /> */}
             </SidebarHeader>
