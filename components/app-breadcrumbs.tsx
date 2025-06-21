@@ -16,6 +16,9 @@ export const breadcrumbTitles: Record<string, string> = {
     katakana: 'Katakana',
     'beginner-vocab': 'Beginner Vocabulary',
     settings: 'Settings',
+    privacy: 'Privacy Policy',
+    flashcards: 'Flashcards',
+    quiz: 'Quiz',
 };
 
 // Simplified breadcrumbs logic

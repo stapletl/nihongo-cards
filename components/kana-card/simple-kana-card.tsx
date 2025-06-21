@@ -19,15 +19,21 @@ export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({
     <Button
         variant="outline"
         size="sm"
-        className="w-full max-w-30 justify-self-center px-2"
+        className="h-12 w-full transition-transform hover:scale-105 sm:h-14 md:h-16"
         onClick={onActionClick}>
         <div
             className={cn(
                 'flex w-full items-center',
-                showRomanji ? 'justify-between' : 'justify-center'
+                showRomanji ? 'justify-between gap-1' : 'justify-center'
             )}>
-            <p className="text-lg font-semibold">{kanaItem.character}</p>
-            {showRomanji && <p className="text-muted-foreground">{kanaItem.romaji}</p>}
+            <p className="text-base font-semibold sm:text-lg md:text-xl lg:text-2xl">
+                {kanaItem.character}
+            </p>
+            {showRomanji && (
+                <p className="text-muted-foreground md:text-md text-xs sm:text-sm lg:text-lg">
+                    {kanaItem.romaji}
+                </p>
+            )}
         </div>
     </Button>
 );
