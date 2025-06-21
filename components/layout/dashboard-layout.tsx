@@ -19,7 +19,7 @@ export default async function DashboardLayout({ children }: LayoutProps) {
             <SpeechProvider>
                 <SidebarProvider>
                     <AppSidebar />
-                    <SidebarInset className="flex h-screen flex-col">
+                    <SidebarInset className="flex h-dvh flex-col">
                         <header className="bg-background flex h-16 shrink-0 items-center gap-2 border-b px-4">
                             <SidebarTrigger className="-ml-1" />
                             <Separator

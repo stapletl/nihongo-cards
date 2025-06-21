@@ -36,6 +36,22 @@ type NavSection = {
 
 const navMain: NavSection[] = [
     {
+        title: 'Study',
+        url: '#',
+        items: [
+            {
+                title: 'Flashcards',
+                url: '/flashcards',
+                enabled: true,
+            },
+            {
+                title: 'Quiz',
+                url: '/quiz',
+                enabled: false,
+            },
+        ],
+    },
+    {
         title: 'Getting Started',
         url: '#',
         items: [

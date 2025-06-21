@@ -27,7 +27,7 @@ const VoiceSettingsContent = dynamic(
 
 export default function SettingsPage() {
     return (
-        <div className="flex min-h-screen justify-center">
+        <div className="flex justify-center">
             <div className="container max-w-2xl space-y-4">
                 <section className="space-y-4">
                     <h2 className="text-2xl font-bold">Voice Settings</h2>
