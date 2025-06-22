@@ -38,6 +38,10 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
             <h2 className="mt-8 scroll-m-20 text-3xl font-semibold tracking-tight">
                 Gojūon (五十音)
             </h2>
+            <p className="mt-4 text-lg">
+                Select a character to see its details, including pronunciation, example words, and
+                more.
+            </p>
             <div className="mx-auto mt-4 max-w-2xl">
                 <div className="grid grid-cols-5 gap-2 sm:gap-3 md:gap-4">
                     {gojuonGrid.map((row, rowIndex) =>
@@ -53,10 +57,6 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                                     key={kanaItem.character}
                                     kanaItem={kanaItem}
                                     showRomanji={showRomanji}
-                                    onActionClick={() => {
-                                        setSelectedCharacter(kanaItem.character);
-                                        setDialogVisible(true);
-                                    }}
                                 />
                             );
                         })
@@ -83,10 +83,6 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                                     key={kanaItem.character}
                                     kanaItem={kanaItem}
                                     showRomanji={showRomanji}
-                                    onActionClick={() => {
-                                        setSelectedCharacter(kanaItem.character);
-                                        setDialogVisible(true);
-                                    }}
                                 />
                             );
                         })
@@ -111,10 +107,6 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                                     key={kanaItem.character}
                                     kanaItem={kanaItem}
                                     showRomanji={showRomanji}
-                                    onActionClick={() => {
-                                        setSelectedCharacter(kanaItem.character);
-                                        setDialogVisible(true);
-                                    }}
                                 />
                             );
                         })

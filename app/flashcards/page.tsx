@@ -1,14 +1,15 @@
+import { FlashcardContent } from './flashcard-content';
+
 export default function Page() {
     return (
-        <div className="flex h-full flex-col items-center justify-center gap-6 p-8">
-            <div className="flex max-w-[980px] flex-col items-center gap-4 text-center">
-                <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl lg:leading-[1.1]">
-                    Flashcards
-                </h1>
-                <p className="text-muted-foreground max-w-[750px] text-lg sm:text-xl">
-                    Explore our flashcard system to enhance your Japanese learning experience.
-                </p>
-            </div>
+        <div>
+            <h1 className="mb-4 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                Flashcards <span className="font-bold whitespace-nowrap">(フラッシュカード)</span>
+            </h1>
+            <p className="leading-7">
+                Explore our flashcard system to enhance your Japanese learning experience.
+            </p>
+            <FlashcardContent />
         </div>
     );
 }
