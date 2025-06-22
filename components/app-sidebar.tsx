@@ -36,22 +36,6 @@ type NavSection = {
 
 const navMain: NavSection[] = [
     {
-        title: 'Study',
-        url: '#',
-        items: [
-            {
-                title: 'Flashcards',
-                url: '/flashcards',
-                enabled: true,
-            },
-            {
-                title: 'Quiz',
-                url: '/quiz',
-                enabled: false,
-            },
-        ],
-    },
-    {
         title: 'Getting Started',
         url: '#',
         items: [
@@ -73,52 +57,68 @@ const navMain: NavSection[] = [
         ],
     },
     {
-        title: 'Intermediate Studies',
+        title: 'Study',
         url: '#',
         items: [
             {
-                title: 'Intermediate Vocab',
-                url: '/intermediate-vocab',
-                enabled: false,
+                title: 'Flashcards',
+                url: '/flashcards',
+                enabled: true,
             },
             {
-                title: 'Kanji',
-                url: '/kanji',
-                enabled: false,
-            },
-            {
-                title: 'Quizzes',
-                url: '/quizzes',
+                title: 'Quiz',
+                url: '/quiz',
                 enabled: false,
             },
         ],
     },
-    {
-        title: 'Tools & Resources',
-        url: '#',
-        items: [
-            {
-                title: 'Dictionary',
-                url: '/dictionary',
-                enabled: false,
-            },
-            {
-                title: 'Stroke Order',
-                url: '/stroke-order',
-                enabled: false,
-            },
-            {
-                title: 'Study Tips',
-                url: '/study-tips',
-                enabled: false,
-            },
-            {
-                title: 'External Resources',
-                url: '/external-resources',
-                enabled: false,
-            },
-        ],
-    },
+    // {
+    //     title: 'Intermediate Studies',
+    //     url: '#',
+    //     items: [
+    //         {
+    //             title: 'Intermediate Vocab',
+    //             url: '/intermediate-vocab',
+    //             enabled: false,
+    //         },
+    //         {
+    //             title: 'Kanji',
+    //             url: '/kanji',
+    //             enabled: false,
+    //         },
+    //         {
+    //             title: 'Quizzes',
+    //             url: '/quizzes',
+    //             enabled: false,
+    //         },
+    //     ],
+    // },
+    // {
+    //     title: 'Tools & Resources',
+    //     url: '#',
+    //     items: [
+    //         {
+    //             title: 'Dictionary',
+    //             url: '/dictionary',
+    //             enabled: false,
+    //         },
+    //         {
+    //             title: 'Stroke Order',
+    //             url: '/stroke-order',
+    //             enabled: false,
+    //         },
+    //         {
+    //             title: 'Study Tips',
+    //             url: '/study-tips',
+    //             enabled: false,
+    //         },
+    //         {
+    //             title: 'External Resources',
+    //             url: '/external-resources',
+    //             enabled: false,
+    //         },
+    //     ],
+    // },
 ];
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar>;

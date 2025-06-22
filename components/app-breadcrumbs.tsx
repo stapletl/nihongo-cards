@@ -21,42 +21,40 @@ export const breadcrumbTitles: Record<string, string> = {
     quiz: 'Quiz',
 };
 
-// Simplified breadcrumbs logic
 export default function AppBreadcrumbs() {
     const pathname = usePathname();
-    const segments = pathname
-        .split('/')
-        .filter((segment) => segment !== '' && segment in breadcrumbTitles);
+    const segments = pathname.split('/').filter((segment) => segment !== '');
 
-    // Build paths for comparison
+    // Build paths for each segment
     const segmentPaths = segments.map((_, index) => '/' + segments.slice(0, index + 1).join('/'));
 
     return (
         <Breadcrumb>
             <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbItem className="md:block">
                     <BreadcrumbLink asChild={true}>
                         <Link href="/">Home</Link>
                     </BreadcrumbLink>
                 </BreadcrumbItem>
-                {segments.map((segment, index) => (
-                    <React.Fragment key={index}>
-                        <BreadcrumbSeparator className="hidden md:block" />
-                        <BreadcrumbItem key={index} className="hidden md:block">
-                            {segmentPaths[index] === pathname ? (
-                                <BreadcrumbPage>
-                                    {breadcrumbTitles[segment] ?? '404'}
-                                </BreadcrumbPage>
-                            ) : (
-                                <BreadcrumbLink asChild={true}>
-                                    <Link href={segmentPaths[index]}>
-                                        {breadcrumbTitles[segment] ?? segment}
-                                    </Link>
-                                </BreadcrumbLink>
-                            )}
-                        </BreadcrumbItem>
-                    </React.Fragment>
-                ))}
+                {segments.map((segment, index) => {
+                    // Use friendly title if available, else decodeURIComponent for dynamic segments
+                    const isLast = segmentPaths[index] === pathname;
+                    const label = breadcrumbTitles[segment] ?? decodeURIComponent(segment);
+                    return (
+                        <React.Fragment key={index}>
+                            <BreadcrumbSeparator className="md:block" />
+                            <BreadcrumbItem className="md:block">
+                                {isLast ? (
+                                    <BreadcrumbPage>{label}</BreadcrumbPage>
+                                ) : (
+                                    <BreadcrumbLink asChild={true}>
+                                        <Link href={segmentPaths[index]}>{label}</Link>
+                                    </BreadcrumbLink>
+                                )}
+                            </BreadcrumbItem>
+                        </React.Fragment>
+                    );
+                })}
             </BreadcrumbList>
         </Breadcrumb>
     );

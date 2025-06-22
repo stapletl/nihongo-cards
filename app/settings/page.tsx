@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Label } from '@/components/ui/label';
 import { ThemeToggle } from '@/components/theme-toggle';
+import Link from 'next/link';
 
 const VoiceSettingsContent = dynamic(
     () =>
@@ -43,6 +44,15 @@ export default function SettingsPage() {
                             <Label>Theme</Label>
                             <ThemeToggle />
                         </div>
+                    </Card>
+                </section>
+
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-bold">Privacy</h2>
+                    <Card className="p-6">
+                        <Link href="/privacy" className="text-accent-foreground underline">
+                            View our Privacy Policy
+                        </Link>
                     </Card>
                 </section>
             </div>
