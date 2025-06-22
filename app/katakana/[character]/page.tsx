@@ -4,6 +4,14 @@ import { katakanaItems } from '@/lib/katakana';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+    return katakanaItems.map((item) => ({
+        character: item.character,
+    }));
+}
+
 export default async function Page({ params }: { params: Promise<{ character: string }> }) {
     const { character } = await params;
     const decodedCharacter = decodeURIComponent(character);
