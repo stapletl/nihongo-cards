@@ -51,4 +51,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Nihongo Cards uses KanjiVG which is licensed by CC BY-SA Ulrich Apel (http://kanjivg.tagaini.net). See also http://creativecommons.org/licenses/by-sa/3.0/
+
+This project is closed source, you shouldn't even be reading this if you're not me 🤔

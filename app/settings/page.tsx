@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Label } from '@/components/ui/label';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -49,10 +49,33 @@ export default function SettingsPage() {
 
                 <section className="space-y-4">
                     <h2 className="text-2xl font-bold">Privacy</h2>
-                    <Card className="p-6">
-                        <Link href="/privacy" className="text-accent-foreground underline">
-                            View our Privacy Policy
-                        </Link>
+                    <Card>
+                        <CardContent>
+                            <p className="text-base">
+                                We do not collect or sell your data. For more information view our{' '}
+                                <Link href="settings/privacy" className="text-primary underline">
+                                    Privacy Policy
+                                </Link>
+                                .
+                            </p>
+                        </CardContent>
+                    </Card>
+                </section>
+
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-bold">License</h2>
+                    <Card>
+                        <CardContent>
+                            <p className="text-base">KanjiVG</p>
+                            <p className="text-muted-foreground text-sm">Ulrich Apel</p>
+                            <a
+                                target="_blank"
+                                href="https://creativecommons.org/licenses/by-sa/3.0/"
+                                rel="noopener noreferrer"
+                                className="text-primary text-sm underline">
+                                CC BY-SA 3.0
+                            </a>
+                        </CardContent>
                     </Card>
                 </section>
             </div>

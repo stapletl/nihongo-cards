@@ -21,6 +21,7 @@ import { Badge } from './ui/badge';
 import { usePathname } from 'next/navigation';
 import { Settings } from 'lucide-react';
 import { AppIcon } from './app-icon';
+import { ThemeToggle } from './theme-toggle';
 
 type NavItem = {
     title: string;
@@ -182,15 +183,18 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
                 ))}
             </SidebarContent>
             <SidebarFooter className="border-t">
-                <SidebarMenuButton
-                    asChild={true}
-                    isActive={pathname === '/settings'}
-                    onClick={handleNavigationClick}>
-                    <Link href="/settings" className="flex items-center gap-2">
-                        <Settings className="h-4 w-4" />
-                        Settings
-                    </Link>
-                </SidebarMenuButton>
+                <div className="flex items-center justify-between gap-2">
+                    <SidebarMenuButton
+                        asChild={true}
+                        isActive={pathname === '/settings'}
+                        onClick={handleNavigationClick}>
+                        <Link href="/settings" className="flex items-center gap-2">
+                            <Settings className="h-4 w-4" />
+                            Settings
+                        </Link>
+                    </SidebarMenuButton>
+                    <ThemeToggle />
+                </div>
             </SidebarFooter>
             <SidebarRail />
         </Sidebar>
