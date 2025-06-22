@@ -3,7 +3,21 @@ import React, { useState } from 'react';
 import { SpeechButton } from '@/components/speech-button';
 import { ShowRomanjiButton } from '@/components/show-romanji-button';
 import { KanaItem } from '@/lib/hiragana';
-import Image from 'next/image';
+import dynamic from 'next/dynamic';
+import { Loader2 } from 'lucide-react';
+
+const KanaStrokeOrderImage = dynamic(
+    () =>
+        import('@/components/kana-card/kana-stroke-order-image').then((mod) => ({
+            default: mod.KanaStrokeOrderImage,
+        })),
+    {
+        ssr: false,
+        loading: () => (
+            <Loader2 className="text-muted-foreground mx-auto my-20 h-[48px] w-[48px] animate-spin" />
+        ),
+    }
+);
 
 // Helper to bold the kana in the example
 const renderExampleWithBoldKana = (example: string, kana: string): React.ReactNode[] =>
@@ -20,13 +34,12 @@ type KanaPageContentProps = {
 export const KanaPageContent: React.FC<KanaPageContentProps> = ({ kanaItem }) => {
     const [showRomanji, setShowRomanji] = useState(false);
 
-    // svg url for stroke order is the lower hex code of the character with padding of 0 so that it will be 5 characters long.
+    // svg url for stroke order is the lower case hex code of the character with leading 0s so that it will be 5 characters long.
     // e.g. あ is 03042, ア is 030a2
     const kanaHex = kanaItem.character.charCodeAt(0).toString(16).padStart(5, '0').toLowerCase();
 
     // console.log(`Kana Hex: ${kanaHex}`); // Debugging line to check kanaHex value
-
-    const strokeOrderUrl = `/stroke-order/${kanaHex}.svg`;
+    const strokeOrderUrl = `/kana-svgs/${kanaHex}.svg`;
 
     return (
         <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
@@ -100,21 +113,37 @@ export const KanaPageContent: React.FC<KanaPageContentProps> = ({ kanaItem }) =>
             </section>
 
             {/* Stroke Order section */}
-            {/* <section className="space-y-6">
+            <section className="space-y-6">
                 <h2 className="text-2xl font-bold sm:text-3xl">Stroke Order</h2>
                 <div className="bg-muted rounded-lg p-8 sm:p-12">
                     <div className="flex min-h-[200px] flex-col items-center justify-center space-y-4">
-                        <Image
-                            width={128}
-                            height={128}
-                            src={strokeOrderUrl}
-                            alt={`Stroke order for ${kanaItem.character}`}
-                            className="fill-primary stroke-primary h-32 w-auto sm:h-40 md:h-48 lg:h-56"
-                            onError={(e) => (e.currentTarget.style.display = 'none')}
-                        />
+                        {kanaItem.character.length === 1 ? (
+                            <KanaStrokeOrderImage
+                                strokeOrderUrl={strokeOrderUrl}
+                                character={kanaItem.character}
+                            />
+                        ) : (
+                            <div className="flex flex-row gap-8">
+                                {Array.from(kanaItem.character).map((char, idx) => {
+                                    const charHex = char
+                                        .charCodeAt(0)
+                                        .toString(16)
+                                        .padStart(5, '0')
+                                        .toLowerCase();
+                                    const charStrokeOrderUrl = `/kana-svgs/${charHex}.svg`;
+                                    return (
+                                        <KanaStrokeOrderImage
+                                            key={idx}
+                                            strokeOrderUrl={charStrokeOrderUrl}
+                                            character={char}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        )}
                     </div>
                 </div>
-            </section> */}
+            </section>
         </main>
     );
 };
