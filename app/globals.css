@@ -1,17 +1,17 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@keyframes pulse-scale {
+@keyframes border-pulse {
     0%,
     100% {
-        transform: scale(1);
+        box-shadow: inset 0 0 0 1px var(--color-primary);
     }
     50% {
-        transform: scale(1.1);
+        box-shadow: inset 0 0 0 2px var(--color-primary);
     }
 }
-.animate-pulse-scale {
-    animation: pulse-scale 2s ease-in-out infinite;
+.animate-border-pulse {
+    animation: border-pulse 2s ease-in-out infinite;
 }
 
 @custom-variant dark (&:is(.dark *));
