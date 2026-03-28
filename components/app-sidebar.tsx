@@ -19,7 +19,7 @@ import {
 import Link from 'next/link';
 import { Badge } from './ui/badge';
 import { usePathname } from 'next/navigation';
-import { Settings } from 'lucide-react';
+import { Settings, CreditCardIcon, ClipboardListIcon, BarChartIcon } from 'lucide-react';
 import { AppIcon } from './app-icon';
 import { ThemeToggle } from './theme-toggle';
 
@@ -27,6 +27,8 @@ type NavItem = {
     title: string;
     url: string;
     enabled: boolean;
+    soon?: boolean;
+    icon?: React.ReactNode;
 };
 
 type NavSection = {
@@ -34,6 +36,10 @@ type NavSection = {
     url: string;
     items: NavItem[];
 };
+
+const KanjiIcon = ({ char }: { char: string }) => (
+    <span className="flex size-4 items-center justify-center text-sm font-semibold">{char}</span>
+);
 
 const navMain: NavSection[] = [
     {
@@ -44,16 +50,19 @@ const navMain: NavSection[] = [
                 title: 'Hiragana',
                 url: '/hiragana',
                 enabled: true,
+                icon: <KanjiIcon char="あ" />,
             },
             {
                 title: 'Katakana',
                 url: '/katakana',
                 enabled: true,
+                icon: <KanjiIcon char="ア" />,
             },
             {
                 title: 'Beginner Vocab',
                 url: '/beginner-vocab',
                 enabled: true,
+                icon: <KanjiIcon char="日" />,
             },
         ],
     },
@@ -65,11 +74,22 @@ const navMain: NavSection[] = [
                 title: 'Flashcards',
                 url: '/flashcards',
                 enabled: true,
+                soon: true,
+                icon: <CreditCardIcon />,
             },
             {
                 title: 'Quiz',
                 url: '/quiz',
-                enabled: false,
+                enabled: true,
+                soon: true,
+                icon: <ClipboardListIcon />,
+            },
+            {
+                title: 'Statistics',
+                url: '/statistics',
+                enabled: true,
+                soon: true,
+                icon: <BarChartIcon />,
             },
         ],
     },
@@ -163,13 +183,18 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
                                                 asChild={true}
                                                 isActive={pathname === item.url}
                                                 onClick={handleNavigationClick}>
-                                                <Link href={item.url}>{item.title}</Link>
+                                                <Link href={item.url}>
+                                                    {item.icon}
+                                                    {item.title}
+                                                    {item.soon && <Badge>Soon</Badge>}
+                                                </Link>
                                             </SidebarMenuButton>
                                         ) : (
                                             <SidebarMenuButton
                                                 disabled={true}
                                                 isActive={pathname === item.url}>
                                                 <>
+                                                    {item.icon}
                                                     {item.title}
                                                     <Badge>Soon</Badge>
                                                 </>

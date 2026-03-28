@@ -19,6 +19,7 @@ export const breadcrumbTitles: Record<string, string> = {
     privacy: 'Privacy Policy',
     flashcards: 'Flashcards',
     quiz: 'Quiz',
+    statistics: 'Statistics',
 };
 
 export default function AppBreadcrumbs() {
