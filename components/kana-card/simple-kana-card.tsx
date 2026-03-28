@@ -24,7 +24,7 @@ export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({ kanaItem, showRo
             size="sm"
             className={cn(
                 'h-12 w-full transition-all duration-300 hover:scale-105 sm:h-14 md:h-16',
-                { 'border-2 border-primary': !visited }
+                { 'border-2 dark:border-primary border-primary': !visited }
             )}
             asChild={true}>
             <Link href={href}>
