@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { SpeechProvider } from '@/components/providers/speech-provider';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import AppBreadcrumbs from '../app-breadcrumbs';
+import { CommandMenu } from '@/components/command-menu';
 
 type LayoutProps = {
     children: React.ReactNode;
@@ -27,6 +28,9 @@ export default async function DashboardLayout({ children }: LayoutProps) {
                                 className="mr-2 data-[orientation=vertical]:h-4"
                             />
                             <AppBreadcrumbs />
+                            <div className="ml-auto">
+                                <CommandMenu />
+                            </div>
                         </header>
                         <div className="flex-1 overflow-auto">
                             <div className="flex min-w-[375px] flex-col gap-4 p-4">{children}</div>
