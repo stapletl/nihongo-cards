@@ -9,6 +9,7 @@ import { useLocalStorage } from 'usehooks-ts';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import { RomanjiSection } from '@/components/romanji-section';
+import { useKanaProgressMap } from '@/hooks/use-kana-progress';
 
 // Create a map for quick lookup of kana items
 const kanaMap = new Map(katakanaItems.map((item) => [item.character, item]));
@@ -29,6 +30,7 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
     const selectedIndex = katakanaItems.findIndex((item) => item.character === selectedCharacter);
 
     const [showRomanji] = useLocalStorage<boolean>('show-kana-romanji', true);
+    const progressMap = useKanaProgressMap();
 
     return (
         <>
@@ -47,16 +49,17 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
                     {gojuonGrid.map((row, rowIndex) =>
                         row.map((character, colIndex) => {
                             if (character === null) {
-                                // Render empty cell
                                 return <div key={`${rowIndex}-${colIndex}`} className="h-full" />;
                             }
                             const kanaItem = kanaMap.get(character);
                             if (!kanaItem) return null;
+                            const visited = (progressMap.get(character)?.detailsViewCount ?? 0) > 0;
                             return (
                                 <SimpleKanaCard
                                     key={kanaItem.character}
                                     kanaItem={kanaItem}
                                     showRomanji={showRomanji}
+                                    visited={visited}
                                 />
                             );
                         })
@@ -73,16 +76,17 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
                     {dakutenHandakutenGrid.map((row, rowIndex) =>
                         row.map((character, colIndex) => {
                             if (character === null) {
-                                // Render empty cell
                                 return <div key={`${rowIndex}-${colIndex}`} className="h-full" />;
                             }
                             const kanaItem = kanaMap.get(character);
                             if (!kanaItem) return null;
+                            const visited = (progressMap.get(character)?.detailsViewCount ?? 0) > 0;
                             return (
                                 <SimpleKanaCard
                                     key={kanaItem.character}
                                     kanaItem={kanaItem}
                                     showRomanji={showRomanji}
+                                    visited={visited}
                                 />
                             );
                         })
@@ -97,16 +101,17 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
                     {yoonGrid.map((row, rowIndex) =>
                         row.map((character, colIndex) => {
                             if (character === null) {
-                                // Render empty cell
                                 return <div key={`${rowIndex}-${colIndex}`} className="h-full" />;
                             }
                             const kanaItem = kanaMap.get(character);
                             if (!kanaItem) return null;
+                            const visited = (progressMap.get(character)?.detailsViewCount ?? 0) > 0;
                             return (
                                 <SimpleKanaCard
                                     key={kanaItem.character}
                                     kanaItem={kanaItem}
                                     showRomanji={showRomanji}
+                                    visited={visited}
                                 />
                             );
                         })
