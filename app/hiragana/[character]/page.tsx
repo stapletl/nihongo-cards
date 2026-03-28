@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { hiraganaItems } from '@/lib/hiragana';
 import { KanaPageContent } from '@/components/kana-card/kana-page-content';
+import { KanaNavHotkeys } from '@/components/kana-card/kana-nav-hotkeys';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
@@ -27,6 +28,10 @@ export default async function Page({ params }: { params: Promise<{ character: st
 
     return (
         <div>
+            <KanaNavHotkeys
+                prevHref={prevHiragana?.character}
+                nextHref={nextHiragana?.character}
+            />
             <div className="mb-4 flex justify-between">
                 {prevHiragana && (
                     <Button asChild={true} variant="outline" className="mb-4">
