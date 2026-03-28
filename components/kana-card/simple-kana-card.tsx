@@ -19,9 +19,12 @@ export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({ kanaItem, showRo
     const basePath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
     const href = `${basePath}/${kanaItem.character}`;
 
+    // Button is typed for HTMLButtonElement; asChild forwards the ref to the rendered <a>, so HTMLAnchorElement is correct at runtime.
+    const buttonRef = ref as React.Ref<HTMLButtonElement>;
+
     return (
         <Button
-            ref={ref as React.Ref<HTMLButtonElement>}
+            ref={buttonRef}
             variant="outline"
             size="sm"
             className={cn(
