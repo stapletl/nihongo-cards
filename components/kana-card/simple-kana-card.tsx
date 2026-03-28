@@ -11,15 +11,17 @@ type SimpleKanaCardProps = {
     kanaItem: KanaItem;
     showRomanji: boolean;
     visited: boolean;
+    ref?: React.Ref<HTMLAnchorElement>;
 };
 
-export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({ kanaItem, showRomanji, visited }) => {
+export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({ kanaItem, showRomanji, visited, ref }) => {
     const pathname = usePathname();
     const basePath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
     const href = `${basePath}/${kanaItem.character}`;
 
     return (
         <Button
+            ref={ref as React.Ref<HTMLButtonElement>}
             variant="outline"
             size="sm"
             className={cn(
