@@ -6,9 +6,9 @@ export interface KanaProgress {
     flashcardViewCount: number;
     quizCorrectCount: number;
     quizIncorrectCount: number;
-    lastVisited: number | null;   // Date.now() timestamp
-    lastStudied: number | null;
-    lastQuizzed: number | null;
+    lastVisited: number | null;   // set when character detail page is viewed
+    lastStudied: number | null;   // set when character is studied via flashcard
+    lastQuizzed: number | null;   // set when character appears in a quiz
 }
 
 interface NihongoCardsDB extends DBSchema {
@@ -24,6 +24,9 @@ const DB_VERSION = 1;
 let dbPromise: Promise<IDBPDatabase<NihongoCardsDB>> | null = null;
 
 function getDB(): Promise<IDBPDatabase<NihongoCardsDB>> {
+    if (typeof window === 'undefined') {
+        throw new Error('kana-db: IndexedDB is only available in the browser');
+    }
     if (!dbPromise) {
         dbPromise = openDB<NihongoCardsDB>(DB_NAME, DB_VERSION, {
             upgrade(db) {
