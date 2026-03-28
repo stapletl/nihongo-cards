@@ -1,0 +1,20 @@
+{
+    "setup": [
+        {
+            "name": "Install dependencies",
+            "command": "bun install"
+        }
+    ],
+    "run": [
+        {
+            "name": "Dev server",
+            "command": "bun dev"
+        }
+    ],
+    "archive": [
+        {
+            "name": "Delete node_modules",
+            "command": "rm -rf node_modules"
+        }
+    ]
+}
