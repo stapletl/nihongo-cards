@@ -32,6 +32,9 @@ function getDB(): Promise<IDBPDatabase<NihongoCardsDB>> {
             upgrade(db) {
                 db.createObjectStore('kanaProgress', { keyPath: 'character' });
             },
+        }).catch((err) => {
+            dbPromise = null;
+            throw err;
         });
     }
     return dbPromise;
@@ -61,4 +64,8 @@ export async function incrementDetailView(character: string): Promise<void> {
     record.lastVisited = Date.now();
     await store.put(record);
     await tx.done;
+}
+
+export function isVisited(progress: KanaProgress | undefined): boolean {
+    return (progress?.detailsViewCount ?? 0) > 0;
 }

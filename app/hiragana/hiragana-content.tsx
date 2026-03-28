@@ -10,6 +10,7 @@ import dynamic from 'next/dynamic';
 import { Skeleton } from '@/components/ui/skeleton';
 import { RomanjiSection } from '@/components/romanji-section';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
+import { isVisited } from '@/lib/kana-db';
 
 // Create a map for quick lookup of kana items
 const kanaMap = new Map(hiraganaItems.map((item) => [item.character, item]));
@@ -53,7 +54,7 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                             }
                             const kanaItem = kanaMap.get(character);
                             if (!kanaItem) return null;
-                            const visited = (progressMap.get(character)?.detailsViewCount ?? 0) > 0;
+                            const visited = isVisited(progressMap.get(character));
                             return (
                                 <SimpleKanaCard
                                     key={kanaItem.character}
@@ -80,7 +81,7 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                             }
                             const kanaItem = kanaMap.get(character);
                             if (!kanaItem) return null;
-                            const visited = (progressMap.get(character)?.detailsViewCount ?? 0) > 0;
+                            const visited = isVisited(progressMap.get(character));
                             return (
                                 <SimpleKanaCard
                                     key={kanaItem.character}
@@ -105,7 +106,7 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                             }
                             const kanaItem = kanaMap.get(character);
                             if (!kanaItem) return null;
-                            const visited = (progressMap.get(character)?.detailsViewCount ?? 0) > 0;
+                            const visited = isVisited(progressMap.get(character));
                             return (
                                 <SimpleKanaCard
                                     key={kanaItem.character}
