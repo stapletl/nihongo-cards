@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { KanaPageContent } from '@/components/kana-card/kana-page-content';
+import { KanaNavHotkeys } from '@/components/kana-card/kana-nav-hotkeys';
 import { katakanaItems } from '@/lib/katakana';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -27,6 +28,10 @@ export default async function Page({ params }: { params: Promise<{ character: st
 
     return (
         <div>
+            <KanaNavHotkeys
+                prevHref={prevkatakana?.character}
+                nextHref={nextkatakana?.character}
+            />
             <div className="mb-4 flex justify-between">
                 {prevkatakana && (
                     <Button asChild={true} variant="outline" className="mb-4">
