@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { hiraganaItems } from '@/lib/hiragana';
 import { KanaPageContent } from '@/components/kana-card/kana-page-content';
+import { MarkKanaVisited } from '@/components/kana-card/mark-kana-visited';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
@@ -27,6 +28,7 @@ export default async function Page({ params }: { params: Promise<{ character: st
 
     return (
         <div>
+            <MarkKanaVisited character={hiraganaItem.character} />
             <div className="mb-4 flex justify-between">
                 {prevHiragana && (
                     <Button asChild={true} variant="outline" className="mb-4">
