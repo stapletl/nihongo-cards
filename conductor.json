@@ -1,20 +1,7 @@
 {
-    "setup": [
-        {
-            "name": "Install dependencies",
-            "command": "bun install"
-        }
-    ],
-    "run": [
-        {
-            "name": "Dev server",
-            "command": "bun dev"
-        }
-    ],
-    "archive": [
-        {
-            "name": "Delete node_modules",
-            "command": "rm -rf node_modules"
-        }
-    ]
+    "scripts": {
+        "setup": "bun install",
+        "run": "bun dev",
+        "archive": "rm -rf node_modules"
+    }
 }
