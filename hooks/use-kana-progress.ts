@@ -12,9 +12,13 @@ export function useKanaProgressMap(): Map<string, KanaProgress> {
     const [progressMap, setProgressMap] = useState<Map<string, KanaProgress>>(new Map());
 
     useEffect(() => {
-        getAllKanaProgress().then((records) => {
-            setProgressMap(new Map(records.map((r) => [r.character, r])));
-        });
+        getAllKanaProgress()
+            .then((records) => {
+                setProgressMap(new Map(records.map((r) => [r.character, r])));
+            })
+            .catch((err) => {
+                console.error('useKanaProgressMap: failed to load progress', err);
+            });
     }, []);
 
     return progressMap;
