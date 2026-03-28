@@ -1,18 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@keyframes border-pulse {
-    0%,
-    100% {
-        box-shadow: inset 0 0 0 1px var(--color-primary);
-    }
-    50% {
-        box-shadow: inset 0 0 0 2px var(--color-primary);
-    }
-}
-.animate-border-pulse {
-    animation: border-pulse 2s ease-in-out infinite;
-}
 
 @custom-variant dark (&:is(.dark *));
 

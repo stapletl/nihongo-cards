@@ -22,6 +22,11 @@ import { usePathname } from 'next/navigation';
 import { Settings } from 'lucide-react';
 import { AppIcon } from './app-icon';
 import { ThemeToggle } from './theme-toggle';
+import { hiraganaItems } from '@/lib/hiragana';
+import { katakanaItems } from '@/lib/katakana';
+import { useKanaProgressMap } from '@/hooks/use-kana-progress';
+import { isVisited } from '@/lib/kana-db';
+import { Skeleton } from './ui/skeleton';
 
 type NavItem = {
     title: string;
@@ -127,6 +132,12 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar>;
 export const AppSidebar = ({ ...props }: AppSidebarProps) => {
     const pathname = usePathname();
     const { toggleSidebar, isMobile } = useSidebar();
+    const { progressMap, isLoading } = useKanaProgressMap();
+
+    const newCounts: Record<string, number> = {
+        '/hiragana': hiraganaItems.filter((item) => !isVisited(progressMap.get(item.character))).length,
+        '/katakana': katakanaItems.filter((item) => !isVisited(progressMap.get(item.character))).length,
+    };
 
     // If the sidebar is open on mobile, clicking a link should close it
     const handleNavigationClick = () => {
@@ -163,7 +174,14 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
                                                 asChild={true}
                                                 isActive={pathname === item.url}
                                                 onClick={handleNavigationClick}>
-                                                <Link href={item.url}>{item.title}</Link>
+                                                <Link href={item.url}>
+                                                    {item.title}
+                                                    {isLoading && item.url in newCounts ? (
+                                                        <Skeleton className="h-4 w-12 rounded-full" />
+                                                    ) : newCounts[item.url] > 0 ? (
+                                                        <Badge>{newCounts[item.url]} new</Badge>
+                                                    ) : null}
+                                                </Link>
                                             </SidebarMenuButton>
                                         ) : (
                                             <SidebarMenuButton

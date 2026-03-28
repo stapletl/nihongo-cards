@@ -31,7 +31,7 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
     const selectedIndex = katakanaItems.findIndex((item) => item.character === selectedCharacter);
 
     const [showRomanji] = useLocalStorage<boolean>('show-kana-romanji', true);
-    const progressMap = useKanaProgressMap();
+    const { progressMap, isLoading } = useKanaProgressMap();
 
     return (
         <>
@@ -54,6 +54,14 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
                             }
                             const kanaItem = kanaMap.get(character);
                             if (!kanaItem) return null;
+                            if (isLoading) {
+                                return (
+                                    <Skeleton
+                                        key={`${rowIndex}-${colIndex}`}
+                                        className="h-12 w-full sm:h-14 md:h-16"
+                                    />
+                                );
+                            }
                             const visited = isVisited(progressMap.get(character));
                             return (
                                 <SimpleKanaCard
@@ -81,6 +89,14 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
                             }
                             const kanaItem = kanaMap.get(character);
                             if (!kanaItem) return null;
+                            if (isLoading) {
+                                return (
+                                    <Skeleton
+                                        key={`${rowIndex}-${colIndex}`}
+                                        className="h-12 w-full sm:h-14 md:h-16"
+                                    />
+                                );
+                            }
                             const visited = isVisited(progressMap.get(character));
                             return (
                                 <SimpleKanaCard
@@ -106,6 +122,14 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
                             }
                             const kanaItem = kanaMap.get(character);
                             if (!kanaItem) return null;
+                            if (isLoading) {
+                                return (
+                                    <Skeleton
+                                        key={`${rowIndex}-${colIndex}`}
+                                        className="h-12 w-full sm:h-14 md:h-16"
+                                    />
+                                );
+                            }
                             const visited = isVisited(progressMap.get(character));
                             return (
                                 <SimpleKanaCard

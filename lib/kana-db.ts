@@ -1,6 +1,8 @@
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
 
-export interface KanaProgress {
+export const KANA_PROGRESS_UPDATED_EVENT = 'kana-progress-updated';
+
+export type KanaProgress = {
     character: string;
     detailsViewCount: number;
     flashcardViewCount: number;
@@ -9,14 +11,14 @@ export interface KanaProgress {
     lastVisited: number | null;   // set when character detail page is viewed
     lastStudied: number | null;   // set when character is studied via flashcard
     lastQuizzed: number | null;   // set when character appears in a quiz
-}
+};
 
-interface NihongoCardsDB extends DBSchema {
+type NihongoCardsDB = DBSchema & {
     kanaProgress: {
         key: string;
         value: KanaProgress;
     };
-}
+};
 
 const DB_NAME = 'nihongo-cards-db';
 const DB_VERSION = 1;
@@ -64,6 +66,7 @@ export async function incrementDetailView(character: string): Promise<void> {
     record.lastVisited = Date.now();
     await store.put(record);
     await tx.done;
+    window.dispatchEvent(new CustomEvent('kana-progress-updated'));
 }
 
 export function isVisited(progress: KanaProgress | undefined): boolean {
