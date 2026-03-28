@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useHotkey } from '@tanstack/react-hotkeys';
-import { SearchIcon, CreditCardIcon, ClipboardListIcon, BarChartIcon } from 'lucide-react';
+import { SearchIcon, CreditCardIcon, ClipboardListIcon, BarChartIcon, SettingsIcon, SunIcon, MoonIcon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import {
     CommandDialog,
     CommandEmpty,
@@ -17,6 +18,7 @@ import {
 export function CommandMenu() {
     const [open, setOpen] = React.useState(false);
     const router = useRouter();
+    const { resolvedTheme, setTheme } = useTheme();
 
     useHotkey('Mod+K', () => {
         setOpen((prev) => !prev);
@@ -69,6 +71,10 @@ export function CommandMenu() {
                             <BarChartIcon />
                             <span>Statistics</span>
                         </CommandItem>
+                        <CommandItem onSelect={() => handleSelect('/settings')}>
+                            <SettingsIcon />
+                            <span>Settings</span>
+                        </CommandItem>
                     </CommandGroup>
                     <CommandSeparator />
                     <CommandGroup heading="Commands">
@@ -79,6 +85,14 @@ export function CommandMenu() {
                         <CommandItem onSelect={() => handleSelect('/quiz')}>
                             <ClipboardListIcon />
                             <span>Start Quiz</span>
+                        </CommandItem>
+                        <CommandItem
+                            onSelect={() => {
+                                setOpen(false);
+                                setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+                            }}>
+                            {resolvedTheme === 'dark' ? <SunIcon /> : <MoonIcon />}
+                            <span>Toggle Theme</span>
                         </CommandItem>
                     </CommandGroup>
                 </CommandList>
