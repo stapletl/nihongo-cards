@@ -92,7 +92,16 @@ export default function SettingsPage() {
                     <h2 className="text-2xl font-bold">License</h2>
                     <Card>
                         <CardContent>
-                            <p className="text-base">KanjiVG</p>
+                            <div className="flex items-center gap-2">
+                                <p className="text-base">KanjiVG</p>
+                                <a
+                                    target="_blank"
+                                    href="https://kanjivg.tagaini.net/"
+                                    rel="noopener noreferrer"
+                                    className="text-primary text-base underline">
+                                    Homepage
+                                </a>
+                            </div>
                             <p className="text-muted-foreground text-sm">Ulrich Apel</p>
                             <a
                                 target="_blank"
@@ -101,6 +110,12 @@ export default function SettingsPage() {
                                 className="text-primary text-sm underline">
                                 CC BY-SA 3.0
                             </a>
+                            <div className="flex items-center gap-2">
+                                <p className="text-secondary-foreground text-sm">Modifications:</p>
+                                <p className="text-muted-foreground text-sm">
+                                    svg modifications for better firefox compatibility
+                                </p>
+                            </div>
                         </CardContent>
                     </Card>
                 </section>
