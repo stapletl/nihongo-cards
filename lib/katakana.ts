@@ -751,6 +751,31 @@ export const yoon: KanaItem[] = [
         exampleTranslation: 'chocolate',
         emoji: '🍫',
     },
+    // D-yoon
+    {
+        character: 'ヂャ',
+        romaji: 'JA',
+        example: 'ヂャミセ',
+        exampleRomaji: 'jamise',
+        exampleTranslation: 'teahouse',
+        emoji: '🍵',
+    }, // rare
+    {
+        character: 'ヂュ',
+        romaji: 'JU',
+        example: 'ヂュン',
+        exampleRomaji: 'jun',
+        exampleTranslation: 'name (Jun)',
+        emoji: '🧑‍🎓',
+    }, // used in names
+    {
+        character: 'ヂョ',
+        romaji: 'JO',
+        example: 'ヂョクセン',
+        exampleRomaji: 'jokusen',
+        exampleTranslation: 'direct line',
+        emoji: '📞',
+    }, // uncommon
     // N-yoon
     {
         character: 'ニャ',
