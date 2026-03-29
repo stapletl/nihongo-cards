@@ -30,7 +30,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to start l
 
 ## Tech Stack
 
-- [Next.js 15](https://nextjs.org/) - React framework with App Router
+- [Next.js 16](https://nextjs.org/) - React framework with App Router
 - [Tailwind CSS](https://tailwindcss.com/) - For styling
 - [shadcn/ui](https://ui.shadcn.com/) - UI components
 - [Radix UI](https://www.radix-ui.com/) - Accessible component primitives
