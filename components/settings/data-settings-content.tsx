@@ -65,8 +65,9 @@ export function DataSettingsContent() {
     const [importError, setImportError] = useState<string | null>(null);
     const [pendingRecords, setPendingRecords] = useState<KanaProgress[] | null>(null);
 
-    function handleExport() {
-        getAllKanaProgress().then((records) => {
+    async function handleExport() {
+        try {
+            const records = await getAllKanaProgress();
             const envelope: ExportEnvelope = {
                 version: 1,
                 exportedAt: Date.now(),
@@ -80,7 +81,9 @@ export function DataSettingsContent() {
             a.download = 'nihongo-cards-backup.json';
             a.click();
             URL.revokeObjectURL(url);
-        });
+        } catch (err) {
+            console.error('Failed to export data:', err);
+        }
     }
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -170,7 +173,7 @@ export function DataSettingsContent() {
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                                 <AlertDialogAction
-                                    className="bg-destructive text-white hover:bg-destructive/90"
+                                    variant="destructive"
                                     onClick={handleConfirmImport}>
                                     Import
                                 </AlertDialogAction>
@@ -208,7 +211,7 @@ export function DataSettingsContent() {
                         <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
-                                className="bg-destructive text-white hover:bg-destructive/90"
+                                variant="destructive"
                                 onClick={handleConfirmDelete}>
                                 Delete
                             </AlertDialogAction>
