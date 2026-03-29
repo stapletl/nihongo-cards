@@ -101,6 +101,7 @@ hooks/
 - Prettier: 4-space indent, single quotes, 100-char line width, trailing commas
 - Tailwind class order enforced by `prettier-plugin-tailwindcss`
 - Theme colors use CSS variables (`var(--color-primary)`, etc.) — reference these in custom CSS rather than hardcoding values
+- The dark variant is `@custom-variant dark (&:is(.dark *))`, which boosts specificity to `(0,2,0)`. Plain utilities like `border-primary` are `(0,1,0)` and will lose to `dark:*` variants from component base classes (e.g. Button outline has `dark:border-input`). Always pair with `dark:border-primary` etc. when overriding — do NOT remove the `dark:` duplicate as it is not redundant
 
 ## What's Planned (not yet built)
 
