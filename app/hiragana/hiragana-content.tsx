@@ -191,7 +191,7 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                     }
                 >
                     <ArrowDown className="h-4 w-4" />
-                    First new
+                    New
                 </Button>
             )}
         </>

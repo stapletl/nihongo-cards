@@ -191,7 +191,7 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
                     }
                 >
                     <ArrowDown className="h-4 w-4" />
-                    First new
+                    New
                 </Button>
             )}
         </>
