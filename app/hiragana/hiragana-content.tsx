@@ -37,7 +37,10 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
 
     const firstUnvisitedCharacter = useMemo(() => {
         if (isLoading) return null;
-        return hiraganaItems.find((item) => !isVisited(progressMap.get(item.character)))?.character ?? null;
+        return (
+            hiraganaItems.find((item) => !isVisited(progressMap.get(item.character)))?.character ??
+            null
+        );
     }, [progressMap, isLoading]);
 
     const firstUnvisitedRef = useRef<HTMLAnchorElement>(null);
@@ -93,7 +96,11 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                                     showRomanji={showRomanji}
                                     visited={visited}
                                     firstUnvisited={kanaItem.character === firstUnvisitedCharacter}
-                                    ref={kanaItem.character === firstUnvisitedCharacter ? firstUnvisitedRef : undefined}
+                                    ref={
+                                        kanaItem.character === firstUnvisitedCharacter
+                                            ? firstUnvisitedRef
+                                            : undefined
+                                    }
                                 />
                             );
                         })
@@ -130,7 +137,11 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                                     showRomanji={showRomanji}
                                     visited={visited}
                                     firstUnvisited={kanaItem.character === firstUnvisitedCharacter}
-                                    ref={kanaItem.character === firstUnvisitedCharacter ? firstUnvisitedRef : undefined}
+                                    ref={
+                                        kanaItem.character === firstUnvisitedCharacter
+                                            ? firstUnvisitedRef
+                                            : undefined
+                                    }
                                 />
                             );
                         })
@@ -165,7 +176,11 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                                     showRomanji={showRomanji}
                                     visited={visited}
                                     firstUnvisited={kanaItem.character === firstUnvisitedCharacter}
-                                    ref={kanaItem.character === firstUnvisitedCharacter ? firstUnvisitedRef : undefined}
+                                    ref={
+                                        kanaItem.character === firstUnvisitedCharacter
+                                            ? firstUnvisitedRef
+                                            : undefined
+                                    }
                                 />
                             );
                         })
@@ -187,12 +202,14 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
             )}
             {showScrollButton && (
                 <Button
-                    className="fixed bottom-6 right-6 z-50 gap-1 shadow-lg"
+                    className="fixed right-6 bottom-6 z-50 gap-1 shadow-lg"
                     size="sm"
                     onClick={() =>
-                        firstUnvisitedRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-                    }
-                >
+                        firstUnvisitedRef.current?.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                        })
+                    }>
                     <ArrowDown className="h-4 w-4" />
                     New
                 </Button>
