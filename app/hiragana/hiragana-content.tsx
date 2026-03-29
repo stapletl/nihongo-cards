@@ -92,6 +92,7 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                                     kanaItem={kanaItem}
                                     showRomanji={showRomanji}
                                     visited={visited}
+                                    firstUnvisited={kanaItem.character === firstUnvisitedCharacter}
                                     ref={kanaItem.character === firstUnvisitedCharacter ? firstUnvisitedRef : undefined}
                                 />
                             );
@@ -128,6 +129,7 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                                     kanaItem={kanaItem}
                                     showRomanji={showRomanji}
                                     visited={visited}
+                                    firstUnvisited={kanaItem.character === firstUnvisitedCharacter}
                                     ref={kanaItem.character === firstUnvisitedCharacter ? firstUnvisitedRef : undefined}
                                 />
                             );
@@ -162,6 +164,7 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                                     kanaItem={kanaItem}
                                     showRomanji={showRomanji}
                                     visited={visited}
+                                    firstUnvisited={kanaItem.character === firstUnvisitedCharacter}
                                     ref={kanaItem.character === firstUnvisitedCharacter ? firstUnvisitedRef : undefined}
                                 />
                             );
