@@ -82,9 +82,6 @@ hooks/
 - Detail pages include `<MarkKanaVisited character={...} />` to record the visit on mount
 - Future flashcard/quiz features should add new functions to `kana-db.ts` following the same upsert pattern as `incrementDetailView`
 
-**Animations**
-- Custom animations defined in `app/globals.css` and registered in `tailwind.config.mjs`
-- `animate-border-pulse` — gentle 1px→2px primary border pulse for unvisited kana cards
 
 **Routing**
 - Kana detail routes: `/hiragana/[character]` and `/katakana/[character]`
