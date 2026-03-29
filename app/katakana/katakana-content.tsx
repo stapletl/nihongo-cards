@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { dakutenHandakutenGrid, gojuonGrid, katakanaItems, yoonGrid } from '@/lib/katakana';
 import { ResponsiveDialog } from '@/components/responsive-dialog';
@@ -11,6 +11,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { RomanjiSection } from '@/components/romanji-section';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
 import { isVisited } from '@/lib/kana-db';
+import { Button } from '@/components/ui/button';
+import { ArrowDown } from 'lucide-react';
 
 // Create a map for quick lookup of kana items
 const kanaMap = new Map(katakanaItems.map((item) => [item.character, item]));
@@ -32,6 +34,27 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
 
     const [showRomanji] = useLocalStorage<boolean>('show-kana-romanji', true);
     const { progressMap, isLoading } = useKanaProgressMap();
+
+    const firstUnvisitedCharacter = useMemo(() => {
+        if (isLoading) return null;
+        return katakanaItems.find((item) => !isVisited(progressMap.get(item.character)))?.character ?? null;
+    }, [progressMap, isLoading]);
+
+    const firstUnvisitedRef = useRef<HTMLAnchorElement>(null);
+    const [showScrollButton, setShowScrollButton] = useState(false);
+
+    useEffect(() => {
+        const el = firstUnvisitedRef.current;
+        if (!el) {
+            setShowScrollButton(false);
+            return;
+        }
+        const observer = new IntersectionObserver(([entry]) => {
+            setShowScrollButton(!entry.isIntersecting && entry.boundingClientRect.top > 0);
+        });
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, [firstUnvisitedCharacter]);
 
     return (
         <>
@@ -69,6 +92,7 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
                                     kanaItem={kanaItem}
                                     showRomanji={showRomanji}
                                     visited={visited}
+                                    ref={kanaItem.character === firstUnvisitedCharacter ? firstUnvisitedRef : undefined}
                                 />
                             );
                         })
@@ -104,6 +128,7 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
                                     kanaItem={kanaItem}
                                     showRomanji={showRomanji}
                                     visited={visited}
+                                    ref={kanaItem.character === firstUnvisitedCharacter ? firstUnvisitedRef : undefined}
                                 />
                             );
                         })
@@ -137,6 +162,7 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
                                     kanaItem={kanaItem}
                                     showRomanji={showRomanji}
                                     visited={visited}
+                                    ref={kanaItem.character === firstUnvisitedCharacter ? firstUnvisitedRef : undefined}
                                 />
                             );
                         })
@@ -155,6 +181,18 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
                         <VocabCarousel items={katakanaItems} activeIndex={selectedIndex} />
                     </div>
                 </ResponsiveDialog>
+            )}
+            {showScrollButton && (
+                <Button
+                    className="fixed bottom-6 right-6 z-50 gap-1 shadow-lg"
+                    size="sm"
+                    onClick={() =>
+                        firstUnvisitedRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                    }
+                >
+                    <ArrowDown className="h-4 w-4" />
+                    First new
+                </Button>
             )}
         </>
     );
