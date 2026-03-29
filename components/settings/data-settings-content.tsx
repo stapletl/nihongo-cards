@@ -79,7 +79,8 @@ export function DataSettingsContent() {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'nihongo-cards-backup.json';
+            const date = new Date().toISOString().slice(0, 10);
+            a.download = `nihongo-cards-backup-${date}.json`;
             a.click();
             setTimeout(() => URL.revokeObjectURL(url), 100);
         } catch (err) {
