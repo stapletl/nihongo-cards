@@ -26,6 +26,25 @@ const VoiceSettingsContent = dynamic(
     }
 );
 
+const DataSettingsContent = dynamic(
+    () =>
+        import('@/components/settings/data-settings-content').then((mod) => ({
+            default: mod.DataSettingsContent,
+        })),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="flex flex-col gap-6">
+                <Skeleton className="h-14 w-full" />
+                <Skeleton className="h-px w-full" />
+                <Skeleton className="h-14 w-full" />
+                <Skeleton className="h-px w-full" />
+                <Skeleton className="h-14 w-full" />
+            </div>
+        ),
+    }
+);
+
 export default function SettingsPage() {
     return (
         <div className="flex justify-center">
@@ -44,6 +63,13 @@ export default function SettingsPage() {
                             <Label>Theme</Label>
                             <ThemeToggle />
                         </div>
+                    </Card>
+                </section>
+
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-bold">Data</h2>
+                    <Card className="p-6">
+                        <DataSettingsContent />
                     </Card>
                 </section>
 
