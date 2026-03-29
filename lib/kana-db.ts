@@ -66,7 +66,7 @@ export async function incrementDetailView(character: string): Promise<void> {
     record.lastVisited = Date.now();
     await store.put(record);
     await tx.done;
-    window.dispatchEvent(new CustomEvent('kana-progress-updated'));
+    window.dispatchEvent(new CustomEvent(KANA_PROGRESS_UPDATED_EVENT));
 }
 
 export function isVisited(progress: KanaProgress | undefined): boolean {

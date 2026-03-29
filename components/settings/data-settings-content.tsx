@@ -19,6 +19,7 @@ import {
     clearKanaProgress,
     importKanaProgress,
     type KanaProgress,
+    KANA_PROGRESS_UPDATED_EVENT,
 } from '@/lib/kana-db';
 
 type ExportEnvelope = {
@@ -80,7 +81,7 @@ export function DataSettingsContent() {
             a.href = url;
             a.download = 'nihongo-cards-backup.json';
             a.click();
-            URL.revokeObjectURL(url);
+            setTimeout(() => URL.revokeObjectURL(url), 100);
         } catch (err) {
             console.error('Failed to export data:', err);
         }
@@ -113,12 +114,20 @@ export function DataSettingsContent() {
 
     async function handleConfirmImport() {
         if (!pendingRecords) return;
-        await importKanaProgress(pendingRecords);
-        setPendingRecords(null);
+        try {
+            await importKanaProgress(pendingRecords);
+            setPendingRecords(null);
+        } catch (err) {
+            console.error('Failed to import data:', err);
+        }
     }
 
     async function handleConfirmDelete() {
-        await clearKanaProgress();
+        try {
+            await clearKanaProgress();
+        } catch (err) {
+            console.error('Failed to delete data:', err);
+        }
     }
 
     return (
