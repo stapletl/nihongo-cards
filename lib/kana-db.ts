@@ -8,9 +8,9 @@ export type KanaProgress = {
     flashcardViewCount: number;
     quizCorrectCount: number;
     quizIncorrectCount: number;
-    lastVisited: number | null;   // set when character detail page is viewed
-    lastStudied: number | null;   // set when character is studied via flashcard
-    lastQuizzed: number | null;   // set when character appears in a quiz
+    lastVisited: number | null; // set when character detail page is viewed
+    lastStudied: number | null; // set when character is studied via flashcard
+    lastQuizzed: number | null; // set when character appears in a quiz
 };
 
 type NihongoCardsDB = DBSchema & {

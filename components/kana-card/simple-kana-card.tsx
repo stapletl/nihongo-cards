@@ -15,7 +15,13 @@ type SimpleKanaCardProps = {
     ref?: React.Ref<HTMLAnchorElement>;
 };
 
-export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({ kanaItem, showRomanji, visited, firstUnvisited, ref }) => {
+export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({
+    kanaItem,
+    showRomanji,
+    visited,
+    firstUnvisited,
+    ref,
+}) => {
     const pathname = usePathname();
     const basePath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
     const href = `${basePath}/${kanaItem.character}`;
@@ -30,7 +36,7 @@ export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({ kanaItem, showRo
             size="sm"
             className={cn(
                 'h-12 w-full transition-all duration-300 hover:scale-105 sm:h-14 md:h-16',
-                { 'border-2 dark:border-primary border-primary': !visited },
+                { 'dark:border-primary border-primary border-2': !visited },
                 { 'animate-gentle-bounce': firstUnvisited }
             )}
             asChild={true}>

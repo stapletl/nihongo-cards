@@ -66,16 +66,19 @@ hooks/
 ## Key Patterns
 
 **Server vs client components**
+
 - Page files (`page.tsx`) are server components — no `'use client'`, no hooks, no browser APIs
 - Content files (`*-content.tsx`) are client components — handle interactivity and hooks
 - Drop-in side-effect components (e.g. `MarkKanaVisited`) use `'use client'` and return `null`
 
 **Kana data**
+
 - All kana items live in `lib/hiragana.ts` and `lib/katakana.ts` as static arrays
 - `KanaItem` type: `{ character, romaji, example, exampleRomaji, exampleTranslation, emoji }`
 - Grid arrays (`gojuonGrid`, `dakutenHandakutenGrid`, `yoonGrid`) contain `string | null` rows — null means empty cell
 
 **IndexedDB progress tracking**
+
 - `KanaProgress` in `lib/kana-db.ts` tracks per-character stats: `detailsViewCount`, `flashcardViewCount`, `quizCorrectCount`, `quizIncorrectCount`, `lastVisited`, `lastStudied`, `lastQuizzed`
 - Use `isVisited(progress)` to check if a character has been visited — don't inline `detailsViewCount > 0`
 - List pages load the full map with `useKanaProgressMap()` and pass `visited` down to `SimpleKanaCard`
@@ -83,15 +86,18 @@ hooks/
 - Future flashcard/quiz features should add new functions to `kana-db.ts` following the same upsert pattern as `incrementDetailView`
 
 **Animations**
-- Custom animations defined in `app/globals.css` and registered in `tailwind.config.mjs`
-- `animate-border-pulse` — gentle 1px→2px primary border pulse for unvisited kana cards
+
+- Custom animations defined in `app/globals.css` (`@keyframes` + `--animate-*` in `@theme`) and mirrored in `tailwind.config.mjs`
+- `animate-gentle-bounce` — subtle 3px vertical bounce for the first unvisited kana card on list pages
 
 **Routing**
+
 - Kana detail routes: `/hiragana/[character]` and `/katakana/[character]`
 - Characters are URL-encoded Japanese Unicode; decode with `decodeURIComponent` on the server
 - `dynamicParams = false` + `generateStaticParams` — all character routes are statically generated
 
 **Styling**
+
 - Prettier: 4-space indent, single quotes, 100-char line width, trailing commas
 - Tailwind class order enforced by `prettier-plugin-tailwindcss`
 - Theme colors use CSS variables (`var(--color-primary)`, etc.) — reference these in custom CSS rather than hardcoding values

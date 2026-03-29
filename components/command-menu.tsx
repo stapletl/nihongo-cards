@@ -3,7 +3,15 @@
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useHotkey } from '@tanstack/react-hotkeys';
-import { SearchIcon, CreditCardIcon, ClipboardListIcon, BarChartIcon, SettingsIcon, SunIcon, MoonIcon } from 'lucide-react';
+import {
+    SearchIcon,
+    CreditCardIcon,
+    ClipboardListIcon,
+    BarChartIcon,
+    SettingsIcon,
+    SunIcon,
+    MoonIcon,
+} from 'lucide-react';
 import { useTheme } from 'next-themes';
 import {
     CommandDialog,
@@ -34,7 +42,7 @@ export function CommandMenu() {
             {/* Trigger button */}
             <button
                 onClick={() => setOpen(true)}
-                className="text-muted-foreground hover:bg-accent hover:text-accent-foreground flex h-9 w-9 items-center justify-center rounded-md transition-colors md:w-56 md:justify-start md:gap-2 md:border md:border-input md:bg-background md:px-3 md:text-sm">
+                className="text-muted-foreground hover:bg-accent hover:text-accent-foreground md:border-input md:bg-background flex h-9 w-9 items-center justify-center rounded-md transition-colors md:w-56 md:justify-start md:gap-2 md:border md:px-3 md:text-sm">
                 <SearchIcon className="h-4 w-4 shrink-0" />
                 <span className="hidden flex-1 text-left md:block">Search...</span>
                 <kbd className="bg-muted text-muted-foreground pointer-events-none hidden h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium md:flex">
@@ -48,15 +56,21 @@ export function CommandMenu() {
                     <CommandEmpty>No results found.</CommandEmpty>
                     <CommandGroup heading="Navigation">
                         <CommandItem onSelect={() => handleSelect('/hiragana')}>
-                            <span className="flex size-4 items-center justify-center text-sm font-semibold text-muted-foreground">あ</span>
+                            <span className="text-muted-foreground flex size-4 items-center justify-center text-sm font-semibold">
+                                あ
+                            </span>
                             <span>Hiragana</span>
                         </CommandItem>
                         <CommandItem onSelect={() => handleSelect('/katakana')}>
-                            <span className="flex size-4 items-center justify-center text-sm font-semibold text-muted-foreground">ア</span>
+                            <span className="text-muted-foreground flex size-4 items-center justify-center text-sm font-semibold">
+                                ア
+                            </span>
                             <span>Katakana</span>
                         </CommandItem>
                         <CommandItem onSelect={() => handleSelect('/beginner-vocab')}>
-                            <span className="flex size-4 items-center justify-center text-sm font-semibold text-muted-foreground">日</span>
+                            <span className="text-muted-foreground flex size-4 items-center justify-center text-sm font-semibold">
+                                日
+                            </span>
                             <span>Beginner Vocab</span>
                         </CommandItem>
                         <CommandItem onSelect={() => handleSelect('/flashcards')}>
