@@ -26,6 +26,25 @@ const VoiceSettingsContent = dynamic(
     }
 );
 
+const DataSettingsContent = dynamic(
+    () =>
+        import('@/components/settings/data-settings-content').then((mod) => ({
+            default: mod.DataSettingsContent,
+        })),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="flex flex-col gap-6">
+                <Skeleton className="h-14 w-full" />
+                <Skeleton className="h-px w-full" />
+                <Skeleton className="h-14 w-full" />
+                <Skeleton className="h-px w-full" />
+                <Skeleton className="h-14 w-full" />
+            </div>
+        ),
+    }
+);
+
 export default function SettingsPage() {
     return (
         <div className="flex justify-center">
@@ -48,6 +67,13 @@ export default function SettingsPage() {
                 </section>
 
                 <section className="space-y-4">
+                    <h2 className="text-2xl font-bold">Data</h2>
+                    <Card className="p-6">
+                        <DataSettingsContent />
+                    </Card>
+                </section>
+
+                <section className="space-y-4">
                     <h2 className="text-2xl font-bold">Privacy</h2>
                     <Card>
                         <CardContent>
@@ -66,7 +92,16 @@ export default function SettingsPage() {
                     <h2 className="text-2xl font-bold">License</h2>
                     <Card>
                         <CardContent>
-                            <p className="text-base">KanjiVG</p>
+                            <div className="flex items-center gap-2">
+                                <p className="text-base">KanjiVG</p>
+                                <a
+                                    target="_blank"
+                                    href="https://kanjivg.tagaini.net/"
+                                    rel="noopener noreferrer"
+                                    className="text-primary text-base underline">
+                                    Homepage
+                                </a>
+                            </div>
                             <p className="text-muted-foreground text-sm">Ulrich Apel</p>
                             <a
                                 target="_blank"
@@ -75,6 +110,12 @@ export default function SettingsPage() {
                                 className="text-primary text-sm underline">
                                 CC BY-SA 3.0
                             </a>
+                            <div className="flex items-center gap-2">
+                                <p className="text-secondary-foreground text-sm">Modifications:</p>
+                                <p className="text-muted-foreground text-sm">
+                                    svg modifications for better firefox compatibility
+                                </p>
+                            </div>
                         </CardContent>
                     </Card>
                 </section>

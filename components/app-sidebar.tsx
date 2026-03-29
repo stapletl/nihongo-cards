@@ -155,8 +155,10 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
     const { progressMap, isLoading } = useKanaProgressMap();
 
     const newCounts: Record<string, number> = {
-        '/hiragana': hiraganaItems.filter((item) => !isVisited(progressMap.get(item.character))).length,
-        '/katakana': katakanaItems.filter((item) => !isVisited(progressMap.get(item.character))).length,
+        '/hiragana': hiraganaItems.filter((item) => !isVisited(progressMap.get(item.character)))
+            .length,
+        '/katakana': katakanaItems.filter((item) => !isVisited(progressMap.get(item.character)))
+            .length,
     };
 
     // If the sidebar is open on mobile, clicking a link should close it

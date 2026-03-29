@@ -8,7 +8,10 @@ import { getAllKanaProgress, KanaProgress, KANA_PROGRESS_UPDATED_EVENT } from '@
  * Returns an empty Map on the server (SSR) and while loading.
  * Re-fetches whenever a `kana-progress-updated` event is dispatched.
  */
-export function useKanaProgressMap(): { progressMap: Map<string, KanaProgress>; isLoading: boolean } {
+export function useKanaProgressMap(): {
+    progressMap: Map<string, KanaProgress>;
+    isLoading: boolean;
+} {
     const [progressMap, setProgressMap] = useState<Map<string, KanaProgress>>(new Map());
     const [isLoading, setIsLoading] = useState(true);
 

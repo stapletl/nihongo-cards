@@ -30,10 +30,7 @@ export default async function Page({ params }: { params: Promise<{ character: st
     return (
         <div>
             <MarkKanaVisited character={hiraganaItem.character} />
-            <KanaNavHotkeys
-                prevHref={prevHiragana?.character}
-                nextHref={nextHiragana?.character}
-            />
+            <KanaNavHotkeys prevHref={prevHiragana?.character} nextHref={nextHiragana?.character} />
             <div className="mb-4 flex justify-between">
                 {prevHiragana && (
                     <Button asChild={true} variant="outline" className="mb-4">
