@@ -3,11 +3,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { SimpleKanaCard } from '@/components/kana-card/simple-kana-card';
-import { ResponsiveDialog } from '@/components/responsive-dialog';
 import { RomanjiSection } from '@/components/romanji-section';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { VocabCarousel } from '@/components/vocab-card/vocab-carousel';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
 import { dakutenHandakutenGrid, gojuonGrid, hiraganaItems, yoonGrid } from '@/lib/hiragana';
 import { isVisited } from '@/lib/kana-db';
@@ -20,10 +18,6 @@ const kanaMap = new Map(hiraganaItems.map((item) => [item.character, item]));
 type HiraganaContentProps = unknown;
 
 export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
-    const [dialogVisible, setDialogVisible] = useState(false);
-    const [selectedCharacter, setSelectedCharacter] = useState<string | null>(null);
-    const selectedIndex = hiraganaItems.findIndex((item) => item.character === selectedCharacter);
-
     const [showRomanji] = useLocalStorage<boolean>('show-kana-romanji', true);
     const { progressMap, isLoading } = useKanaProgressMap();
 
@@ -180,18 +174,6 @@ export const HiraganaContent: React.FC<HiraganaContentProps> = () => {
                 </div>
             </div>
 
-            {/* Dialog for displaying more information */}
-            {selectedCharacter && selectedIndex !== -1 && (
-                <ResponsiveDialog
-                    className="min-h-1/2 min-w-1/2"
-                    open={dialogVisible}
-                    title="Hiragana Character Details"
-                    onOpenChange={(open) => setDialogVisible(open)}>
-                    <div className="flex flex-col items-center justify-center">
-                        <VocabCarousel items={hiraganaItems} activeIndex={selectedIndex} />
-                    </div>
-                </ResponsiveDialog>
-            )}
             {showScrollButton && (
                 <Button
                     className="fixed right-6 bottom-6 z-50 gap-1 shadow-lg animate-gentle-bounce"

@@ -16,13 +16,13 @@ export const BeginnerVocabContent: React.FC<BeginnerVocabContentProps> = ({ voca
 
     return (
         <section className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-            {vocabItems.map((item, index) => {
+            {vocabItems.map((item) => {
                 if (isLoading) {
-                    return <Skeleton key={index} className="h-24 w-full" />;
+                    return <Skeleton key={item.japanese} className="h-32 w-full" />;
                 }
                 return (
                     <SimpleVocabCard
-                        key={index}
+                        key={item.japanese}
                         vocabItem={item}
                         visited={isVocabVisited(progressMap.get(item.japanese))}
                     />

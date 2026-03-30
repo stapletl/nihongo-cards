@@ -33,7 +33,9 @@ export default async function Page({ params }: { params: Promise<{ japanese: str
             <div className="flex shrink-0 justify-between border-b p-2">
                 {prevVocab ? (
                     <Button asChild={true} variant="ghost">
-                        <Link href={prevVocab.japanese}>← {prevVocab.japanese}</Link>
+                        <Link href={`/beginner-vocab/${prevVocab.japanese}`}>
+                            ← {prevVocab.japanese}
+                        </Link>
                     </Button>
                 ) : (
                     <span />
@@ -43,7 +45,9 @@ export default async function Page({ params }: { params: Promise<{ japanese: str
                 </Button>
                 {nextVocab ? (
                     <Button asChild={true} variant="ghost">
-                        <Link href={nextVocab.japanese}>{nextVocab.japanese} →</Link>
+                        <Link href={`/beginner-vocab/${nextVocab.japanese}`}>
+                            {nextVocab.japanese} →
+                        </Link>
                     </Button>
                 ) : (
                     <span />
