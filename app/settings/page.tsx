@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Label } from '@/components/ui/label';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { LicenseCard } from '@/components/ui/license-card';
 import Link from 'next/link';
 
 const VoiceSettingsContent = dynamic(
@@ -48,7 +49,7 @@ const DataSettingsContent = dynamic(
 export default function SettingsPage() {
     return (
         <div className="flex justify-center">
-            <div className="container max-w-2xl space-y-4">
+            <div className="container max-w-2xl space-y-4 pb-4">
                 <section className="space-y-4">
                     <h2 className="text-2xl font-bold">Voice Settings</h2>
                     <Card className="space-y-2 p-6">
@@ -90,34 +91,14 @@ export default function SettingsPage() {
 
                 <section className="space-y-4">
                     <h2 className="text-2xl font-bold">License</h2>
-                    <Card>
-                        <CardContent>
-                            <div className="flex items-center gap-2">
-                                <p className="text-base">KanjiVG</p>
-                                <a
-                                    target="_blank"
-                                    href="https://kanjivg.tagaini.net/"
-                                    rel="noopener noreferrer"
-                                    className="text-primary text-base underline">
-                                    Homepage
-                                </a>
-                            </div>
-                            <p className="text-muted-foreground text-sm">Ulrich Apel</p>
-                            <a
-                                target="_blank"
-                                href="https://creativecommons.org/licenses/by-sa/3.0/"
-                                rel="noopener noreferrer"
-                                className="text-primary text-sm underline">
-                                CC BY-SA 3.0
-                            </a>
-                            <div className="flex items-center gap-2">
-                                <p className="text-secondary-foreground text-sm">Modifications:</p>
-                                <p className="text-muted-foreground text-sm">
-                                    svg modifications for better firefox compatibility
-                                </p>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <LicenseCard
+                        name="KanjiVG"
+                        homepageUrl="https://kanjivg.tagaini.net/"
+                        credit="Ulrich Apel"
+                        licenseType="CC BY-SA 3.0"
+                        licenseUrl="https://creativecommons.org/licenses/by-sa/3.0/"
+                        modifications="SVG modifications for better Firefox compatibility"
+                    />
                 </section>
             </div>
         </div>
