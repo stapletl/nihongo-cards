@@ -1,0 +1,54 @@
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+
+import { KanaNavHotkeys } from '@/components/kana-card/kana-nav-hotkeys';
+import { KanaPageContent } from '@/components/kana-card/kana-page-content';
+import { MarkKanaVisited } from '@/components/kana-card/mark-kana-visited';
+import { Button } from '@/components/ui/button';
+import { KanaItem } from '@/lib/hiragana';
+
+type KanaDetailPageProps = {
+    items: KanaItem[];
+    character: string;
+    backHref: string;
+    backLabel: string;
+};
+
+export function KanaDetailPage({ items, character, backHref, backLabel }: KanaDetailPageProps) {
+    const decodedCharacter = decodeURIComponent(character);
+    const kanaItem = items.find((item) => item.character === decodedCharacter);
+    if (!kanaItem) notFound();
+
+    const idx = items.indexOf(kanaItem);
+    const prevItem = items.at(idx - 1);
+    const nextItem = items.at(idx + 1) ?? items[0];
+
+    return (
+        <div className="-mx-4 -mt-4 flex h-full flex-col overflow-hidden">
+            <MarkKanaVisited character={kanaItem.character} />
+            <KanaNavHotkeys prevHref={prevItem?.character} nextHref={nextItem?.character} />
+            <div className="flex shrink-0 justify-between border-b p-2">
+                {prevItem ? (
+                    <Button asChild={true} variant="ghost">
+                        <Link href={`${prevItem.character}`}>←{prevItem.character}</Link>
+                    </Button>
+                ) : (
+                    <span />
+                )}
+                <Button asChild={true} variant="ghost">
+                    <Link href={backHref}>{backLabel}</Link>
+                </Button>
+                {nextItem ? (
+                    <Button asChild={true} variant="ghost">
+                        <Link href={`${nextItem.character}`}>{nextItem.character}→</Link>
+                    </Button>
+                ) : (
+                    <span />
+                )}
+            </div>
+            <div className="flex-1 overflow-y-auto pt-4">
+                <KanaPageContent kanaItem={kanaItem} />
+            </div>
+        </div>
+    );
+}

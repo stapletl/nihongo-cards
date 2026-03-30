@@ -1,4 +1,5 @@
-import { KatakanaContent } from './katakana-content';
+import { KanaContent } from '@/components/kana-content';
+import { dakutenHandakutenGrid, gojuonGrid, katakanaItems, yoonGrid } from '@/lib/katakana';
 
 export default function Page() {
     return (
@@ -12,7 +13,12 @@ export default function Page() {
                 onomatopoeia, scientific terms, and emphasis. Like Hiragana, each character
                 represents a specific syllable sound.
             </p>
-            <KatakanaContent />
+            <KanaContent
+                items={katakanaItems}
+                gojuonGrid={gojuonGrid}
+                dakutenHandakutenGrid={dakutenHandakutenGrid}
+                yoonGrid={yoonGrid}
+            />
         </div>
     );
 }
