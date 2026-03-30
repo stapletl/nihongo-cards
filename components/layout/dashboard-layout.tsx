@@ -33,7 +33,7 @@ export default async function DashboardLayout({ children }: LayoutProps) {
                             </div>
                         </header>
                         <div className="flex-1 overflow-auto">
-                            <div className="flex min-w-[375px] flex-col gap-4 p-4">{children}</div>
+                            <div className="flex h-full min-w-[375px] flex-col gap-4 p-4">{children}</div>
                         </div>
                     </SidebarInset>
                 </SidebarProvider>

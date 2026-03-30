@@ -28,25 +28,31 @@ export default async function Page({ params }: { params: Promise<{ character: st
         hiraganaItems.at(hiraganaItems.indexOf(hiraganaItem) + 1) ?? hiraganaItems[0];
 
     return (
-        <div>
+        <div className="-mx-4 -mt-4 flex h-full flex-col overflow-hidden">
             <MarkKanaVisited character={hiraganaItem.character} />
             <KanaNavHotkeys prevHref={prevHiragana?.character} nextHref={nextHiragana?.character} />
-            <div className="mb-4 flex justify-between">
-                {prevHiragana && (
-                    <Button asChild={true} variant="outline" className="mb-4">
+            <div className="flex shrink-0 justify-between border-b p-2">
+                {prevHiragana ? (
+                    <Button asChild={true} variant="ghost">
                         <Link href={`${prevHiragana.character}`}>←{prevHiragana.character}</Link>
                     </Button>
+                ) : (
+                    <span />
                 )}
-                <Button asChild={true} variant="outline" className="mb-4">
+                <Button asChild={true} variant="ghost">
                     <Link href="/hiragana">Back to Hiragana</Link>
                 </Button>
-                {nextHiragana && (
-                    <Button asChild={true} variant="outline" className="mb-4">
+                {nextHiragana ? (
+                    <Button asChild={true} variant="ghost">
                         <Link href={`${nextHiragana.character}`}>{nextHiragana.character}→</Link>
                     </Button>
+                ) : (
+                    <span />
                 )}
             </div>
-            <KanaPageContent kanaItem={hiraganaItem} />
+            <div className="flex-1 overflow-y-auto pt-4">
+                <KanaPageContent kanaItem={hiraganaItem} />
+            </div>
         </div>
     );
 }
