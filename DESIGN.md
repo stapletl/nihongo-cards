@@ -1,7 +1,7 @@
 # Nihongo Cards — Design Review
 
 > Review date: 2026-03-29
-> Status: Bug fixes applied — current color palette retained. See `design-mockup.html` for reference mockups.
+> Status: Bug fixes applied — current color palette retained.
 
 ---
 
@@ -21,7 +21,7 @@
 
 ### Bugs Fixed (2026-03-29)
 
-All 7 bugs were fixed while keeping the existing orange/amber color palette unchanged.
+All 6 bugs were fixed while keeping the existing orange/amber color palette unchanged.
 
 | # | Issue | Fix |
 |---|-------|-----|
@@ -66,7 +66,7 @@ The original orange/amber palette is retained. These are the corrected values in
 | `--sidebar-border` | `oklch(0.9401 0 0)` | `oklch(0.3618 0.0101 106.8928)` | Dark border, not near-white |
 
 ### Font Stack — `@theme inline`
-`--font-sans` and `--font-mono` now lead with `var(--font-geist-sans)` / `var(--font-geist-mono)` so the Geist fonts loaded in `app/layout.tsx` are actually used.
+`--font-sans` and `--font-mono` in `@theme inline` now lead with `var(--font-geist-sans)` / `var(--font-geist-mono)`. The duplicate `--font-sans`/`--font-mono` declarations that existed in `:root` and `.dark` (which were shadowing `@theme inline` and preventing Geist from loading) were removed.
 
 ---
 
@@ -82,4 +82,4 @@ The original orange/amber palette is retained. These are the corrected values in
 
 - **Typography**: Geist is now correctly wired and works well. No immediate changes needed.
 - **Settings page**: Three sparse sections — could benefit from a card grouping layout in a future pass.
-- **Future palette evolution**: If a color palette change is ever revisited, `design-mockup.html` contains side-by-side mockups of Vermillion and Indigo proposals for reference.
+- **Future palette evolution**: The current orange/amber palette is intentional. If a change is ever revisited, Vermillion and Indigo were considered as alternatives.
