@@ -1,46 +1,8 @@
-import { openDB, DBSchema, IDBPDatabase } from 'idb';
+import { getDB, type KanaProgress } from './db';
+
+export type { KanaProgress } from './db';
 
 export const KANA_PROGRESS_UPDATED_EVENT = 'kana-progress-updated';
-
-export type KanaProgress = {
-    character: string;
-    detailsViewCount: number;
-    flashcardViewCount: number;
-    quizCorrectCount: number;
-    quizIncorrectCount: number;
-    lastVisited: number | null; // set when character detail page is viewed
-    lastStudied: number | null; // set when character is studied via flashcard
-    lastQuizzed: number | null; // set when character appears in a quiz
-};
-
-type NihongoCardsDB = DBSchema & {
-    kanaProgress: {
-        key: string;
-        value: KanaProgress;
-    };
-};
-
-const DB_NAME = 'nihongo-cards-db';
-const DB_VERSION = 1;
-
-let dbPromise: Promise<IDBPDatabase<NihongoCardsDB>> | null = null;
-
-function getDB(): Promise<IDBPDatabase<NihongoCardsDB>> {
-    if (typeof window === 'undefined') {
-        throw new Error('kana-db: IndexedDB is only available in the browser');
-    }
-    if (!dbPromise) {
-        dbPromise = openDB<NihongoCardsDB>(DB_NAME, DB_VERSION, {
-            upgrade(db) {
-                db.createObjectStore('kanaProgress', { keyPath: 'character' });
-            },
-        }).catch((err) => {
-            dbPromise = null;
-            throw err;
-        });
-    }
-    return dbPromise;
-}
 
 export async function getAllKanaProgress(): Promise<KanaProgress[]> {
     const db = await getDB();
