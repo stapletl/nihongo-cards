@@ -2,28 +2,20 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-import { dakutenHandakutenGrid, gojuonGrid, katakanaItems, yoonGrid } from '@/lib/katakana';
+import { SimpleKanaCard } from '@/components/kana-card/simple-kana-card';
 import { ResponsiveDialog } from '@/components/responsive-dialog';
-import { VocabCarousel } from '@/components/vocab-card/vocab-carousel';
-import { useLocalStorage } from 'usehooks-ts';
-import dynamic from 'next/dynamic';
-import { Skeleton } from '@/components/ui/skeleton';
 import { RomanjiSection } from '@/components/romanji-section';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { VocabCarousel } from '@/components/vocab-card/vocab-carousel';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
 import { isVisited } from '@/lib/kana-db';
-import { Button } from '@/components/ui/button';
+import { dakutenHandakutenGrid, gojuonGrid, katakanaItems, yoonGrid } from '@/lib/katakana';
 import { ArrowDown } from 'lucide-react';
+import { useLocalStorage } from 'usehooks-ts';
 
 // Create a map for quick lookup of kana items
 const kanaMap = new Map(katakanaItems.map((item) => [item.character, item]));
-
-const SimpleKanaCard = dynamic(
-    () =>
-        import('@/components/kana-card/simple-kana-card').then((mod) => ({
-            default: mod.SimpleKanaCard,
-        })),
-    { ssr: false, loading: () => <Skeleton className="h-12 w-full sm:h-14 md:h-16" /> }
-);
 
 type KatakanaContentProps = unknown;
 
@@ -202,7 +194,7 @@ export const KatakanaContent: React.FC<KatakanaContentProps> = () => {
             )}
             {showScrollButton && (
                 <Button
-                    className="fixed right-6 bottom-6 z-50 gap-1 shadow-lg"
+                    className="fixed right-6 bottom-6 z-50 gap-1 shadow-lg animate-gentle-bounce"
                     size="sm"
                     onClick={() =>
                         firstUnvisitedRef.current?.scrollIntoView({
