@@ -19,13 +19,24 @@ import {
     clearKanaProgress,
     importKanaProgress,
     type KanaProgress,
-    KANA_PROGRESS_UPDATED_EVENT,
 } from '@/lib/kana-db';
+import {
+    getAllVocabProgress,
+    clearVocabProgress,
+    importVocabProgress,
+    type VocabProgress,
+} from '@/lib/vocab-db';
 
 type ExportEnvelope = {
-    version: 1;
+    version: 2;
     exportedAt: number;
-    data: KanaProgress[];
+    kanaData: KanaProgress[];
+    vocabData: VocabProgress[];
+};
+
+type PendingImport = {
+    kanaData: KanaProgress[];
+    vocabData: VocabProgress[];
 };
 
 function isValidKanaProgress(obj: unknown): obj is KanaProgress {
@@ -43,36 +54,94 @@ function isValidKanaProgress(obj: unknown): obj is KanaProgress {
     );
 }
 
-function validateEnvelope(parsed: unknown): { ok: true; data: KanaProgress[] } | { ok: false; error: string } {
+function isValidVocabProgress(obj: unknown): obj is VocabProgress {
+    if (!obj || typeof obj !== 'object') return false;
+    const r = obj as Record<string, unknown>;
+    return (
+        typeof r.japanese === 'string' &&
+        typeof r.detailsViewCount === 'number' &&
+        typeof r.flashcardViewCount === 'number' &&
+        typeof r.quizCorrectCount === 'number' &&
+        typeof r.quizIncorrectCount === 'number' &&
+        (r.lastVisited === null || typeof r.lastVisited === 'number') &&
+        (r.lastStudied === null || typeof r.lastStudied === 'number') &&
+        (r.lastQuizzed === null || typeof r.lastQuizzed === 'number')
+    );
+}
+
+function validateEnvelope(
+    parsed: unknown,
+): { ok: true; data: PendingImport } | { ok: false; error: string } {
     if (!parsed || typeof parsed !== 'object') {
         return { ok: false, error: 'File is not a valid JSON object.' };
     }
     const env = parsed as Record<string, unknown>;
-    if (env.version !== 1) {
-        return { ok: false, error: `Unsupported file version: ${env.version}. Expected version 1.` };
+
+    // v1: legacy kana-only export
+    if (env.version === 1) {
+        if (!Array.isArray(env.data)) {
+            return { ok: false, error: 'File is missing a valid "data" array.' };
+        }
+        const invalid = env.data.findIndex((item) => !isValidKanaProgress(item));
+        if (invalid !== -1) {
+            return { ok: false, error: `Record at index ${invalid} has an unexpected shape.` };
+        }
+        return { ok: true, data: { kanaData: env.data as KanaProgress[], vocabData: [] } };
     }
-    if (!Array.isArray(env.data)) {
-        return { ok: false, error: 'File is missing a valid "data" array.' };
+
+    // v2: kana + vocab
+    if (env.version === 2) {
+        if (!Array.isArray(env.kanaData)) {
+            return { ok: false, error: 'File is missing a valid "kanaData" array.' };
+        }
+        if (!Array.isArray(env.vocabData)) {
+            return { ok: false, error: 'File is missing a valid "vocabData" array.' };
+        }
+        const invalidKana = env.kanaData.findIndex((item) => !isValidKanaProgress(item));
+        if (invalidKana !== -1) {
+            return {
+                ok: false,
+                error: `Kana record at index ${invalidKana} has an unexpected shape.`,
+            };
+        }
+        const invalidVocab = env.vocabData.findIndex((item) => !isValidVocabProgress(item));
+        if (invalidVocab !== -1) {
+            return {
+                ok: false,
+                error: `Vocab record at index ${invalidVocab} has an unexpected shape.`,
+            };
+        }
+        return {
+            ok: true,
+            data: {
+                kanaData: env.kanaData as KanaProgress[],
+                vocabData: env.vocabData as VocabProgress[],
+            },
+        };
     }
-    const invalid = env.data.findIndex((item) => !isValidKanaProgress(item));
-    if (invalid !== -1) {
-        return { ok: false, error: `Record at index ${invalid} has an unexpected shape.` };
-    }
-    return { ok: true, data: env.data as KanaProgress[] };
+
+    return {
+        ok: false,
+        error: `Unsupported file version: ${env.version}. Expected version 1 or 2.`,
+    };
 }
 
 export function DataSettingsContent() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [importError, setImportError] = useState<string | null>(null);
-    const [pendingRecords, setPendingRecords] = useState<KanaProgress[] | null>(null);
+    const [pendingImport, setPendingImport] = useState<PendingImport | null>(null);
 
     async function handleExport() {
         try {
-            const records = await getAllKanaProgress();
+            const [kanaData, vocabData] = await Promise.all([
+                getAllKanaProgress(),
+                getAllVocabProgress(),
+            ]);
             const envelope: ExportEnvelope = {
-                version: 1,
+                version: 2,
                 exportedAt: Date.now(),
-                data: records,
+                kanaData,
+                vocabData,
             };
             const json = JSON.stringify(envelope, null, 2);
             const blob = new Blob([json], { type: 'application/json' });
@@ -90,7 +159,7 @@ export function DataSettingsContent() {
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         setImportError(null);
-        setPendingRecords(null);
+        setPendingImport(null);
         const file = e.target.files?.[0];
         if (!fileInputRef.current) return;
         fileInputRef.current.value = '';
@@ -105,7 +174,7 @@ export function DataSettingsContent() {
                     setImportError(result.error);
                     return;
                 }
-                setPendingRecords(result.data);
+                setPendingImport(result.data);
             } catch {
                 setImportError('File could not be parsed as JSON.');
             }
@@ -114,10 +183,13 @@ export function DataSettingsContent() {
     }
 
     async function handleConfirmImport() {
-        if (!pendingRecords) return;
+        if (!pendingImport) return;
         try {
-            await importKanaProgress(pendingRecords);
-            setPendingRecords(null);
+            await Promise.all([
+                importKanaProgress(pendingImport.kanaData),
+                importVocabProgress(pendingImport.vocabData),
+            ]);
+            setPendingImport(null);
         } catch (err) {
             console.error('Failed to import data:', err);
         }
@@ -125,7 +197,7 @@ export function DataSettingsContent() {
 
     async function handleConfirmDelete() {
         try {
-            await clearKanaProgress();
+            await Promise.all([clearKanaProgress(), clearVocabProgress()]);
         } catch (err) {
             console.error('Failed to delete data:', err);
         }
@@ -158,9 +230,9 @@ export function DataSettingsContent() {
                         </p>
                     </div>
                     <AlertDialog
-                        open={pendingRecords !== null}
+                        open={pendingImport !== null}
                         onOpenChange={(open) => {
-                            if (!open) setPendingRecords(null);
+                            if (!open) setPendingImport(null);
                         }}>
                         <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
                             Import

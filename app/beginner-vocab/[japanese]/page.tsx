@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { beginnerVocab } from '@/lib/beginner-vocab';
 import { VocabPageContent } from '@/components/vocab-card/vocab-page-content';
 import { MarkVocabVisited } from '@/components/vocab-card/mark-vocab-visited';
+import { NavHotkeys } from '@/components/nav-hotkeys';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
@@ -23,35 +24,30 @@ export default async function Page({ params }: { params: Promise<{ japanese: str
     }
 
     const currentIndex = beginnerVocab.indexOf(vocabItem);
-    const prevVocab = currentIndex > 0 ? beginnerVocab[currentIndex - 1] : null;
-    const nextVocab =
-        currentIndex < beginnerVocab.length - 1 ? beginnerVocab[currentIndex + 1] : null;
+    const prevVocab = beginnerVocab.at(currentIndex - 1);
+    const nextVocab = beginnerVocab.at(currentIndex + 1) ?? beginnerVocab[0];
 
     return (
         <div className="-mx-4 -mt-4 flex h-full flex-col overflow-hidden">
             <MarkVocabVisited japanese={vocabItem.japanese} />
-            <div className="flex shrink-0 justify-between border-b p-2">
-                {prevVocab ? (
-                    <Button asChild={true} variant="ghost">
-                        <Link href={`/beginner-vocab/${prevVocab.japanese}`}>
-                            ← {prevVocab.japanese}
-                        </Link>
-                    </Button>
-                ) : (
-                    <span />
-                )}
-                <Button asChild={true} variant="ghost">
+            <NavHotkeys
+                prevHref={`/beginner-vocab/${prevVocab?.japanese}`}
+                nextHref={`/beginner-vocab/${nextVocab.japanese}`}
+            />
+            <div className="grid shrink-0 grid-cols-3 border-b p-2">
+                <Button asChild={true} variant="ghost" className="justify-self-start">
+                    <Link href={`/beginner-vocab/${prevVocab?.japanese}`}>
+                        ← {prevVocab?.japanese}
+                    </Link>
+                </Button>
+                <Button asChild={true} variant="ghost" className="justify-self-center">
                     <Link href="/beginner-vocab">Back to Vocab</Link>
                 </Button>
-                {nextVocab ? (
-                    <Button asChild={true} variant="ghost">
-                        <Link href={`/beginner-vocab/${nextVocab.japanese}`}>
-                            {nextVocab.japanese} →
-                        </Link>
-                    </Button>
-                ) : (
-                    <span />
-                )}
+                <Button asChild={true} variant="ghost" className="justify-self-end">
+                    <Link href={`/beginner-vocab/${nextVocab.japanese}`}>
+                        {nextVocab.japanese} →
+                    </Link>
+                </Button>
             </div>
             <div className="flex-1 overflow-y-auto pt-4">
                 <VocabPageContent vocabItem={vocabItem} />
