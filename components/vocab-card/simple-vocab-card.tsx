@@ -13,17 +13,19 @@ import { VocabItem } from '@/lib/beginner-vocab';
 import { SpeechButton } from '@/components/speech-button';
 import { Button } from '../ui/button';
 import { Info } from 'lucide-react';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 type SimpleVocabCardProps = {
     vocabItem: VocabItem;
-    onActionClick: () => void;
+    visited: boolean;
 };
 
-export const SimpleVocabCard: React.FC<SimpleVocabCardProps> = ({ vocabItem, onActionClick }) => {
+export const SimpleVocabCard: React.FC<SimpleVocabCardProps> = ({ vocabItem, visited }) => {
     const shouldShowReading = vocabItem.japanese !== vocabItem.japaneseReading;
 
     return (
-        <Card>
+        <Card className={cn({ 'border-2 border-primary dark:border-primary': !visited })}>
             <CardHeader>
                 <CardTitle>{vocabItem.japanese}</CardTitle>
                 {shouldShowReading && (
@@ -39,13 +41,11 @@ export const SimpleVocabCard: React.FC<SimpleVocabCardProps> = ({ vocabItem, onA
                     <CardDescription>{vocabItem.english}</CardDescription>
                 </div>
                 <CardAction className="self-center">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 gap-1.5"
-                        onClick={onActionClick}>
-                        <Info className="h-3.5 w-3.5" />
-                        <span className="text-xs">More Info</span>
+                    <Button variant="ghost" size="sm" className="h-6 gap-1.5" asChild={true}>
+                        <Link href={`/beginner-vocab/${vocabItem.japanese}`}>
+                            <Info className="h-3.5 w-3.5" />
+                            <span className="text-xs">More Info</span>
+                        </Link>
                     </Button>
                 </CardAction>
             </CardContent>
