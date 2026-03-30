@@ -6,9 +6,9 @@ export type KanaProgress = {
     flashcardViewCount: number;
     quizCorrectCount: number;
     quizIncorrectCount: number;
-    lastVisited: number | null;
-    lastStudied: number | null;
-    lastQuizzed: number | null;
+    lastVisited: number | null; // set when character detail page is viewed
+    lastStudied: number | null; // set when character is studied via flashcard
+    lastQuizzed: number | null; // set when character appears in a quiz
 };
 
 export type VocabProgress = {
@@ -17,9 +17,9 @@ export type VocabProgress = {
     flashcardViewCount: number;
     quizCorrectCount: number;
     quizIncorrectCount: number;
-    lastVisited: number | null;
-    lastStudied: number | null;
-    lastQuizzed: number | null;
+    lastVisited: number | null; // set when vocab detail page is viewed
+    lastStudied: number | null; // set when vocab item is studied via flashcard
+    lastQuizzed: number | null; // set when vocab item appears in a quiz
 };
 
 type NihongoCardsDB = DBSchema & {
