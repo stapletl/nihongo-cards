@@ -31,9 +31,7 @@ export async function incrementVocabView(japanese: string): Promise<void> {
     window.dispatchEvent(new CustomEvent(VOCAB_PROGRESS_UPDATED_EVENT));
 }
 
-export function isVocabVisited(
-    progress: VocabProgress | undefined
-): boolean {
+export function isVocabVisited(progress: VocabProgress | undefined): boolean {
     return (progress?.detailsViewCount ?? 0) > 0;
 }
 
@@ -45,9 +43,7 @@ export async function clearVocabProgress(): Promise<void> {
     window.dispatchEvent(new CustomEvent(VOCAB_PROGRESS_UPDATED_EVENT));
 }
 
-export async function importVocabProgress(
-    records: VocabProgress[]
-): Promise<void> {
+export async function importVocabProgress(records: VocabProgress[]): Promise<void> {
     const db = await getDB();
     const tx = db.transaction('vocabProgress', 'readwrite');
     const store = tx.objectStore('vocabProgress');
