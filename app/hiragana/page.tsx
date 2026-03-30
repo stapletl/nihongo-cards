@@ -1,4 +1,5 @@
-import { HiraganaContent } from './hiragana-content';
+import { KanaContent } from '@/components/kana-content';
+import { dakutenHandakutenGrid, gojuonGrid, hiraganaItems, yoonGrid } from '@/lib/hiragana';
 
 export default function Page() {
     return (
@@ -12,7 +13,12 @@ export default function Page() {
                 language. Each character represents a specific syllable, making it essential for
                 reading and writing Japanese.
             </p>
-            <HiraganaContent />
+            <KanaContent
+                items={hiraganaItems}
+                gojuonGrid={gojuonGrid}
+                dakutenHandakutenGrid={dakutenHandakutenGrid}
+                yoonGrid={yoonGrid}
+            />
         </div>
     );
 }
