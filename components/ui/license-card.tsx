@@ -2,8 +2,8 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export interface LicenseCardProps {
     name?: string;
+    author?: string;
     homepageUrl?: string;
-    credit?: string;
     licenseType?: string;
     licenseUrl?: string;
     modifications?: string;
@@ -11,8 +11,8 @@ export interface LicenseCardProps {
 
 export function LicenseCard({
     name,
+    author,
     homepageUrl,
-    credit,
     licenseType,
     licenseUrl,
     modifications,
@@ -20,9 +20,10 @@ export function LicenseCard({
     return (
         <Card>
             <CardContent className="space-y-3">
-                {name && (
+                {(name || author) && (
                     <div>
-                        <p className="text-lg font-semibold">{name}</p>
+                        {name && <p className="text-lg font-semibold">{name}</p>}
+                        {author && <p className="text-muted-foreground text-sm">By {author}</p>}
                     </div>
                 )}
 
@@ -39,12 +40,6 @@ export function LicenseCard({
                             </a>
                         </p>
                     </div>
-                )}
-
-                {credit && (
-                    <p className="text-sm">
-                        Credit: <span className="text-foreground">{credit}</span>
-                    </p>
                 )}
 
                 {(licenseType || licenseUrl) && (

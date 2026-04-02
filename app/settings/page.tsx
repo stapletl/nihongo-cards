@@ -92,9 +92,16 @@ export default function SettingsPage() {
                 <section className="space-y-4">
                     <h2 className="text-2xl font-bold">License</h2>
                     <LicenseCard
+                        name="Nihongo Cards"
+                        author="Logan Stapleton"
+                        homepageUrl="https://github.com/stapletl/nihongo-cards"
+                        licenseType="MIT"
+                        licenseUrl="https://github.com/stapletl/nihongo-cards/blob/main/LICENSE"
+                    />
+                    <LicenseCard
                         name="KanjiVG"
                         homepageUrl="https://kanjivg.tagaini.net/"
-                        credit="Ulrich Apel"
+                        author="Ulrich Apel"
                         licenseType="CC BY-SA 3.0"
                         licenseUrl="https://creativecommons.org/licenses/by-sa/3.0/"
                         modifications="SVG modifications for better Firefox compatibility"
