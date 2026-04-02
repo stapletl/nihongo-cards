@@ -607,42 +607,42 @@ export const dakutenHandakuten: KanaItem[] = [
     {
         character: 'ぱ',
         romaji: 'pa',
-        example: 'ぱん',
-        exampleRomaji: 'pan',
-        exampleTranslation: 'bread',
-        emoji: '🍞',
+        example: 'ぱちぱち',
+        exampleRomaji: 'pachipachi',
+        exampleTranslation: 'crackling/clapping sound',
+        emoji: '👏',
     },
     {
         character: 'ぴ',
         romaji: 'pi',
-        example: 'ぴあの',
-        exampleRomaji: 'piano',
-        exampleTranslation: 'piano',
-        emoji: '🎹',
+        example: 'ぴかぴか',
+        exampleRomaji: 'pikapika',
+        exampleTranslation: 'sparkling/shiny',
+        emoji: '✨',
     },
     {
         character: 'ぷ',
         romaji: 'pu',
-        example: 'ぷーる',
-        exampleRomaji: 'puuru',
-        exampleTranslation: 'pool',
-        emoji: '🏊',
+        example: 'ぷかぷか',
+        exampleRomaji: 'pukapuka',
+        exampleTranslation: 'floating/bobbing',
+        emoji: '🌊',
     },
     {
         character: 'ぺ',
         romaji: 'pe',
-        example: 'ぺん',
-        exampleRomaji: 'pen',
-        exampleTranslation: 'pen',
-        emoji: '🖊️',
+        example: 'ぺこぺこ',
+        exampleRomaji: 'pekopeko',
+        exampleTranslation: 'very hungry/bowing repeatedly',
+        emoji: '🙇',
     },
     {
         character: 'ぽ',
         romaji: 'po',
-        example: 'ぽすと',
-        exampleRomaji: 'posuto',
-        exampleTranslation: 'mailbox',
-        emoji: '📮',
+        example: 'ぽかぽか',
+        exampleRomaji: 'pokapoka',
+        exampleTranslation: 'warm and cozy',
+        emoji: '☀️',
     },
 ];
 
@@ -771,37 +771,37 @@ export const yoon: KanaItem[] = [
     {
         character: 'ちょ',
         romaji: 'cho',
-        example: 'ちょこれーと',
-        exampleRomaji: 'chokoreeto',
-        exampleTranslation: 'chocolate',
-        emoji: '🍫',
+        example: 'ちょっと',
+        exampleRomaji: 'chotto',
+        exampleTranslation: 'a little/just a moment',
+        emoji: '🤏',
     },
 
     // D-yoon (from ぢ/づ, but use じ/ず spelling conventionally)
     {
         character: 'ぢゃ',
         romaji: 'ja',
-        example: 'ぢゃみせ',
-        exampleRomaji: 'jamise',
-        exampleTranslation: 'teahouse',
-        emoji: '🍵',
-    }, // rare
+        example: 'そうぢゃ',
+        exampleRomaji: 'souja',
+        exampleTranslation: "that's right (Kyushu dialect)",
+        emoji: '🗾',
+    }, // rare — dialectal
     {
         character: 'ぢゅ',
         romaji: 'ju',
-        example: 'ぢゅん',
-        exampleRomaji: 'jun',
-        exampleTranslation: 'name (Jun)',
-        emoji: '🧑‍🎓',
-    }, // used in names
+        example: 'まんぢゅう',
+        exampleRomaji: 'manjuu',
+        exampleTranslation: 'steamed bun (historical kana)',
+        emoji: '🥮',
+    }, // rare — historical kana spelling of まんじゅう
     {
         character: 'ぢょ',
         romaji: 'jo',
-        example: 'ぢょくせん',
-        exampleRomaji: 'jokusen',
-        exampleTranslation: 'direct line',
-        emoji: '📞',
-    }, // uncommon
+        example: 'ぢょっぴり',
+        exampleRomaji: 'joppiri',
+        exampleTranslation: 'just a tiny bit (informal variant of ちょっぴり)',
+        emoji: '🤏',
+    }, // rare — informal/dialectal
 
     // N-yoon
     {

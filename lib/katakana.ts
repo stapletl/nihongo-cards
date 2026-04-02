@@ -739,7 +739,7 @@ export const yoon: KanaItem[] = [
         character: 'チュ',
         romaji: 'CHU',
         example: 'チューリップ',
-        exampleRomaji: 'chuurrippu',
+        exampleRomaji: 'chuurippu',
         exampleTranslation: 'tulip',
         emoji: '🌷',
     },
@@ -755,27 +755,27 @@ export const yoon: KanaItem[] = [
     {
         character: 'ヂャ',
         romaji: 'JA',
-        example: 'ヂャミセ',
-        exampleRomaji: 'jamise',
-        exampleTranslation: 'teahouse',
-        emoji: '🍵',
-    }, // rare
+        example: 'ヂャズ',
+        exampleRomaji: 'jazu',
+        exampleTranslation: 'jazz (historical katakana spelling)',
+        emoji: '🎷',
+    }, // rare — historical pre-1946 katakana
     {
         character: 'ヂュ',
         romaji: 'JU',
-        example: 'ヂュン',
-        exampleRomaji: 'jun',
-        exampleTranslation: 'name (Jun)',
-        emoji: '🧑‍🎓',
-    }, // used in names
+        example: 'ヂュラルミン',
+        exampleRomaji: 'jurarumin',
+        exampleTranslation: 'duralumin (historical katakana spelling)',
+        emoji: '✈️',
+    }, // rare — historical pre-1946 katakana
     {
         character: 'ヂョ',
         romaji: 'JO',
-        example: 'ヂョクセン',
-        exampleRomaji: 'jokusen',
-        exampleTranslation: 'direct line',
-        emoji: '📞',
-    }, // uncommon
+        example: 'ヂョコビッチ',
+        exampleRomaji: 'jokobicchi',
+        exampleTranslation: 'Djokovic (historical katakana rendering)',
+        emoji: '🎾',
+    }, // rare — historical pre-1946 katakana
     // N-yoon
     {
         character: 'ニャ',
@@ -796,10 +796,10 @@ export const yoon: KanaItem[] = [
     {
         character: 'ニョ',
         romaji: 'NYO',
-        example: 'キャニオン',
-        exampleRomaji: 'kyanion',
-        exampleTranslation: 'canyon',
-        emoji: '🏞️',
+        example: 'ニョッキ',
+        exampleRomaji: 'nyokki',
+        exampleTranslation: 'gnocchi',
+        emoji: '🍝',
     },
     // H-yoon
     {
