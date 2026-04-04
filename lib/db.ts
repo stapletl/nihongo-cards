@@ -11,24 +11,12 @@ export type KanaProgress = {
     lastQuizzed: number | null; // set when character appears in a quiz
 };
 
-export type VocabProgress = {
-    japanese: string;
-    detailsViewCount: number;
-    flashcardViewCount: number;
-    quizCorrectCount: number;
-    quizIncorrectCount: number;
-    lastVisited: number | null; // set when vocab detail page is viewed
-    lastStudied: number | null; // set when vocab item is studied via flashcard
-    lastQuizzed: number | null; // set when vocab item appears in a quiz
-};
-
 type NihongoCardsDB = DBSchema & {
     kanaProgress: { key: string; value: KanaProgress };
-    vocabProgress: { key: string; value: VocabProgress };
 };
 
 const DB_NAME = 'nihongo-cards-db';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 let dbPromise: Promise<IDBPDatabase<NihongoCardsDB>> | null = null;
 
@@ -43,7 +31,13 @@ export function getDB(): Promise<IDBPDatabase<NihongoCardsDB>> {
                     db.createObjectStore('kanaProgress', { keyPath: 'character' });
                 }
                 if (oldVersion < 2) {
-                    db.createObjectStore('vocabProgress', { keyPath: 'japanese' });
+                    // vocabProgress was added in v2 and removed in v3 — skip creation
+                }
+                if (oldVersion < 3) {
+                    const rawDb = db as unknown as IDBDatabase;
+                    if (rawDb.objectStoreNames.contains('vocabProgress')) {
+                        rawDb.deleteObjectStore('vocabProgress');
+                    }
                 }
             },
         }).catch((err) => {

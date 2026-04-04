@@ -1,6 +1,6 @@
 # Nihongo Cards — Claude Context
 
-Japanese learning app built with Next.js App Router. Covers hiragana, katakana, beginner vocabulary, flashcards, and quizzes.
+Japanese learning app built with Next.js App Router. Covers hiragana, katakana, flashcards, and quizzes.
 
 ## Commands
 
@@ -34,7 +34,6 @@ app/                        # Next.js App Router pages
   katakana/                 # mirrors hiragana structure
   flashcards/
   quiz/
-  beginner-vocab/
   settings/
 
 components/
@@ -45,7 +44,6 @@ components/
     mark-kana-visited.tsx   # null-render client component — fires incrementDetailView on mount
     kana-nav-hotkeys.tsx    # keyboard nav for detail pages
   ui/                       # shadcn primitives — don't edit directly
-  vocab-card/
   providers/
   layout/
 
@@ -53,7 +51,6 @@ lib/
   hiragana.ts               # KanaItem type + all hiragana data arrays
   katakana.ts               # same for katakana
   kana-db.ts                # IndexedDB layer: KanaProgress schema, getAllKanaProgress, incrementDetailView, isVisited
-  beginner-vocab.ts
   utils.ts                  # cn() helper
 
 hooks/

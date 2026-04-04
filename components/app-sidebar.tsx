@@ -24,11 +24,8 @@ import { AppIcon } from './app-icon';
 import { ThemeToggle } from './theme-toggle';
 import { hiraganaItems } from '@/lib/hiragana';
 import { katakanaItems } from '@/lib/katakana';
-import { beginnerVocab } from '@/lib/beginner-vocab';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
-import { useVocabProgressMap } from '@/hooks/use-vocab-progress';
 import { isVisited } from '@/lib/kana-db';
-import { isVocabVisited } from '@/lib/vocab-db';
 import { Skeleton } from './ui/skeleton';
 
 type NavItem = {
@@ -65,12 +62,6 @@ const navMain: NavSection[] = [
                 url: '/katakana',
                 enabled: true,
                 icon: <KanjiIcon char="ア" />,
-            },
-            {
-                title: 'Beginner Vocab',
-                url: '/beginner-vocab',
-                enabled: true,
-                icon: <KanjiIcon char="日" />,
             },
         ],
     },
@@ -155,18 +146,13 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar>;
 export const AppSidebar = ({ ...props }: AppSidebarProps) => {
     const pathname = usePathname();
     const { toggleSidebar, isMobile } = useSidebar();
-    const { progressMap: kanaProgressMap, isLoading: isKanaLoading } = useKanaProgressMap();
-    const { progressMap: vocabProgressMap, isLoading: isVocabLoading } = useVocabProgressMap();
-    const isLoading = isKanaLoading || isVocabLoading;
+    const { progressMap: kanaProgressMap, isLoading } = useKanaProgressMap();
 
     const newCounts: Record<string, number> = {
         '/hiragana': hiraganaItems.filter((item) => !isVisited(kanaProgressMap.get(item.character)))
             .length,
         '/katakana': katakanaItems.filter((item) => !isVisited(kanaProgressMap.get(item.character)))
             .length,
-        '/beginner-vocab': beginnerVocab.filter(
-            (item) => !isVocabVisited(vocabProgressMap.get(item.japanese))
-        ).length,
     };
 
     // If the sidebar is open on mobile, clicking a link should close it

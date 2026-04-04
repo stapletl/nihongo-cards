@@ -128,12 +128,6 @@ export function CommandMenu() {
                             </span>
                             <span>Katakana</span>
                         </CommandItem>
-                        <CommandItem onSelect={() => handleSelect('/beginner-vocab')}>
-                            <span className="text-muted-foreground flex size-4 items-center justify-center text-sm font-semibold">
-                                日
-                            </span>
-                            <span>Beginner Vocab</span>
-                        </CommandItem>
                         <CommandItem onSelect={() => handleSelect('/flashcards')}>
                             <CreditCardIcon />
                             <span>Flashcards</span>
