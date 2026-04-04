@@ -41,12 +41,6 @@ export default function Page() {
                         <span className="ml-2">→</span>
                     </Link>
                 </Button>
-                <Button asChild={true} size="lg">
-                    <Link href="/beginner-vocab">
-                        Go to Vocab
-                        <span className="ml-2">→</span>
-                    </Link>
-                </Button>
             </div>
 
             <KatakanaMarquee />
