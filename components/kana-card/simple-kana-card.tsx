@@ -13,6 +13,7 @@ type SimpleKanaCardProps = {
     visited: boolean;
     firstUnvisited?: boolean;
     ref?: React.Ref<HTMLAnchorElement>;
+    basePath?: string;
 };
 
 export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({
@@ -21,9 +22,11 @@ export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({
     visited,
     firstUnvisited,
     ref,
+    basePath: basePathProp,
 }) => {
     const pathname = usePathname();
-    const basePath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+    const computedBase = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+    const basePath = basePathProp ?? computedBase;
     const href = `${basePath}/${kanaItem.character}`;
 
     // Button is typed for HTMLButtonElement; asChild forwards the ref to the rendered <a>, so HTMLAnchorElement is correct at runtime.
