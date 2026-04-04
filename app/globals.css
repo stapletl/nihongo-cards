@@ -72,6 +72,8 @@
     --color-shadow-color: var(--shadow-color);
     --color-destructive-foreground: var(--destructive-foreground);
     --animate-gentle-bounce: gentle-bounce 1.5s ease-in-out infinite;
+    --animate-marquee: marquee var(--duration) infinite linear;
+    --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
 }
 
 :root {
@@ -179,6 +181,23 @@
     --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
 }
 
+@keyframes marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(-100% - var(--gap)));
+    }
+}
+@keyframes marquee-vertical {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(calc(-100% - var(--gap)));
+    }
+}
+
 @keyframes gentle-bounce {
     0%,
     100% {
@@ -194,6 +213,10 @@
 @layer base {
     * {
         @apply border-border outline-ring/50;
+    }
+    html,
+    body {
+        overflow-x: hidden;
     }
     body {
         @apply bg-background text-foreground;

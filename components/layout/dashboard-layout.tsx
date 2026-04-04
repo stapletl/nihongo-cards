@@ -20,7 +20,7 @@ export default async function DashboardLayout({ children }: LayoutProps) {
             <SpeechProvider>
                 <SidebarProvider>
                     <AppSidebar />
-                    <SidebarInset className="flex h-dvh flex-col">
+                    <SidebarInset className="h-dvh w-full overflow-x-hidden">
                         <header className="bg-background flex h-16 shrink-0 items-center gap-2 border-b px-4">
                             <SidebarTrigger className="-ml-1" />
                             <Separator
@@ -32,8 +32,10 @@ export default async function DashboardLayout({ children }: LayoutProps) {
                                 <CommandMenu />
                             </div>
                         </header>
-                        <div className="flex-1 overflow-auto">
-                            <div className="flex h-full min-w-[375px] flex-col gap-4 p-4">{children}</div>
+                        <div className="flex-1 overflow-y-auto w-full overflow-x-hidden">
+                            <div className="flex h-full min-w-[375px] flex-col gap-4">
+                                {children}
+                            </div>
                         </div>
                     </SidebarInset>
                 </SidebarProvider>
