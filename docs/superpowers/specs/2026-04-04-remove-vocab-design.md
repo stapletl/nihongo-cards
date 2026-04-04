@@ -44,8 +44,8 @@ This removes leftover vocab progress data from existing users' browsers.
 
 ## Data Export/Import Simplification
 
-- **Export:** kana-only, back to version 1 envelope `{ version: 1, exportedAt, data: KanaProgress[] }`
-- **Import:** still accepts v1 and v2 files; v2 vocabData is silently ignored
+- **Export:** kana-only, version 1 envelope `{ version: 1, exportedAt, data: KanaProgress[] }`
+- **Import:** still accepts v1 and v2 files; v2 `vocabData` is silently ignored (backward compat for existing backups)
 - `VocabProgress` type and `isValidVocabProgress` validator are removed from `data-settings-content.tsx`
 
 ---
