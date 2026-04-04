@@ -68,7 +68,54 @@ export function CommandMenu() {
                 <CommandInput placeholder="Type a command or search..." />
                 <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
+                    <CommandGroup heading="Commands">
+                        {nextHiragana && (
+                            <CommandItem
+                                onSelect={() =>
+                                    handleSelect(
+                                        `/hiragana/${encodeURIComponent(nextHiragana.character)}`
+                                    )
+                                }>
+                                <ArrowRightIcon className='text-primary' />
+                                <span>
+                                    View Next Hiragana — <span className='font-semibold text-primary'>{nextHiragana.character}</span> (
+                                    {nextHiragana.romaji})
+                                </span>
+                            </CommandItem>
+                        )}
+                        {nextKatakana && (
+                            <CommandItem
+                                onSelect={() =>
+                                    handleSelect(
+                                        `/katakana/${encodeURIComponent(nextKatakana.character)}`
+                                    )
+                                }>
+                                <ArrowRightIcon className='text-primary' />
+                                <span>
+                                    View Next Katakana — <span className='font-semibold text-primary'>{nextKatakana.character}</span> (
+                                    {nextKatakana.romaji})
+                                </span>
+                            </CommandItem>
+                        )}
+                        <CommandItem onSelect={() => handleSelect('/flashcards')}>
+                            <CreditCardIcon />
+                            <span>Study Flash Cards</span>
+                        </CommandItem>
+                        <CommandItem onSelect={() => handleSelect('/quiz')}>
+                            <ClipboardListIcon />
+                            <span>Start Quiz</span>
+                        </CommandItem>
+                        <CommandItem
+                            onSelect={() => {
+                                setOpen(false);
+                                setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+                            }}>
+                            {resolvedTheme === 'dark' ? <SunIcon /> : <MoonIcon />}
+                            <span>Toggle Theme</span>
+                        </CommandItem>
+                    </CommandGroup>
                     <CommandGroup heading="Navigation">
+                        <CommandSeparator />
                         <CommandItem onSelect={() => handleSelect('/hiragana')}>
                             <span className="text-muted-foreground flex size-4 items-center justify-center text-sm font-semibold">
                                 あ
@@ -102,53 +149,6 @@ export function CommandMenu() {
                         <CommandItem onSelect={() => handleSelect('/settings')}>
                             <SettingsIcon />
                             <span>Settings</span>
-                        </CommandItem>
-                    </CommandGroup>
-                    <CommandSeparator />
-                    <CommandGroup heading="Commands">
-                        <CommandItem onSelect={() => handleSelect('/flashcards')}>
-                            <CreditCardIcon />
-                            <span>Study Flash Cards</span>
-                        </CommandItem>
-                        <CommandItem onSelect={() => handleSelect('/quiz')}>
-                            <ClipboardListIcon />
-                            <span>Start Quiz</span>
-                        </CommandItem>
-                        {nextHiragana && (
-                            <CommandItem
-                                onSelect={() =>
-                                    handleSelect(
-                                        `/hiragana/${encodeURIComponent(nextHiragana.character)}`,
-                                    )
-                                }>
-                                <ArrowRightIcon />
-                                <span>
-                                    View next hiragana — {nextHiragana.character} (
-                                    {nextHiragana.romaji})
-                                </span>
-                            </CommandItem>
-                        )}
-                        {nextKatakana && (
-                            <CommandItem
-                                onSelect={() =>
-                                    handleSelect(
-                                        `/katakana/${encodeURIComponent(nextKatakana.character)}`,
-                                    )
-                                }>
-                                <ArrowRightIcon />
-                                <span>
-                                    View next katakana — {nextKatakana.character} (
-                                    {nextKatakana.romaji})
-                                </span>
-                            </CommandItem>
-                        )}
-                        <CommandItem
-                            onSelect={() => {
-                                setOpen(false);
-                                setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
-                            }}>
-                            {resolvedTheme === 'dark' ? <SunIcon /> : <MoonIcon />}
-                            <span>Toggle Theme</span>
                         </CommandItem>
                     </CommandGroup>
                 </CommandList>
