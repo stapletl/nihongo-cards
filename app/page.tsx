@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { SpeechButton } from '@/components/speech-button';
+import { SITE_NAME, SITE_DESCRIPTION } from '@/lib/site';
 
 const japaneseTitle = '日本語カード';
 
@@ -16,11 +17,11 @@ export default function Page() {
                         <SpeechButton text={japaneseTitle} />
                     </div>
                     <h1 className="text-4xl leading-tight font-bold tracking-tighter md:text-6xl lg:leading-[1.1]">
-                        Nihongo Cards
+                        {SITE_NAME}
                     </h1>
                 </div>
                 <p className="text-muted-foreground max-w-[750px] text-lg sm:text-xl">
-                    Introduction to Japanese with an intelligent flashcard system
+                    {SITE_DESCRIPTION}
                 </p>
             </div>
 
