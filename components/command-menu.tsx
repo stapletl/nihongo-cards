@@ -11,9 +11,14 @@ import {
     SettingsIcon,
     SunIcon,
     MoonIcon,
+    ArrowRightIcon,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useKanaProgressMap } from '@/hooks/use-kana-progress';
+import { isVisited } from '@/lib/kana-db';
+import { hiraganaItems } from '@/lib/hiragana';
+import { katakanaItems } from '@/lib/katakana';
 import {
     CommandDialog,
     CommandEmpty,
@@ -29,6 +34,10 @@ export function CommandMenu() {
     const router = useRouter();
     const { resolvedTheme, setTheme } = useTheme();
     const isMobile = useIsMobile();
+    const { progressMap } = useKanaProgressMap();
+
+    const nextHiragana = hiraganaItems.find((item) => !isVisited(progressMap.get(item.character)));
+    const nextKatakana = katakanaItems.find((item) => !isVisited(progressMap.get(item.character)));
 
     useHotkey('Mod+K', () => {
         setOpen((prev) => !prev);
@@ -105,6 +114,34 @@ export function CommandMenu() {
                             <ClipboardListIcon />
                             <span>Start Quiz</span>
                         </CommandItem>
+                        {nextHiragana && (
+                            <CommandItem
+                                onSelect={() =>
+                                    handleSelect(
+                                        `/hiragana/${encodeURIComponent(nextHiragana.character)}`,
+                                    )
+                                }>
+                                <ArrowRightIcon />
+                                <span>
+                                    View next hiragana — {nextHiragana.character} (
+                                    {nextHiragana.romaji})
+                                </span>
+                            </CommandItem>
+                        )}
+                        {nextKatakana && (
+                            <CommandItem
+                                onSelect={() =>
+                                    handleSelect(
+                                        `/katakana/${encodeURIComponent(nextKatakana.character)}`,
+                                    )
+                                }>
+                                <ArrowRightIcon />
+                                <span>
+                                    View next katakana — {nextKatakana.character} (
+                                    {nextKatakana.romaji})
+                                </span>
+                            </CommandItem>
+                        )}
                         <CommandItem
                             onSelect={() => {
                                 setOpen(false);
