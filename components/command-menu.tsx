@@ -13,6 +13,7 @@ import {
     MoonIcon,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { useIsMobile } from '@/hooks/use-mobile';
 import {
     CommandDialog,
     CommandEmpty,
@@ -27,6 +28,7 @@ export function CommandMenu() {
     const [open, setOpen] = React.useState(false);
     const router = useRouter();
     const { resolvedTheme, setTheme } = useTheme();
+    const isMobile = useIsMobile();
 
     useHotkey('Mod+K', () => {
         setOpen((prev) => !prev);
@@ -50,7 +52,10 @@ export function CommandMenu() {
                 </kbd>
             </button>
 
-            <CommandDialog open={open} onOpenChange={setOpen}>
+            <CommandDialog
+                open={open}
+                onOpenChange={setOpen}
+                className={isMobile ? 'top-4 translate-y-0' : undefined}>
                 <CommandInput placeholder="Type a command or search..." />
                 <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
