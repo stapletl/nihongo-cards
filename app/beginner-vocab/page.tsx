@@ -3,7 +3,7 @@ import { BeginnerVocabContent } from './beginner-vocab-content';
 
 export default function Page() {
     return (
-        <div>
+        <div className="p-4">
             <h1 className="mb-4 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                 Beginner Vocabulary
             </h1>

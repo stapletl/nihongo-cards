@@ -28,7 +28,7 @@ export default async function Page({ params }: { params: Promise<{ japanese: str
     const nextVocab = beginnerVocab.at(currentIndex + 1) ?? beginnerVocab[0];
 
     return (
-        <div className="-mx-4 -mt-4 flex h-full flex-col overflow-hidden">
+        <div className="flex h-full flex-col overflow-hidden">
             <MarkVocabVisited japanese={vocabItem.japanese} />
             <NavHotkeys
                 prevHref={`/beginner-vocab/${prevVocab?.japanese}`}

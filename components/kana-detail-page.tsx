@@ -24,7 +24,7 @@ export function KanaDetailPage({ items, character, backHref, backLabel }: KanaDe
     const nextItem = items.at(idx + 1) ?? items[0];
 
     return (
-        <div className="-mx-4 -mt-4 flex h-full flex-col overflow-hidden">
+        <div className="flex h-full flex-col overflow-hidden">
             <MarkKanaVisited character={kanaItem.character} />
             <KanaNavHotkeys prevHref={prevItem?.character} nextHref={nextItem?.character} />
             <div className="flex shrink-0 justify-between border-b p-2">
