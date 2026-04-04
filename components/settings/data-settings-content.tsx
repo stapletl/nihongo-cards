@@ -20,23 +20,11 @@ import {
     importKanaProgress,
     type KanaProgress,
 } from '@/lib/kana-db';
-import {
-    getAllVocabProgress,
-    clearVocabProgress,
-    importVocabProgress,
-    type VocabProgress,
-} from '@/lib/vocab-db';
 
 type ExportEnvelope = {
-    version: 2;
+    version: 1;
     exportedAt: number;
-    kanaData: KanaProgress[];
-    vocabData: VocabProgress[];
-};
-
-type PendingImport = {
-    kanaData: KanaProgress[];
-    vocabData: VocabProgress[];
+    data: KanaProgress[];
 };
 
 function isValidKanaProgress(obj: unknown): obj is KanaProgress {
@@ -54,30 +42,15 @@ function isValidKanaProgress(obj: unknown): obj is KanaProgress {
     );
 }
 
-function isValidVocabProgress(obj: unknown): obj is VocabProgress {
-    if (!obj || typeof obj !== 'object') return false;
-    const r = obj as Record<string, unknown>;
-    return (
-        typeof r.japanese === 'string' &&
-        typeof r.detailsViewCount === 'number' &&
-        typeof r.flashcardViewCount === 'number' &&
-        typeof r.quizCorrectCount === 'number' &&
-        typeof r.quizIncorrectCount === 'number' &&
-        (r.lastVisited === null || typeof r.lastVisited === 'number') &&
-        (r.lastStudied === null || typeof r.lastStudied === 'number') &&
-        (r.lastQuizzed === null || typeof r.lastQuizzed === 'number')
-    );
-}
-
 function validateEnvelope(
     parsed: unknown,
-): { ok: true; data: PendingImport } | { ok: false; error: string } {
+): { ok: true; data: KanaProgress[] } | { ok: false; error: string } {
     if (!parsed || typeof parsed !== 'object') {
         return { ok: false, error: 'File is not a valid JSON object.' };
     }
     const env = parsed as Record<string, unknown>;
 
-    // v1: legacy kana-only export
+    // v1: kana-only export
     if (env.version === 1) {
         if (!Array.isArray(env.data)) {
             return { ok: false, error: 'File is missing a valid "data" array.' };
@@ -86,38 +59,22 @@ function validateEnvelope(
         if (invalid !== -1) {
             return { ok: false, error: `Record at index ${invalid} has an unexpected shape.` };
         }
-        return { ok: true, data: { kanaData: env.data as KanaProgress[], vocabData: [] } };
+        return { ok: true, data: env.data as KanaProgress[] };
     }
 
-    // v2: kana + vocab
+    // v2: kana + vocab — vocab silently ignored, kanaData extracted
     if (env.version === 2) {
         if (!Array.isArray(env.kanaData)) {
             return { ok: false, error: 'File is missing a valid "kanaData" array.' };
         }
-        if (!Array.isArray(env.vocabData)) {
-            return { ok: false, error: 'File is missing a valid "vocabData" array.' };
-        }
-        const invalidKana = env.kanaData.findIndex((item) => !isValidKanaProgress(item));
-        if (invalidKana !== -1) {
+        const invalid = env.kanaData.findIndex((item) => !isValidKanaProgress(item));
+        if (invalid !== -1) {
             return {
                 ok: false,
-                error: `Kana record at index ${invalidKana} has an unexpected shape.`,
+                error: `Kana record at index ${invalid} has an unexpected shape.`,
             };
         }
-        const invalidVocab = env.vocabData.findIndex((item) => !isValidVocabProgress(item));
-        if (invalidVocab !== -1) {
-            return {
-                ok: false,
-                error: `Vocab record at index ${invalidVocab} has an unexpected shape.`,
-            };
-        }
-        return {
-            ok: true,
-            data: {
-                kanaData: env.kanaData as KanaProgress[],
-                vocabData: env.vocabData as VocabProgress[],
-            },
-        };
+        return { ok: true, data: env.kanaData as KanaProgress[] };
     }
 
     return {
@@ -129,19 +86,15 @@ function validateEnvelope(
 export function DataSettingsContent() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [importError, setImportError] = useState<string | null>(null);
-    const [pendingImport, setPendingImport] = useState<PendingImport | null>(null);
+    const [pendingImport, setPendingImport] = useState<KanaProgress[] | null>(null);
 
     async function handleExport() {
         try {
-            const [kanaData, vocabData] = await Promise.all([
-                getAllKanaProgress(),
-                getAllVocabProgress(),
-            ]);
+            const data = await getAllKanaProgress();
             const envelope: ExportEnvelope = {
-                version: 2,
+                version: 1,
                 exportedAt: Date.now(),
-                kanaData,
-                vocabData,
+                data,
             };
             const json = JSON.stringify(envelope, null, 2);
             const blob = new Blob([json], { type: 'application/json' });
@@ -185,10 +138,7 @@ export function DataSettingsContent() {
     async function handleConfirmImport() {
         if (!pendingImport) return;
         try {
-            await Promise.all([
-                importKanaProgress(pendingImport.kanaData),
-                importVocabProgress(pendingImport.vocabData),
-            ]);
+            await importKanaProgress(pendingImport);
             setPendingImport(null);
         } catch (err) {
             console.error('Failed to import data:', err);
@@ -197,7 +147,7 @@ export function DataSettingsContent() {
 
     async function handleConfirmDelete() {
         try {
-            await Promise.all([clearKanaProgress(), clearVocabProgress()]);
+            await clearKanaProgress();
         } catch (err) {
             console.error('Failed to delete data:', err);
         }
