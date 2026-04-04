@@ -26,8 +26,11 @@ const completedStrokeStyle: React.CSSProperties = {
 };
 
 const getAnimatedStrokeStyle = (delayMs: number): React.CSSProperties => ({
-    animation: `kana-stroke-draw ${STROKE_DRAW_MS}ms linear forwards`,
-    animationDelay: `${delayMs}ms`,
+    animation: [
+        `kana-stroke-show 1ms linear ${delayMs}ms forwards`,
+        `kana-stroke-draw ${STROKE_DRAW_MS}ms linear ${delayMs}ms forwards`,
+    ].join(', '),
+    opacity: 0,
     strokeDasharray: 1,
     strokeDashoffset: 1,
 });
@@ -96,6 +99,16 @@ export const KanaStrokeOrderSvg: React.FC<KanaStrokeOrderSvgProps> = ({
                 </g>
             </svg>
             <style jsx>{`
+                @keyframes kana-stroke-show {
+                    from {
+                        opacity: 0;
+                    }
+
+                    to {
+                        opacity: 1;
+                    }
+                }
+
                 @keyframes kana-stroke-draw {
                     from {
                         stroke-dashoffset: 1;
