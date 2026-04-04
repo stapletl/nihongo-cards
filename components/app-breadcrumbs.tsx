@@ -14,7 +14,6 @@ import React from 'react';
 export const breadcrumbTitles: Record<string, string> = {
     hiragana: 'Hiragana',
     katakana: 'Katakana',
-    'beginner-vocab': 'Beginner Vocabulary',
     settings: 'Settings',
     privacy: 'Privacy Policy',
     flashcards: 'Flashcards',
