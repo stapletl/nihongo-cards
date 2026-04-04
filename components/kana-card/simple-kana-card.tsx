@@ -13,6 +13,7 @@ type SimpleKanaCardProps = {
     visited: boolean;
     firstUnvisited?: boolean;
     ref?: React.Ref<HTMLAnchorElement>;
+    basePath?: string;
 };
 
 export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({
@@ -21,9 +22,11 @@ export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({
     visited,
     firstUnvisited,
     ref,
+    basePath: basePathProp,
 }) => {
     const pathname = usePathname();
-    const basePath = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+    const computedBase = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+    const basePath = basePathProp ?? computedBase;
     const href = `${basePath}/${kanaItem.character}`;
 
     // Button is typed for HTMLButtonElement; asChild forwards the ref to the rendered <a>, so HTMLAnchorElement is correct at runtime.
@@ -36,7 +39,7 @@ export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({
             size="sm"
             className={cn(
                 'h-12 w-full transition-all duration-300 hover:scale-105 sm:h-14 md:h-16',
-                { 'border-2 border-primary dark:border-primary': !visited },
+                { 'border-primary dark:border-primary border-2': !visited },
                 { 'animate-gentle-bounce': firstUnvisited }
             )}
             asChild={true}>
@@ -46,11 +49,9 @@ export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({
                         'flex w-full items-center',
                         showRomanji ? 'justify-between gap-1' : 'justify-center'
                     )}>
-                    <p className="text-base font-semibold sm:text-lg md:text-xl lg:text-2xl">
-                        {kanaItem.character}
-                    </p>
+                    <p className="text-2xl font-semibold md:text-4xl">{kanaItem.character}</p>
                     {showRomanji && (
-                        <p className="text-muted-foreground md:text-md text-xs sm:text-sm lg:text-lg">
+                        <p className="text-muted-foreground text-md md:text-xl">
                             {kanaItem.romaji}
                         </p>
                     )}

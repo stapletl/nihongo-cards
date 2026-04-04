@@ -1,14 +1,17 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { SpeechButton } from '@/components/speech-button';
+import { HiraganaMarquee, KatakanaMarquee } from '@/components/kana-slider/kana-marquees';
 import { SITE_NAME, SITE_DESCRIPTION } from '@/lib/site';
 
 const japaneseTitle = '日本語カード';
 
 export default function Page() {
     return (
-        <div className="flex h-full flex-col items-center justify-center gap-6 p-8">
-            <div className="flex max-w-[980px] flex-col items-center gap-4 text-center">
+        <div className="flex h-full flex-col items-center justify-center gap-6 py-8">
+            <HiraganaMarquee />
+
+            <div className="flex max-w-[980px] flex-col items-center gap-4 px-8 text-center">
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-center gap-2">
                         <h2 className="text-muted-foreground text-2xl font-medium md:text-3xl">
@@ -16,7 +19,7 @@ export default function Page() {
                         </h2>
                         <SpeechButton text={japaneseTitle} />
                     </div>
-                    <h1 className="text-4xl leading-tight font-bold tracking-tighter md:text-6xl lg:leading-[1.1]">
+                    <h1 className="text-4xl leading-tight font-bold tracking-tighter text-nowrap md:text-6xl lg:leading-[1.1]">
                         {SITE_NAME}
                     </h1>
                 </div>
@@ -25,7 +28,7 @@ export default function Page() {
                 </p>
             </div>
 
-            <div className="flex flex-col gap-4 sm:flex-row">
+            <div className="flex flex-col gap-4 px-8 sm:flex-row">
                 <Button asChild={true} size="lg">
                     <Link href="/hiragana">
                         Go to Hiragana
@@ -45,6 +48,8 @@ export default function Page() {
                     </Link>
                 </Button>
             </div>
+
+            <KatakanaMarquee />
         </div>
     );
 }

@@ -2,7 +2,7 @@ import { QuizContent } from './quiz-content';
 
 export default function Page() {
     return (
-        <div>
+        <div className="p-4">
             <h1 className="mb-4 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                 Quiz <span className="font-bold whitespace-nowrap">(クイズ)</span>
             </h1>
