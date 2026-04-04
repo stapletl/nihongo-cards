@@ -5,6 +5,7 @@ import { SpeechProvider } from '@/components/providers/speech-provider';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import AppBreadcrumbs from '../app-breadcrumbs';
 import { CommandMenu } from '@/components/command-menu';
+import { GithubButton } from '@/components/github-button';
 
 type LayoutProps = {
     children: React.ReactNode;
@@ -28,7 +29,8 @@ export default async function DashboardLayout({ children }: LayoutProps) {
                                 className="mr-2 data-[orientation=vertical]:h-4"
                             />
                             <AppBreadcrumbs />
-                            <div className="ml-auto">
+                            <div className="ml-auto flex items-center gap-1">
+                                <GithubButton />
                                 <CommandMenu />
                             </div>
                         </header>

@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { LicenseCard } from '@/components/ui/license-card';
 import Link from 'next/link';
+import { SITE_NAME, SITE_AUTHOR, SITE_GITHUB_URL } from '@/lib/site';
 
 const VoiceSettingsContent = dynamic(
     () =>
@@ -92,11 +93,11 @@ export default function SettingsPage() {
                 <section className="space-y-4">
                     <h2 className="text-2xl font-bold">License</h2>
                     <LicenseCard
-                        name="Nihongo Cards"
-                        author="Logan Stapleton"
-                        homepageUrl="https://github.com/stapletl/nihongo-cards"
+                        name={SITE_NAME}
+                        author={SITE_AUTHOR}
+                        homepageUrl={SITE_GITHUB_URL}
                         licenseType="MIT"
-                        licenseUrl="https://github.com/stapletl/nihongo-cards/blob/main/LICENSE"
+                        licenseUrl={`${SITE_GITHUB_URL}/blob/main/LICENSE`}
                     />
                     <LicenseCard
                         name="KanjiVG"

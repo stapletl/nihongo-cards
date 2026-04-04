@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import DashboardLayout from '@/components/layout/dashboard-layout';
+import { SITE_NAME, SITE_DESCRIPTION } from '@/lib/site';
 import './globals.css';
 
 const geistSans = Geist({
@@ -16,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: 'Nihongo Cards',
-    description: 'Introduction to Japanese with an intelligent flashcard system',
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
 };
 
 export default function RootLayout({
