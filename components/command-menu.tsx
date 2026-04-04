@@ -11,8 +11,14 @@ import {
     SettingsIcon,
     SunIcon,
     MoonIcon,
+    ArrowRightIcon,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useKanaProgressMap } from '@/hooks/use-kana-progress';
+import { isVisited } from '@/lib/kana-db';
+import { hiraganaItems } from '@/lib/hiragana';
+import { katakanaItems } from '@/lib/katakana';
 import {
     CommandDialog,
     CommandEmpty,
@@ -27,6 +33,11 @@ export function CommandMenu() {
     const [open, setOpen] = React.useState(false);
     const router = useRouter();
     const { resolvedTheme, setTheme } = useTheme();
+    const isMobile = useIsMobile();
+    const { progressMap } = useKanaProgressMap();
+
+    const nextHiragana = hiraganaItems.find((item) => !isVisited(progressMap.get(item.character)));
+    const nextKatakana = katakanaItems.find((item) => !isVisited(progressMap.get(item.character)));
 
     useHotkey('Mod+K', () => {
         setOpen((prev) => !prev);
@@ -50,11 +61,61 @@ export function CommandMenu() {
                 </kbd>
             </button>
 
-            <CommandDialog open={open} onOpenChange={setOpen}>
+            <CommandDialog
+                open={open}
+                onOpenChange={setOpen}
+                className={isMobile ? 'top-4 translate-y-0' : undefined}>
                 <CommandInput placeholder="Type a command or search..." />
                 <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
+                    <CommandGroup heading="Commands">
+                        {nextHiragana && (
+                            <CommandItem
+                                onSelect={() =>
+                                    handleSelect(
+                                        `/hiragana/${encodeURIComponent(nextHiragana.character)}`
+                                    )
+                                }>
+                                <ArrowRightIcon className='text-primary' />
+                                <span>
+                                    View Next Hiragana — <span className='font-semibold text-primary'>{nextHiragana.character}</span> (
+                                    {nextHiragana.romaji})
+                                </span>
+                            </CommandItem>
+                        )}
+                        {nextKatakana && (
+                            <CommandItem
+                                onSelect={() =>
+                                    handleSelect(
+                                        `/katakana/${encodeURIComponent(nextKatakana.character)}`
+                                    )
+                                }>
+                                <ArrowRightIcon className='text-primary' />
+                                <span>
+                                    View Next Katakana — <span className='font-semibold text-primary'>{nextKatakana.character}</span> (
+                                    {nextKatakana.romaji})
+                                </span>
+                            </CommandItem>
+                        )}
+                        <CommandItem onSelect={() => handleSelect('/flashcards')}>
+                            <CreditCardIcon />
+                            <span>Study Flash Cards</span>
+                        </CommandItem>
+                        <CommandItem onSelect={() => handleSelect('/quiz')}>
+                            <ClipboardListIcon />
+                            <span>Start Quiz</span>
+                        </CommandItem>
+                        <CommandItem
+                            onSelect={() => {
+                                setOpen(false);
+                                setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+                            }}>
+                            {resolvedTheme === 'dark' ? <SunIcon /> : <MoonIcon />}
+                            <span>Toggle Theme</span>
+                        </CommandItem>
+                    </CommandGroup>
                     <CommandGroup heading="Navigation">
+                        <CommandSeparator />
                         <CommandItem onSelect={() => handleSelect('/hiragana')}>
                             <span className="text-muted-foreground flex size-4 items-center justify-center text-sm font-semibold">
                                 あ
@@ -88,25 +149,6 @@ export function CommandMenu() {
                         <CommandItem onSelect={() => handleSelect('/settings')}>
                             <SettingsIcon />
                             <span>Settings</span>
-                        </CommandItem>
-                    </CommandGroup>
-                    <CommandSeparator />
-                    <CommandGroup heading="Commands">
-                        <CommandItem onSelect={() => handleSelect('/flashcards')}>
-                            <CreditCardIcon />
-                            <span>Study Flash Cards</span>
-                        </CommandItem>
-                        <CommandItem onSelect={() => handleSelect('/quiz')}>
-                            <ClipboardListIcon />
-                            <span>Start Quiz</span>
-                        </CommandItem>
-                        <CommandItem
-                            onSelect={() => {
-                                setOpen(false);
-                                setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
-                            }}>
-                            {resolvedTheme === 'dark' ? <SunIcon /> : <MoonIcon />}
-                            <span>Toggle Theme</span>
                         </CommandItem>
                     </CommandGroup>
                 </CommandList>
