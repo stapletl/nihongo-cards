@@ -1,13 +1,16 @@
 import { Button } from '@/components/ui/button';
 import { StarIcon } from 'lucide-react';
-import { SITE_GITHUB_URL, SITE_GITHUB_API_URL } from '@/lib/site';
+import { SITE_NAME, SITE_GITHUB_URL, SITE_GITHUB_API_URL } from '@/lib/site';
 
 const REPO_URL = SITE_GITHUB_URL;
 const API_URL = SITE_GITHUB_API_URL;
 
 async function getStarCount(): Promise<number | null> {
     try {
-        const res = await fetch(API_URL, { next: { revalidate: 3600 } });
+        const res = await fetch(API_URL, {
+            next: { revalidate: 3600 },
+            headers: { 'User-Agent': SITE_NAME },
+        });
         if (!res.ok) {
             console.error('GitHub API error:', res.status, await res.text());
             return null;
@@ -22,8 +25,6 @@ async function getStarCount(): Promise<number | null> {
 
 export async function GithubButton() {
     const stars = await getStarCount();
-
-    console.log('GitHub stars:', stars);
 
     return (
         <Button className="has-[>svg]:px-2" variant="ghost" size="sm" asChild>
