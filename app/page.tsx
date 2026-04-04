@@ -1,12 +1,15 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { SpeechButton } from '@/components/speech-button';
+import { HiraganaSlider, KatakanaSlider } from '@/components/kana-slider/kana-sliders';
 
 const japaneseTitle = '日本語カード';
 
 export default function Page() {
     return (
         <div className="flex h-full flex-col items-center justify-center gap-6 p-8">
+            <HiraganaSlider />
+
             <div className="flex max-w-[980px] flex-col items-center gap-4 text-center">
                 <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-center gap-2">
@@ -44,6 +47,8 @@ export default function Page() {
                     </Link>
                 </Button>
             </div>
+
+            <KatakanaSlider />
         </div>
     );
 }
