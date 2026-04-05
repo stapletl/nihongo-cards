@@ -104,4 +104,3 @@ hooks/
 
 - Flashcard study mode — will use `flashcardViewCount` and `lastStudied` in `KanaProgress`
 - Quiz — will use `quizCorrectCount`, `quizIncorrectCount`, `lastQuizzed`
-- SRS scheduling — `nextReviewAt` field will likely be added to `KanaProgress` in a future DB version bump (increment `DB_VERSION` in `kana-db.ts` and add a version-gated block in the `upgrade` callback)

@@ -1,13 +1,11 @@
 # Nihongo Cards
 
-A modern Japanese learning application built with Next.js that implements a Spaced Repetition System (SRS) for mastering basic Japanese through interactive flashcards. Practice Hiragana, Katakana, and essential vocabulary with an intuitive interface.
+A modern Japanese learning application built with Next.js for mastering Hiragana and Katakana through interactive flashcards and quizzes.
 
 ## Features
 
 - 🎴 Interactive flashcards for Japanese learning
 - ✍️ Hiragana and Katakana practice
-- 📚 Basic vocabulary learning system
-- 🔄 Spaced Repetition System (SRS) for optimal memory retention
 - 🎨 Modern, responsive UI built with shadcn/ui components
 - 🌓 Light/Dark mode support
 
