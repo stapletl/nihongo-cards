@@ -1,8 +1,11 @@
+import { ExternalLinkIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 export interface LicenseCardProps {
     name?: string;
     author?: string;
+    homepage?: string;
     homepageUrl?: string;
     githubUrl?: string;
     licenseType?: string;
@@ -13,34 +16,54 @@ export interface LicenseCardProps {
 export function LicenseCard({
     name,
     author,
+    homepage,
     homepageUrl,
     githubUrl,
     licenseType,
     licenseUrl,
     modifications,
 }: LicenseCardProps) {
+    const homepageHref = homepage ?? homepageUrl;
+
     return (
         <Card>
             <CardContent className="space-y-3">
                 {(name || author) && (
-                    <div>
-                        {name && <p className="text-lg font-semibold">{name}</p>}
-                        {author && <p className="text-muted-foreground text-sm">By {author}</p>}
-                    </div>
-                )}
-
-                {homepageUrl && (
-                    <div className="border-t pt-3">
-                        <p className="text-sm">
-                            Homepage:{' '}
-                            <a
-                                href={homepageUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-primary underline">
-                                {homepageUrl}
-                            </a>
-                        </p>
+                    <div className="flex flex-col gap-1">
+                        {name && (
+                            <div className="flex items-center gap-1">
+                                <p className="text-lg font-semibold">{name}</p>
+                                {homepageHref && (
+                                    <Button variant="ghost" size="icon-xs" asChild>
+                                        <a
+                                            href={homepageHref}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={`Open ${name} homepage`}
+                                            title="Open homepage">
+                                            <ExternalLinkIcon className="size-3.5" />
+                                        </a>
+                                    </Button>
+                                )}
+                            </div>
+                        )}
+                        {author && (
+                            <div className="flex items-center gap-1">
+                                <p className="text-muted-foreground text-sm">By {author}</p>
+                                {!name && homepageHref && (
+                                    <Button variant="ghost" size="icon-xs" asChild>
+                                        <a
+                                            href={homepageHref}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={`Open ${author} homepage`}
+                                            title="Open homepage">
+                                            <ExternalLinkIcon className="size-3.5" />
+                                        </a>
+                                    </Button>
+                                )}
+                            </div>
+                        )}
                     </div>
                 )}
 
