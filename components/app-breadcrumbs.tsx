@@ -7,6 +7,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { House } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
@@ -33,7 +34,10 @@ export default function AppBreadcrumbs() {
             <BreadcrumbList>
                 <BreadcrumbItem className="md:block">
                     <BreadcrumbLink asChild={true}>
-                        <Link href="/">Home</Link>
+                        <Link href="/">
+                            <House className="h-4 w-4" />
+                            <span className="sr-only">Home</span>
+                        </Link>
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 {segments.map((segment, index) => {
