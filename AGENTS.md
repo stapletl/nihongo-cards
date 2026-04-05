@@ -5,13 +5,13 @@ Japanese learning app built with Next.js App Router. Covers hiragana, katakana, 
 ## Commands
 
 ```bash
-npm run dev       # dev server with Turbopack (localhost:3000)
-npm run build     # production build — run this to verify TypeScript and page generation
-npm run lint      # ESLint
-npm run format    # Prettier (auto-fix)
+bun dev           # dev server with Turbopack (localhost:3000)
+bun build         # production build — run this to verify TypeScript and page generation
+bun lint          # ESLint
+bun format        # Prettier (auto-fix)
 ```
 
-No test suite exists yet. `npm run build` is the primary verification step — it runs the TypeScript compiler and generates all 212 static pages.
+No test suite exists yet. `bun build` is the primary verification step — it runs the TypeScript compiler and generates all 212 static pages.
 
 ## Stack
 
@@ -19,7 +19,7 @@ No test suite exists yet. `npm run build` is the primary verification step — i
 - **React 19** — use `'use client'` only when needed (hooks, browser APIs, event handlers)
 - **TypeScript** — strict mode, path alias `@/` maps to repo root
 - **Tailwind CSS v4** — CSS variables for theming, config in `tailwind.config.mjs` + `app/globals.css`
-- **shadcn/ui** — New York style, `components/ui/` — add new components via `npx shadcn@latest add <name>`
+- **shadcn/ui** — New York style, `components/ui/` — add new components via `bunx --bun shadcn@latest add <name>`
 - **idb** — thin IndexedDB wrapper for client-side persistence
 - **Vercel Analytics + Speed Insights** — already wired in `app/layout.tsx`
 
