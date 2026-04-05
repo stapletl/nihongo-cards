@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useThemeToggle } from '@/hooks/use-theme-toggle';
 
 export const ThemeToggle = () => {
-    const { resolvedTheme, toggleTheme } = useThemeToggle();
+    const { toggleTheme } = useThemeToggle();
     const buttonRef = useRef<HTMLButtonElement>(null);
 
     const handleClick = () => {

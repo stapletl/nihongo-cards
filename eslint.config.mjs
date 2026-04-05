@@ -1,20 +1,11 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
 import typescriptParser from '@typescript-eslint/parser';
 import typescriptPlugin from '@typescript-eslint/eslint-plugin';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-});
-
 const eslintConfig = [
-    ...compat.extends('next/core-web-vitals', 'next/typescript'),
+    ...nextCoreWebVitals,
     {
         files: ['**/*.ts', '**/*.tsx'],
         languageOptions: {
@@ -58,7 +49,6 @@ const eslintConfig = [
             // General rules
             'arrow-body-style': ['warn', 'as-needed'],
             eqeqeq: ['error', 'always'],
-            'no-console': 'warn',
             'prefer-const': 'warn',
             'no-unused-expressions': 'warn',
             'no-duplicate-imports': 'error',

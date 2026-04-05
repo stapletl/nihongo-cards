@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { getAllKanaProgress, KanaProgress, KANA_PROGRESS_UPDATED_EVENT } from '@/lib/kana-db';
+import { useCallback, useEffect, useState } from 'react';
+import { KANA_PROGRESS_UPDATED_EVENT, KanaProgress, getAllKanaProgress } from '@/lib/kana-db';
 
 /**
  * Loads all kana progress records into a Map keyed by character.

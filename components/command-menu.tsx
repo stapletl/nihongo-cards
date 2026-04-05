@@ -4,20 +4,20 @@ import * as React from 'react';
 import { useRouter } from 'next/navigation';
 import { useHotkey } from '@tanstack/react-hotkeys';
 import {
-    SearchIcon,
-    CreditCardIcon,
-    ClipboardListIcon,
+    ArrowRightIcon,
     BarChartIcon,
+    CheckIcon,
+    ClipboardListIcon,
+    CreditCardIcon,
+    HomeIcon,
+    MoonIcon,
+    PaletteIcon,
+    SearchIcon,
     SettingsIcon,
     SunIcon,
-    MoonIcon,
-    ArrowRightIcon,
-    HomeIcon,
-    PaletteIcon,
-    CheckIcon,
 } from 'lucide-react';
 import { useThemeToggle } from '@/hooks/use-theme-toggle';
-import { useColorTheme, COLOR_THEMES } from '@/hooks/use-color-theme';
+import { COLOR_THEMES, useColorTheme } from '@/hooks/use-color-theme';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
 import { isVisited } from '@/lib/kana-db';

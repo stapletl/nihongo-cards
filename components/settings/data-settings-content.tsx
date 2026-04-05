@@ -15,10 +15,10 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import {
-    getAllKanaProgress,
-    clearKanaProgress,
-    importKanaProgress,
     type KanaProgress,
+    clearKanaProgress,
+    getAllKanaProgress,
+    importKanaProgress,
 } from '@/lib/kana-db';
 
 type ExportEnvelope = {
@@ -229,7 +229,7 @@ export function DataSettingsContent() {
                     </p>
                 </div>
                 <AlertDialog>
-                    <AlertDialogTrigger asChild>
+                    <AlertDialogTrigger asChild={true}>
                         <Button variant="destructive">Delete</Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
