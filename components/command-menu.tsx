@@ -64,7 +64,7 @@ export function CommandMenu() {
     useHotkey(',', () => handleSelect('/settings'));
     useHotkey('.', () => handleSelect('/'));
     useHotkey('T', () => {
-        setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+        toggleTheme();
     });
 
     return (
