@@ -1,4 +1,4 @@
-import { getDB, type KanaProgress } from './db';
+import { type KanaProgress, getDB } from './db';
 
 export type { KanaProgress } from './db';
 

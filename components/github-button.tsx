@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { StarIcon } from 'lucide-react';
 import { unstable_cache } from 'next/cache';
-import { SITE_NAME, SITE_GITHUB_URL, SITE_GITHUB_API_URL } from '@/lib/site';
+import { SITE_GITHUB_API_URL, SITE_GITHUB_URL, SITE_NAME } from '@/lib/site';
 
 const REPO_URL = SITE_GITHUB_URL;
 const API_URL = SITE_GITHUB_API_URL;
@@ -33,7 +33,7 @@ export async function GithubButton() {
     const stars = await getStarCount();
 
     return (
-        <Button className="has-[>svg]:px-2" variant="ghost" size="sm" asChild>
+        <Button className="has-[>svg]:px-2" variant="ghost" size="sm" asChild={true}>
             <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
                 <svg viewBox="0 0 24 24" className="size-4 shrink-0" aria-hidden="true">
                     <path
