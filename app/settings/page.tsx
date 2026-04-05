@@ -95,13 +95,14 @@ export default function SettingsPage() {
                     <LicenseCard
                         name={SITE_NAME}
                         author={SITE_AUTHOR}
-                        homepageUrl={SITE_GITHUB_URL}
+                        githubUrl={SITE_GITHUB_URL}
                         licenseType="MIT"
                         licenseUrl={`${SITE_GITHUB_URL}/blob/main/LICENSE`}
                     />
                     <LicenseCard
                         name="KanjiVG"
                         homepageUrl="https://kanjivg.tagaini.net/"
+                        githubUrl="https://github.com/KanjiVG/kanjivg"
                         author="Ulrich Apel"
                         licenseType="CC BY-SA 3.0"
                         licenseUrl="https://creativecommons.org/licenses/by-sa/3.0/"

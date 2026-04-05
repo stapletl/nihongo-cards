@@ -4,6 +4,7 @@ export interface LicenseCardProps {
     name?: string;
     author?: string;
     homepageUrl?: string;
+    githubUrl?: string;
     licenseType?: string;
     licenseUrl?: string;
     modifications?: string;
@@ -13,6 +14,7 @@ export function LicenseCard({
     name,
     author,
     homepageUrl,
+    githubUrl,
     licenseType,
     licenseUrl,
     modifications,
@@ -37,6 +39,21 @@ export function LicenseCard({
                                 rel="noopener noreferrer"
                                 className="text-primary underline">
                                 {homepageUrl}
+                            </a>
+                        </p>
+                    </div>
+                )}
+
+                {githubUrl && (
+                    <div className="border-t pt-3">
+                        <p className="text-sm">
+                            GitHub:{' '}
+                            <a
+                                href={githubUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary underline">
+                                {githubUrl}
                             </a>
                         </p>
                     </div>
