@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { AppearanceSettingsContent } from '@/components/settings/appearance-settings-content';
 import { LicenseCard } from '@/components/ui/license-card';
 import Link from 'next/link';
-import { SITE_NAME, SITE_AUTHOR, SITE_GITHUB_URL } from '@/lib/site';
+import { SITE_NAME, SITE_AUTHOR, SITE_GITHUB_URL, SITE_HOMEPAGE_URL } from '@/lib/site';
 
 const VoiceSettingsContent = dynamic(
     () =>
@@ -91,6 +91,7 @@ export default function SettingsPage() {
                     <LicenseCard
                         name={SITE_NAME}
                         author={SITE_AUTHOR}
+                        homepage={SITE_HOMEPAGE_URL}
                         githubUrl={SITE_GITHUB_URL}
                         licenseType="MIT"
                         licenseUrl={`${SITE_GITHUB_URL}/blob/main/LICENSE`}
