@@ -3,6 +3,7 @@ import { Separator } from '@/components/ui/separator';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { SpeechProvider } from '@/components/providers/speech-provider';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { Toaster } from '@/components/ui/sonner';
 import AppBreadcrumbs from '../app-breadcrumbs';
 import { CommandMenu } from '@/components/command-menu';
 import { GithubButton } from '@/components/github-button';
@@ -48,13 +49,14 @@ export default async function DashboardLayout({ children }: LayoutProps) {
                                 <CommandMenu />
                             </div>
                         </header>
-                        <div className="flex-1 overflow-y-auto w-full overflow-x-hidden">
+                        <div className="w-full flex-1 overflow-x-hidden overflow-y-auto">
                             <div className="flex h-full min-w-[375px] flex-col gap-4">
                                 {children}
                             </div>
                         </div>
                     </SidebarInset>
                 </SidebarProvider>
+                <Toaster />
             </SpeechProvider>
         </ThemeProvider>
     );
