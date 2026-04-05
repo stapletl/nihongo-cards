@@ -1,7 +1,7 @@
 import { HiraganaMarquee, KatakanaMarquee } from '@/components/kana-slider/kana-marquees';
 import { SpeechButton } from '@/components/speech-button';
 import { HomeKanaCards } from '@/components/home-kana-cards';
-import { SITE_NAME, SITE_DESCRIPTION } from '@/lib/site';
+import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/site';
 
 const japaneseTitle = '日本語カード';
 

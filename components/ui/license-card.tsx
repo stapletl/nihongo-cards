@@ -2,7 +2,7 @@ import { ExternalLinkIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
-export interface LicenseCardProps {
+export type LicenseCardProps = {
     name?: string;
     author?: string;
     homepage?: string;
@@ -34,7 +34,7 @@ export function LicenseCard({
                             <div className="flex items-center gap-1">
                                 <p className="text-lg font-semibold">{name}</p>
                                 {homepageHref && (
-                                    <Button variant="ghost" size="icon-xs" asChild>
+                                    <Button variant="ghost" size="icon-xs" asChild={true}>
                                         <a
                                             href={homepageHref}
                                             target="_blank"
@@ -51,7 +51,7 @@ export function LicenseCard({
                             <div className="flex items-center gap-1">
                                 <p className="text-muted-foreground text-sm">By {author}</p>
                                 {!name && homepageHref && (
-                                    <Button variant="ghost" size="icon-xs" asChild>
+                                    <Button variant="ghost" size="icon-xs" asChild={true}>
                                         <a
                                             href={homepageHref}
                                             target="_blank"

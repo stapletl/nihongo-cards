@@ -2,7 +2,7 @@ import { type ComponentPropsWithoutRef } from "react"
 
 import { cn } from "@/lib/utils"
 
-interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
+type MarqueeProps = {
   /**
    * Optional CSS class name to apply custom styles
    */
@@ -31,7 +31,7 @@ interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
    * @default 4
    */
   repeat?: number
-}
+} & ComponentPropsWithoutRef<"div">
 
 export function Marquee({
   className,

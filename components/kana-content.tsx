@@ -40,6 +40,7 @@ export const KanaContent: React.FC<KanaContentProps> = ({
     useEffect(() => {
         const el = firstUnvisitedRef.current;
         if (!el) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setShowScrollButton(false);
             return;
         }

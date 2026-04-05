@@ -5,11 +5,11 @@ import { Loader2, Play } from 'lucide-react';
 
 import {
     CHARACTER_GAP_MS,
-    getKanaStrokeAnimationDuration,
     KanaStrokeOrderSvg,
+    getKanaStrokeAnimationDuration,
 } from '@/components/kana-card/kana-stroke-order-svg';
 import { Button } from '@/components/ui/button';
-import { loadKanaStrokeSvg, ParsedKanaStrokeSvg } from '@/lib/kana-stroke-order';
+import { ParsedKanaStrokeSvg, loadKanaStrokeSvg } from '@/lib/kana-stroke-order';
 
 type KanaStrokeOrderSectionProps = {
     characterText: string;
@@ -57,6 +57,7 @@ export const KanaStrokeOrderSection: React.FC<KanaStrokeOrderSectionProps> = ({
         let isCancelled = false;
         const nextStrokeOrderCharacters = getStrokeOrderCharacters(characterText);
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setReplayToken(0);
         setLoadedStrokeOrderCharacters([]);
 

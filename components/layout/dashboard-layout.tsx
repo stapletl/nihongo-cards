@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/sonner';
 import AppBreadcrumbs from '../app-breadcrumbs';
 import { CommandMenu } from '@/components/command-menu';
 import { GithubButton } from '@/components/github-button';
+import { NativeShareButton } from '@/components/native-share-button';
 
 type LayoutProps = {
     children: React.ReactNode;
@@ -15,10 +16,22 @@ type LayoutProps = {
 export default async function DashboardLayout({ children }: LayoutProps) {
     return (
         <ThemeProvider
-            attribute="class"
+            attribute="data-theme"
             defaultTheme="system"
             enableSystem={true}
-            disableTransitionOnChange={true}>
+            disableTransitionOnChange={true}
+            themes={[
+                'light',
+                'dark',
+                'ai-iro-light',
+                'ai-iro-dark',
+                'sakura-light',
+                'sakura-dark',
+                'matcha-light',
+                'matcha-dark',
+                'murasaki-light',
+                'murasaki-dark',
+            ]}>
             <SpeechProvider>
                 <SidebarProvider>
                     <AppSidebar />
@@ -31,6 +44,7 @@ export default async function DashboardLayout({ children }: LayoutProps) {
                             />
                             <AppBreadcrumbs />
                             <div className="ml-auto flex items-center gap-1">
+                                <NativeShareButton />
                                 <GithubButton />
                                 <CommandMenu />
                             </div>

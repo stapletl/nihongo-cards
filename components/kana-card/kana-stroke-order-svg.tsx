@@ -98,7 +98,7 @@ export const KanaStrokeOrderSvg: React.FC<KanaStrokeOrderSvgProps> = ({
                     ))}
                 </g>
             </svg>
-            <style jsx>{`
+            <style jsx={true}>{`
                 @keyframes kana-stroke-show {
                     from {
                         opacity: 0;
