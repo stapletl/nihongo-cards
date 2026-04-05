@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
+import { useKanaProgressMap } from '@/hooks/use-kana-progress';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -27,6 +29,123 @@ type ExportEnvelope = {
     data: KanaProgress[];
 };
 
+type ProgressStats = {
+    visitedKana: number;
+    flashcardViews: number;
+    quizCorrect: number;
+    quizIncorrect: number;
+};
+
+const EMPTY_PROGRESS_STATS: ProgressStats = {
+    visitedKana: 0,
+    flashcardViews: 0,
+    quizCorrect: 0,
+    quizIncorrect: 0,
+};
+
+const numberFormatter = new Intl.NumberFormat();
+
+const STAT_ROWS: {
+    key: keyof ProgressStats;
+    label: string;
+}[] = [
+    { key: 'visitedKana', label: 'Visited kana' },
+    { key: 'flashcardViews', label: 'Flashcard reviews' },
+    { key: 'quizCorrect', label: 'Quiz correct' },
+    { key: 'quizIncorrect', label: 'Quiz incorrect' },
+];
+
+function getProgressStats(records: KanaProgress[]): ProgressStats {
+    const stats = { ...EMPTY_PROGRESS_STATS };
+
+    for (const record of records) {
+        stats.visitedKana += 1;
+        stats.flashcardViews += record.flashcardViewCount;
+        stats.quizCorrect += record.quizCorrectCount;
+        stats.quizIncorrect += record.quizIncorrectCount;
+    }
+
+    return stats;
+}
+
+function formatNumber(value: number): string {
+    return numberFormatter.format(value);
+}
+
+function formatDelta(value: number): string {
+    if (value === 0) return '0';
+    return `${value > 0 ? '+' : ''}${formatNumber(value)}`;
+}
+
+function ProgressStatsSummary({ stats }: { stats: ProgressStats }) {
+    return (
+        <div className="bg-muted/30 rounded-lg border p-3">
+            <dl className="space-y-2">
+                {STAT_ROWS.map(({ key, label }) => (
+                    <div key={key} className="flex items-center justify-between gap-4 text-sm">
+                        <dt className="text-muted-foreground">{label}</dt>
+                        <dd className="font-medium">{formatNumber(stats[key])}</dd>
+                    </div>
+                ))}
+            </dl>
+        </div>
+    );
+}
+
+function ImportComparison({
+    currentStats,
+    importStats,
+}: {
+    currentStats: ProgressStats;
+    importStats: ProgressStats;
+}) {
+    const tableColumns = 'grid-cols-[minmax(0,1fr)_5rem_5rem_5rem]';
+
+    return (
+        <div className="overflow-hidden rounded-lg border">
+            <div
+                className={cn(
+                    'bg-muted/30 text-muted-foreground grid gap-x-3 px-3 py-2 text-[11px] font-medium tracking-wide uppercase',
+                    tableColumns
+                )}>
+                <span>Metric</span>
+                <span className="text-right">Current</span>
+                <span className="text-right">Import</span>
+                <span className="text-right">Change</span>
+            </div>
+            {STAT_ROWS.map(({ key, label }, index) => {
+                const delta = importStats[key] - currentStats[key];
+
+                return (
+                    <div
+                        key={key}
+                        className={cn(
+                            'grid gap-x-3 px-3 py-2 text-sm',
+                            tableColumns,
+                            index > 0 && 'border-t'
+                        )}>
+                        <span className="text-muted-foreground">{label}</span>
+                        <span className="text-right font-medium tabular-nums">
+                            {formatNumber(currentStats[key])}
+                        </span>
+                        <span className="text-right font-medium tabular-nums">
+                            {formatNumber(importStats[key])}
+                        </span>
+                        <span
+                            className={cn(
+                                'text-right font-medium tabular-nums',
+                                delta > 0 && 'text-emerald-600 dark:text-emerald-400',
+                                delta < 0 && 'text-destructive'
+                            )}>
+                            {formatDelta(delta)}
+                        </span>
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
 function isValidKanaProgress(obj: unknown): obj is KanaProgress {
     if (!obj || typeof obj !== 'object') return false;
     const r = obj as Record<string, unknown>;
@@ -43,7 +162,7 @@ function isValidKanaProgress(obj: unknown): obj is KanaProgress {
 }
 
 function validateEnvelope(
-    parsed: unknown,
+    parsed: unknown
 ): { ok: true; data: KanaProgress[] } | { ok: false; error: string } {
     if (!parsed || typeof parsed !== 'object') {
         return { ok: false, error: 'File is not a valid JSON object.' };
@@ -85,8 +204,13 @@ function validateEnvelope(
 
 export function DataSettingsContent() {
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const { progressMap, isLoading } = useKanaProgressMap();
     const [importError, setImportError] = useState<string | null>(null);
     const [pendingImport, setPendingImport] = useState<KanaProgress[] | null>(null);
+    const currentStats = getProgressStats(Array.from(progressMap.values()));
+    const pendingImportStats = pendingImport
+        ? getProgressStats(pendingImport)
+        : EMPTY_PROGRESS_STATS;
 
     async function handleExport() {
         try {
@@ -198,24 +322,32 @@ export function DataSettingsContent() {
                             <AlertDialogHeader>
                                 <AlertDialogTitle>Replace all progress?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    This will permanently replace all your current progress with
-                                    the imported data. This cannot be undone.
+                                    This will permanently replace all your current progress with the
+                                    imported data. This cannot be undone.
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
+                            {isLoading ? (
+                                <p className="text-muted-foreground text-sm">
+                                    Loading current progress summary...
+                                </p>
+                            ) : (
+                                <ImportComparison
+                                    currentStats={currentStats}
+                                    importStats={pendingImportStats}
+                                />
+                            )}
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                                 <AlertDialogAction
-                                    variant="destructive"
-                                    onClick={handleConfirmImport}>
+                                    onClick={handleConfirmImport}
+                                    disabled={isLoading}>
                                     Import
                                 </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
                 </div>
-                {importError && (
-                    <p className="text-destructive text-sm">{importError}</p>
-                )}
+                {importError && <p className="text-destructive text-sm">{importError}</p>}
             </div>
 
             <Separator />
@@ -236,15 +368,23 @@ export function DataSettingsContent() {
                         <AlertDialogHeader>
                             <AlertDialogTitle>Delete all progress?</AlertDialogTitle>
                             <AlertDialogDescription>
-                                This will permanently delete all your learning progress. This
-                                cannot be undone.
+                                This will permanently delete all your learning progress. This cannot
+                                be undone.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
+                        {isLoading ? (
+                            <p className="text-muted-foreground text-sm">
+                                Loading current progress summary...
+                            </p>
+                        ) : (
+                            <ProgressStatsSummary stats={currentStats} />
+                        )}
                         <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
                                 variant="destructive"
-                                onClick={handleConfirmDelete}>
+                                onClick={handleConfirmDelete}
+                                disabled={isLoading}>
                                 Delete
                             </AlertDialogAction>
                         </AlertDialogFooter>
