@@ -92,27 +92,7 @@ const navMain: NavSection[] = [
             },
         ],
     },
-    // {
-    //     title: 'Intermediate Studies',
-    //     url: '#',
-    //     items: [
-    //         {
-    //             title: 'Intermediate Vocab',
-    //             url: '/intermediate-vocab',
-    //             enabled: false,
-    //         },
-    //         {
-    //             title: 'Kanji',
-    //             url: '/kanji',
-    //             enabled: false,
-    //         },
-    //         {
-    //             title: 'Quizzes',
-    //             url: '/quizzes',
-    //             enabled: false,
-    //         },
-    //     ],
-    // },
+
     // {
     //     title: 'Tools & Resources',
     //     url: '#',

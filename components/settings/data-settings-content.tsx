@@ -62,7 +62,7 @@ function validateEnvelope(
         return { ok: true, data: env.data as KanaProgress[] };
     }
 
-    // v2: kana + vocab — vocab silently ignored, kanaData extracted
+    // v2: legacy format — extract kanaData, ignore other fields
     if (env.version === 2) {
         if (!Array.isArray(env.kanaData)) {
             return { ok: false, error: 'File is missing a valid "kanaData" array.' };
