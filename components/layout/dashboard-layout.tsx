@@ -14,10 +14,22 @@ type LayoutProps = {
 export default async function DashboardLayout({ children }: LayoutProps) {
     return (
         <ThemeProvider
-            attribute="class"
+            attribute="data-theme"
             defaultTheme="system"
             enableSystem={true}
-            disableTransitionOnChange={true}>
+            disableTransitionOnChange={true}
+            themes={[
+                'light',
+                'dark',
+                'ai-iro-light',
+                'ai-iro-dark',
+                'sakura-light',
+                'sakura-dark',
+                'matcha-light',
+                'matcha-dark',
+                'murasaki-light',
+                'murasaki-dark',
+            ]}>
             <SpeechProvider>
                 <SidebarProvider>
                     <AppSidebar />
