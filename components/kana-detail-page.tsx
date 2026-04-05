@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { KanaNavHotkeys } from '@/components/kana-card/kana-nav-hotkeys';
+import { NavHotkeys } from '@/components/nav-hotkeys';
 import { KanaPageContent } from '@/components/kana-card/kana-page-content';
 import { MarkKanaVisited } from '@/components/kana-card/mark-kana-visited';
 import { Button } from '@/components/ui/button';
@@ -26,7 +26,7 @@ export function KanaDetailPage({ items, character, backHref, backLabel }: KanaDe
     return (
         <div className="flex h-full flex-col overflow-hidden">
             <MarkKanaVisited character={kanaItem.character} />
-            <KanaNavHotkeys prevHref={prevItem?.character} nextHref={nextItem?.character} />
+            <NavHotkeys prevHref={prevItem?.character} nextHref={nextItem?.character} />
             <div className="flex shrink-0 justify-between border-b p-2">
                 {prevItem ? (
                     <Button asChild={true} variant="ghost">

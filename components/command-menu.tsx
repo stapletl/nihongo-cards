@@ -12,6 +12,7 @@ import {
     SunIcon,
     MoonIcon,
     ArrowRightIcon,
+    HomeIcon,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -27,6 +28,7 @@ import {
     CommandItem,
     CommandList,
     CommandSeparator,
+    CommandShortcut,
 } from '@/components/ui/command';
 
 export function CommandMenu() {
@@ -47,6 +49,23 @@ export function CommandMenu() {
         setOpen(false);
         router.push(url);
     };
+
+    useHotkey('Shift+H', () => {
+        if (nextHiragana) handleSelect(`/hiragana/${encodeURIComponent(nextHiragana.character)}`);
+    }, { enabled: !!nextHiragana });
+    useHotkey('Shift+K', () => {
+        if (nextKatakana) handleSelect(`/katakana/${encodeURIComponent(nextKatakana.character)}`);
+    }, { enabled: !!nextKatakana });
+    useHotkey('H', () => handleSelect('/hiragana'));
+    useHotkey('K', () => handleSelect('/katakana'));
+    useHotkey('F', () => handleSelect('/flashcards'));
+    useHotkey('Q', () => handleSelect('/quiz'));
+    useHotkey('S', () => handleSelect('/statistics'));
+    useHotkey(',', () => handleSelect('/settings'));
+    useHotkey('.', () => handleSelect('/'));
+    useHotkey('T', () => {
+        setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+    });
 
     return (
         <>
@@ -81,6 +100,7 @@ export function CommandMenu() {
                                     View Next Hiragana — <span className='font-semibold text-primary'>{nextHiragana.character}</span> (
                                     {nextHiragana.romaji})
                                 </span>
+                                <CommandShortcut>⇧H</CommandShortcut>
                             </CommandItem>
                         )}
                         {nextKatakana && (
@@ -95,15 +115,18 @@ export function CommandMenu() {
                                     View Next Katakana — <span className='font-semibold text-primary'>{nextKatakana.character}</span> (
                                     {nextKatakana.romaji})
                                 </span>
+                                <CommandShortcut>⇧K</CommandShortcut>
                             </CommandItem>
                         )}
                         <CommandItem onSelect={() => handleSelect('/flashcards')}>
                             <CreditCardIcon />
                             <span>Study Flash Cards</span>
+                            <CommandShortcut>F</CommandShortcut>
                         </CommandItem>
                         <CommandItem onSelect={() => handleSelect('/quiz')}>
                             <ClipboardListIcon />
                             <span>Start Quiz</span>
+                            <CommandShortcut>Q</CommandShortcut>
                         </CommandItem>
                         <CommandItem
                             onSelect={() => {
@@ -112,37 +135,49 @@ export function CommandMenu() {
                             }}>
                             {resolvedTheme === 'dark' ? <SunIcon /> : <MoonIcon />}
                             <span>Toggle Theme</span>
+                            <CommandShortcut>T</CommandShortcut>
                         </CommandItem>
                     </CommandGroup>
                     <CommandGroup heading="Navigation">
                         <CommandSeparator />
+                        <CommandItem onSelect={() => handleSelect('/')}>
+                            <HomeIcon />
+                            <span>Home</span>
+                            <CommandShortcut>.</CommandShortcut>
+                        </CommandItem>
                         <CommandItem onSelect={() => handleSelect('/hiragana')}>
                             <span className="text-muted-foreground flex size-4 items-center justify-center text-sm font-semibold">
                                 あ
                             </span>
                             <span>Hiragana</span>
+                            <CommandShortcut>H</CommandShortcut>
                         </CommandItem>
                         <CommandItem onSelect={() => handleSelect('/katakana')}>
                             <span className="text-muted-foreground flex size-4 items-center justify-center text-sm font-semibold">
                                 ア
                             </span>
                             <span>Katakana</span>
+                            <CommandShortcut>K</CommandShortcut>
                         </CommandItem>
                         <CommandItem onSelect={() => handleSelect('/flashcards')}>
                             <CreditCardIcon />
                             <span>Flashcards</span>
+                            <CommandShortcut>F</CommandShortcut>
                         </CommandItem>
                         <CommandItem onSelect={() => handleSelect('/quiz')}>
                             <ClipboardListIcon />
                             <span>Quiz</span>
+                            <CommandShortcut>Q</CommandShortcut>
                         </CommandItem>
                         <CommandItem onSelect={() => handleSelect('/statistics')}>
                             <BarChartIcon />
                             <span>Statistics</span>
+                            <CommandShortcut>S</CommandShortcut>
                         </CommandItem>
                         <CommandItem onSelect={() => handleSelect('/settings')}>
                             <SettingsIcon />
                             <span>Settings</span>
+                            <CommandShortcut>,</CommandShortcut>
                         </CommandItem>
                     </CommandGroup>
                 </CommandList>
