@@ -3,8 +3,7 @@
 import dynamic from 'next/dynamic';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Label } from '@/components/ui/label';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { AppearanceSettingsContent } from '@/components/settings/appearance-settings-content';
 import { LicenseCard } from '@/components/ui/license-card';
 import Link from 'next/link';
 import { SITE_NAME, SITE_AUTHOR, SITE_GITHUB_URL } from '@/lib/site';
@@ -60,11 +59,8 @@ export default function SettingsPage() {
 
                 <section className="space-y-4">
                     <h2 className="text-2xl font-bold">Appearance</h2>
-                    <Card className="p-6">
-                        <div className="flex items-center justify-between">
-                            <Label>Theme</Label>
-                            <ThemeToggle />
-                        </div>
+                    <Card className="space-y-2 p-6">
+                        <AppearanceSettingsContent />
                     </Card>
                 </section>
 
