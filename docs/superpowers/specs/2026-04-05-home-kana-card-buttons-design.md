@@ -37,7 +37,7 @@ A `'use client'` component that:
 
 ## Data
 
-- Totals are static: `hiraganaItems.length` (102) and `katakanaItems.length` (101)
+- Totals are static: `hiraganaItems.length` (101) and `katakanaItems.length` (101)
 - Visited count computed client-side from `progressMap` using existing `isVisited()` utility
 - Pattern is identical to the sidebar's `newCounts` calculation
 
