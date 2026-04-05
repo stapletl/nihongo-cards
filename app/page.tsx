@@ -1,7 +1,6 @@
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { SpeechButton } from '@/components/speech-button';
 import { HiraganaMarquee, KatakanaMarquee } from '@/components/kana-slider/kana-marquees';
+import { SpeechButton } from '@/components/speech-button';
+import { HomeKanaCards } from '@/components/home-kana-cards';
 import { SITE_NAME, SITE_DESCRIPTION } from '@/lib/site';
 
 const japaneseTitle = '日本語カード';
@@ -28,20 +27,7 @@ export default function Page() {
                 </p>
             </div>
 
-            <div className="flex flex-col gap-4 px-8 sm:flex-row">
-                <Button asChild={true} size="lg">
-                    <Link href="/hiragana">
-                        Go to Hiragana
-                        <span className="ml-2">→</span>
-                    </Link>
-                </Button>
-                <Button asChild={true} size="lg">
-                    <Link href="/katakana">
-                        Go to Katakana
-                        <span className="ml-2">→</span>
-                    </Link>
-                </Button>
-            </div>
+            <HomeKanaCards />
 
             <KatakanaMarquee />
         </div>
