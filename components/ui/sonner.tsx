@@ -9,8 +9,9 @@ import {
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Toaster as Sonner, type ToasterProps } from 'sonner';
+import { cn } from '@/lib/utils';
 
-const Toaster = ({ ...props }: ToasterProps) => {
+const Toaster = ({ toastOptions, ...props }: ToasterProps) => {
     const { theme = 'system' } = useTheme();
 
     return (
@@ -26,12 +27,16 @@ const Toaster = ({ ...props }: ToasterProps) => {
             }}
             style={
                 {
-                    '--normal-bg': 'var(--popover)',
+                    '--normal-bg': 'var(--accent)',
                     '--normal-text': 'var(--popover-foreground)',
                     '--normal-border': 'var(--border)',
                     '--border-radius': 'var(--radius)',
                 } as React.CSSProperties
             }
+            toastOptions={{
+                ...toastOptions,
+                descriptionClassName: cn('!text-foreground/80', toastOptions?.descriptionClassName),
+            }}
             {...props}
         />
     );

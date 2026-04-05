@@ -197,8 +197,8 @@
     --primary: oklch(0.48 0.16 265);
     --ring: oklch(0.48 0.16 265);
     --background: oklch(0.9818 0.016 265);
-    --card: oklch(0.9950 0.009 265);
-    --popover: oklch(0.9950 0.009 265);
+    --card: oklch(0.995 0.009 265);
+    --popover: oklch(0.995 0.009 265);
     --secondary: oklch(0.9245 0.016 265);
     --muted: oklch(0.9341 0.018 265);
     --accent: oklch(0.9245 0.016 265);
@@ -216,7 +216,7 @@
     --accent: oklch(0.213 0.014 265);
     --sidebar: oklch(0.2357 0.012 265);
     --sidebar-primary: oklch(0.65 0.15 265);
-    --sidebar-accent: oklch(0.168 0.010 265);
+    --sidebar-accent: oklch(0.168 0.01 265);
 }
 
 /* Sakura (桜色) — cherry blossom */
@@ -224,8 +224,8 @@
     --primary: oklch(0.62 0.15 358);
     --ring: oklch(0.62 0.15 358);
     --background: oklch(0.9818 0.016 358);
-    --card: oklch(0.9950 0.009 358);
-    --popover: oklch(0.9950 0.009 358);
+    --card: oklch(0.995 0.009 358);
+    --popover: oklch(0.995 0.009 358);
     --secondary: oklch(0.9245 0.016 358);
     --muted: oklch(0.9341 0.018 358);
     --accent: oklch(0.9245 0.016 358);
@@ -243,7 +243,7 @@
     --accent: oklch(0.213 0.014 358);
     --sidebar: oklch(0.2357 0.012 358);
     --sidebar-primary: oklch(0.72 0.13 358);
-    --sidebar-accent: oklch(0.168 0.010 358);
+    --sidebar-accent: oklch(0.168 0.01 358);
 }
 
 /* Matcha (抹茶色) — green tea */
@@ -251,8 +251,8 @@
     --primary: oklch(0.52 0.13 148);
     --ring: oklch(0.52 0.13 148);
     --background: oklch(0.9818 0.016 148);
-    --card: oklch(0.9950 0.009 148);
-    --popover: oklch(0.9950 0.009 148);
+    --card: oklch(0.995 0.009 148);
+    --popover: oklch(0.995 0.009 148);
     --secondary: oklch(0.9245 0.016 148);
     --muted: oklch(0.9341 0.018 148);
     --accent: oklch(0.9245 0.016 148);
@@ -270,7 +270,7 @@
     --accent: oklch(0.213 0.014 148);
     --sidebar: oklch(0.2357 0.012 148);
     --sidebar-primary: oklch(0.65 0.13 148);
-    --sidebar-accent: oklch(0.168 0.010 148);
+    --sidebar-accent: oklch(0.168 0.01 148);
 }
 
 /* Murasaki (紫色) — imperial purple */
@@ -278,8 +278,8 @@
     --primary: oklch(0.52 0.18 305);
     --ring: oklch(0.52 0.18 305);
     --background: oklch(0.9818 0.016 305);
-    --card: oklch(0.9950 0.009 305);
-    --popover: oklch(0.9950 0.009 305);
+    --card: oklch(0.995 0.009 305);
+    --popover: oklch(0.995 0.009 305);
     --secondary: oklch(0.9245 0.016 305);
     --muted: oklch(0.9341 0.018 305);
     --accent: oklch(0.9245 0.016 305);
@@ -297,7 +297,7 @@
     --accent: oklch(0.213 0.014 305);
     --sidebar: oklch(0.2357 0.012 305);
     --sidebar-primary: oklch(0.68 0.16 305);
-    --sidebar-accent: oklch(0.168 0.010 305);
+    --sidebar-accent: oklch(0.168 0.01 305);
 }
 
 @keyframes marquee {
