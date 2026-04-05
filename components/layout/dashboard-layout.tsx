@@ -6,6 +6,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/s
 import AppBreadcrumbs from '../app-breadcrumbs';
 import { CommandMenu } from '@/components/command-menu';
 import { GithubButton } from '@/components/github-button';
+import { NativeShareButton } from '@/components/native-share-button';
 
 type LayoutProps = {
     children: React.ReactNode;
@@ -42,6 +43,7 @@ export default async function DashboardLayout({ children }: LayoutProps) {
                             />
                             <AppBreadcrumbs />
                             <div className="ml-auto flex items-center gap-1">
+                                <NativeShareButton />
                                 <GithubButton />
                                 <CommandMenu />
                             </div>
