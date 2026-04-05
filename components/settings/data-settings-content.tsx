@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -44,6 +45,12 @@ const EMPTY_PROGRESS_STATS: ProgressStats = {
 };
 
 const numberFormatter = new Intl.NumberFormat();
+const EXPORT_ERROR_TOAST_ID = 'export-data-error';
+const EXPORT_SUCCESS_TOAST_ID = 'export-data-success';
+const IMPORT_ERROR_TOAST_ID = 'import-data-error';
+const IMPORT_SUCCESS_TOAST_ID = 'import-data-success';
+const DELETE_ERROR_TOAST_ID = 'delete-data-error';
+const DELETE_SUCCESS_TOAST_ID = 'delete-data-success';
 
 const STAT_ROWS: {
     key: keyof ProgressStats;
@@ -231,7 +238,17 @@ export function DataSettingsContent() {
             setTimeout(() => URL.revokeObjectURL(url), 100);
         } catch (err) {
             console.error('Failed to export data:', err);
+            toast.error('Could not export your data.', {
+                id: EXPORT_ERROR_TOAST_ID,
+                description: 'Your progress is still safe. Try exporting again in a moment.',
+            });
+            return;
         }
+
+        toast.success('Data exported.', {
+            id: EXPORT_SUCCESS_TOAST_ID,
+            description: 'Your progress backup was downloaded as a JSON file.',
+        });
     }
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -266,7 +283,17 @@ export function DataSettingsContent() {
             setPendingImport(null);
         } catch (err) {
             console.error('Failed to import data:', err);
+            toast.error('Could not import your data.', {
+                id: IMPORT_ERROR_TOAST_ID,
+                description: 'Your current progress was not replaced.',
+            });
+            return;
         }
+
+        toast.success('Data imported.', {
+            id: IMPORT_SUCCESS_TOAST_ID,
+            description: 'Your progress was replaced with the imported backup.',
+        });
     }
 
     async function handleConfirmDelete() {
@@ -274,7 +301,17 @@ export function DataSettingsContent() {
             await clearKanaProgress();
         } catch (err) {
             console.error('Failed to delete data:', err);
+            toast.error('Could not delete your data.', {
+                id: DELETE_ERROR_TOAST_ID,
+                description: 'Your current progress is still intact.',
+            });
+            return;
         }
+
+        toast.success('Data deleted.', {
+            id: DELETE_SUCCESS_TOAST_ID,
+            description: 'All saved progress has been removed from this device.',
+        });
     }
 
     return (
