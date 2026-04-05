@@ -1,11 +1,14 @@
 'use client';
 
+import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 import { COLOR_THEMES, ColorTheme, useColorTheme } from '@/hooks/use-color-theme';
 import { Check } from 'lucide-react';
 
 export function ColorThemePicker() {
+    const { theme, resolvedTheme } = useTheme();
     const { colorTheme, setColorTheme } = useColorTheme();
+    const isDarkTheme = theme?.endsWith('-dark') || resolvedTheme === 'dark';
 
     return (
         <div className="flex flex-wrap gap-3">
@@ -26,7 +29,7 @@ export function ColorThemePicker() {
                         title={t.japanese}>
                         <span
                             className="relative flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
-                            style={{ backgroundColor: t.light }}>
+                            style={{ backgroundColor: isDarkTheme ? t.dark : t.light }}>
                             {isActive && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
                         </span>
                         <span className="font-medium">{t.name}</span>

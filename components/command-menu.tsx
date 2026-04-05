@@ -44,6 +44,7 @@ export function CommandMenu() {
     const { colorTheme, setColorTheme } = useColorTheme();
     const isMobile = useIsMobile();
     const { progressMap } = useKanaProgressMap();
+    const isDarkTheme = resolvedTheme?.endsWith('dark') || resolvedTheme === 'dark';
 
     React.useEffect(() => {
         if (!open) {
@@ -161,7 +162,7 @@ export function CommandMenu() {
                                         setOpen(false);
                                         toggleTheme();
                                     }}>
-                                    {resolvedTheme === 'dark' ? <SunIcon /> : <MoonIcon />}
+                                    {isDarkTheme ? <SunIcon /> : <MoonIcon />}
                                     <span>Light / Dark Mode Toggle</span>
                                     <CommandShortcut>T</CommandShortcut>
                                 </CommandItem>
@@ -225,7 +226,7 @@ export function CommandMenu() {
                                     }}>
                                     <span
                                         className="flex size-4 shrink-0 rounded-full"
-                                        style={{ backgroundColor: resolvedTheme?.endsWith('dark') || resolvedTheme === 'dark' ? theme.dark : theme.light }}
+                                        style={{ backgroundColor: isDarkTheme ? theme.dark : theme.light }}
                                     />
                                     <span>{theme.name}</span>
                                     <span className="text-muted-foreground text-xs">{theme.japanese}</span>
