@@ -14,7 +14,7 @@ import {
     ArrowRightIcon,
     HomeIcon,
 } from 'lucide-react';
-import { useTheme } from 'next-themes';
+import { useThemeToggle } from '@/hooks/use-theme-toggle';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
 import { isVisited } from '@/lib/kana-db';
@@ -34,7 +34,7 @@ import {
 export function CommandMenu() {
     const [open, setOpen] = React.useState(false);
     const router = useRouter();
-    const { resolvedTheme, setTheme } = useTheme();
+    const { resolvedTheme, toggleTheme } = useThemeToggle();
     const isMobile = useIsMobile();
     const { progressMap } = useKanaProgressMap();
 
@@ -64,7 +64,7 @@ export function CommandMenu() {
     useHotkey(',', () => handleSelect('/settings'));
     useHotkey('.', () => handleSelect('/'));
     useHotkey('T', () => {
-        setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+        toggleTheme();
     });
 
     return (
@@ -131,7 +131,7 @@ export function CommandMenu() {
                         <CommandItem
                             onSelect={() => {
                                 setOpen(false);
-                                setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+                                toggleTheme();
                             }}>
                             {resolvedTheme === 'dark' ? <SunIcon /> : <MoonIcon />}
                             <span>Toggle Theme</span>
