@@ -80,6 +80,7 @@ export const FlashcardStudyContent: React.FC = () => {
     const restartStudySession = React.useEffectEvent((nextIds: string[]) => {
         setIsFinishDialogOpen(false);
         setRevealedIds(new Set());
+        viewedIdsRef.current = new Set();
         setDeckSessionKey((current) => current + 1);
         replaceState({ ids: nextIds, index: 0, top });
     });

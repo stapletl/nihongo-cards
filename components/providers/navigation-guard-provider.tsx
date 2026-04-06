@@ -62,10 +62,27 @@ export function NavigationGuardProvider({ children }: NavigationGuardProviderPro
         [router]
     );
 
+    const collapseHistorySentinel = React.useCallback((onCollapsed: () => void) => {
+        const currentState = window.history.state ?? {};
+
+        if (!currentState[HISTORY_SENTINEL_KEY]) {
+            onCollapsed();
+            return;
+        }
+
+        const handlePopState = () => {
+            onCollapsed();
+        };
+
+        ignoreNextPopStateRef.current = true;
+        window.addEventListener('popstate', handlePopState, { once: true });
+        window.history.back();
+    }, []);
+
     const executePendingNavigation = React.useCallback(
         (request: PendingNavigationRequest) => {
             if (request.type === 'callback') {
-                request.callback();
+                collapseHistorySentinel(request.callback);
                 return;
             }
 
@@ -75,9 +92,11 @@ export function NavigationGuardProvider({ children }: NavigationGuardProviderPro
                 return;
             }
 
-            navigateToHref(request.href);
+            collapseHistorySentinel(() => {
+                navigateToHref(request.href);
+            });
         },
-        [navigateToHref]
+        [collapseHistorySentinel, navigateToHref]
     );
 
     const requestNavigation = React.useCallback(
