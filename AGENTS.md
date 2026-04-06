@@ -68,6 +68,14 @@ hooks/
 - Content files (`*-content.tsx`) are client components — handle interactivity and hooks
 - Drop-in side-effect components (e.g. `MarkKanaVisited`) use `'use client'` and return `null`
 
+**React guidance**
+
+- Prefer Server Components first; only opt into `'use client'` when hooks, browser APIs, or event handlers are actually required
+- Avoid `useEffect` unless it is synchronizing with an external system (DOM APIs, subscriptions, timers, IndexedDB/network side effects). If logic can run during render or inside an event handler, do that instead
+- Before adding an effect, check whether the problem is better solved with derived state, a server component, a keyed remount, `useEffectEvent`, or moving the work into the user action that triggered it
+- Do not mirror props into state, recalculate derived data in effects, or use effects to keep two pieces of React state in sync
+- Avoid React anti-patterns such as unnecessary `useMemo`/`useCallback`, broad dependency suppression, and large client components that mix data loading, state orchestration, and presentation when they can be split
+
 **Kana data**
 
 - All kana items live in `lib/hiragana.ts` and `lib/katakana.ts` as static arrays
