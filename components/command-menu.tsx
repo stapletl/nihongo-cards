@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useHotkey } from '@tanstack/react-hotkeys';
 import {
     ArrowRightIcon,
@@ -17,6 +17,7 @@ import {
     SunIcon,
 } from 'lucide-react';
 import { useThemeToggle } from '@/hooks/use-theme-toggle';
+import { useNavigationGuard } from '@/hooks/use-navigation-guard';
 import { COLOR_THEMES, useColorTheme } from '@/hooks/use-color-theme';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
@@ -40,10 +41,13 @@ export function CommandMenu() {
     const [pages, setPages] = React.useState<string[]>([]);
     const page = pages[pages.length - 1];
     const router = useRouter();
+    const pathname = usePathname();
     const { resolvedTheme, toggleTheme } = useThemeToggle();
+    const { requestNavigation } = useNavigationGuard();
     const { colorTheme, setColorTheme } = useColorTheme();
     const isMobile = useIsMobile();
     const { progressMap } = useKanaProgressMap();
+    const isFlashcardStudyPage = pathname === '/flashcards/study';
     const isDarkTheme = resolvedTheme?.endsWith('dark') || resolvedTheme === 'dark';
 
     React.useEffect(() => {
@@ -62,18 +66,30 @@ export function CommandMenu() {
 
     const handleSelect = (url: string) => {
         setOpen(false);
-        router.push(url);
+        requestNavigation(() => {
+            router.push(url);
+        });
     };
 
-    useHotkey('Shift+H', () => {
-        if (nextHiragana) handleSelect(`/hiragana/${encodeURIComponent(nextHiragana.character)}`);
-    }, { enabled: !!nextHiragana });
-    useHotkey('Shift+K', () => {
-        if (nextKatakana) handleSelect(`/katakana/${encodeURIComponent(nextKatakana.character)}`);
-    }, { enabled: !!nextKatakana });
+    useHotkey(
+        'Shift+H',
+        () => {
+            if (nextHiragana)
+                handleSelect(`/hiragana/${encodeURIComponent(nextHiragana.character)}`);
+        },
+        { enabled: !!nextHiragana }
+    );
+    useHotkey(
+        'Shift+K',
+        () => {
+            if (nextKatakana)
+                handleSelect(`/katakana/${encodeURIComponent(nextKatakana.character)}`);
+        },
+        { enabled: !!nextKatakana }
+    );
     useHotkey('H', () => handleSelect('/hiragana'));
     useHotkey('K', () => handleSelect('/katakana'));
-    useHotkey('F', () => handleSelect('/flashcards'));
+    useHotkey('F', () => handleSelect('/flashcards'), { enabled: !isFlashcardStudyPage });
     useHotkey('Q', () => handleSelect('/quiz'));
     useHotkey('S', () => handleSelect('/statistics'));
     useHotkey(',', () => handleSelect('/settings'));
@@ -124,10 +140,13 @@ export function CommandMenu() {
                                                 `/hiragana/${encodeURIComponent(nextHiragana.character)}`
                                             )
                                         }>
-                                        <ArrowRightIcon className='text-primary' />
+                                        <ArrowRightIcon className="text-primary" />
                                         <span>
-                                            View Next Hiragana — <span className='font-semibold text-primary'>{nextHiragana.character}</span> (
-                                            {nextHiragana.romaji})
+                                            View Next Hiragana —{' '}
+                                            <span className="font-semibold text-primary">
+                                                {nextHiragana.character}
+                                            </span>{' '}
+                                            ({nextHiragana.romanji})
                                         </span>
                                         <CommandShortcut>⇧H</CommandShortcut>
                                     </CommandItem>
@@ -139,10 +158,13 @@ export function CommandMenu() {
                                                 `/katakana/${encodeURIComponent(nextKatakana.character)}`
                                             )
                                         }>
-                                        <ArrowRightIcon className='text-primary' />
+                                        <ArrowRightIcon className="text-primary" />
                                         <span>
-                                            View Next Katakana — <span className='font-semibold text-primary'>{nextKatakana.character}</span> (
-                                            {nextKatakana.romaji})
+                                            View Next Katakana —{' '}
+                                            <span className="font-semibold text-primary">
+                                                {nextKatakana.character}
+                                            </span>{' '}
+                                            ({nextKatakana.romanji})
                                         </span>
                                         <CommandShortcut>⇧K</CommandShortcut>
                                     </CommandItem>

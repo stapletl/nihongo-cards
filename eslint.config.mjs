@@ -1,28 +1,11 @@
 import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
-import typescriptParser from '@typescript-eslint/parser';
-import typescriptPlugin from '@typescript-eslint/eslint-plugin';
-import reactPlugin from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import nextTypescript from 'eslint-config-next/typescript';
 
 const eslintConfig = [
     ...nextCoreWebVitals,
+    ...nextTypescript,
     {
         files: ['**/*.ts', '**/*.tsx'],
-        languageOptions: {
-            parser: typescriptParser,
-            parserOptions: {
-                ecmaVersion: 'latest',
-                sourceType: 'module',
-                ecmaFeatures: {
-                    jsx: true,
-                },
-            },
-        },
-        plugins: {
-            '@typescript-eslint': typescriptPlugin,
-            react: reactPlugin,
-            'react-hooks': reactHooksPlugin,
-        },
         rules: {
             // TypeScript rules
             '@typescript-eslint/no-unused-vars': 'warn',
@@ -49,6 +32,7 @@ const eslintConfig = [
             // General rules
             'arrow-body-style': ['warn', 'as-needed'],
             eqeqeq: ['error', 'always'],
+            'no-console': 'warn',
             'prefer-const': 'warn',
             'no-unused-expressions': 'warn',
             'no-duplicate-imports': 'error',

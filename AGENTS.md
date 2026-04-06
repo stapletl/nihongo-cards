@@ -5,13 +5,13 @@ Japanese learning app built with Next.js App Router. Covers hiragana, katakana, 
 ## Commands
 
 ```bash
-bun dev           # dev server with Turbopack (localhost:3000)
-bun build         # production build — run this to verify TypeScript and page generation
-bun lint          # ESLint
-bun format        # Prettier (auto-fix)
+bun run dev       # dev server with Turbopack (localhost:3000)
+bun run build     # production build — run this to verify TypeScript and page generation
+bun run lint      # ESLint
+bun run format    # Prettier (auto-fix)
 ```
 
-No test suite exists yet. `bun build` is the primary verification step — it runs the TypeScript compiler and generates all 212 static pages.
+No test suite exists yet. `bun run build` is the primary verification step — it runs the TypeScript compiler and generates all 216 static pages.
 
 ## Stack
 
@@ -71,7 +71,7 @@ hooks/
 **Kana data**
 
 - All kana items live in `lib/hiragana.ts` and `lib/katakana.ts` as static arrays
-- `KanaItem` type: `{ character, romaji, example, exampleRomaji, exampleTranslation, emoji }`
+- `KanaItem` type: `{ character, romanji, example, exampleRomanji, exampleTranslation, emoji }`
 - Grid arrays (`gojuonGrid`, `dakutenHandakutenGrid`, `yoonGrid`) contain `string | null` rows — null means empty cell
 
 **IndexedDB progress tracking**

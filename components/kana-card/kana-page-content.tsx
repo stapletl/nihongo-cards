@@ -36,10 +36,10 @@ export const KanaPageContent: React.FC<KanaPageContentProps> = ({ kanaItem }) =>
 
                     {/* Character details */}
                     <div className="flex-1 space-y-6 text-center sm:text-left">
-                        {/* Romaji */}
+                        {/* Romanji */}
                         <div className="space-y-2">
                             <h2 className="text-primary text-3xl font-semibold sm:text-4xl">
-                                {kanaItem.romaji}
+                                {kanaItem.romanji}
                             </h2>
                         </div>
 
@@ -69,7 +69,7 @@ export const KanaPageContent: React.FC<KanaPageContentProps> = ({ kanaItem }) =>
                                     />
                                     {showRomanji && (
                                         <span className="text-muted-foreground text-base italic">
-                                            {kanaItem.exampleRomaji}
+                                            {kanaItem.exampleRomanji}
                                         </span>
                                     )}
                                 </div>
