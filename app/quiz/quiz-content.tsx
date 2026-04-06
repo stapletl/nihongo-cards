@@ -2,8 +2,7 @@
 
 import React from 'react';
 
-export const QuizContent: React.FC = () => {
-    return (
+export const QuizContent: React.FC = () => (
         <div className="flex h-full w-full items-center justify-center">
             <div className="text-center">
                 <h1 className="mb-4 text-2xl font-bold">Quiz Coming Soon!</h1>
@@ -13,4 +12,3 @@ export const QuizContent: React.FC = () => {
             </div>
         </div>
     );
-};

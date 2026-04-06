@@ -1,8 +1,11 @@
 'use client';
 
+import { useEffectEvent } from 'react';
 import { useHotkey } from '@tanstack/react-hotkeys';
 import { useRouter } from 'next/navigation';
 import { useNavigationGuard } from '@/hooks/use-navigation-guard';
+
+import { useSwipeNavigation } from '@/hooks/use-swipe-navigation';
 
 type NavHotkeysProps = {
     prevHref?: string;
@@ -13,21 +16,20 @@ export function NavHotkeys({ prevHref, nextHref }: NavHotkeysProps) {
     const router = useRouter();
     const { requestNavigation } = useNavigationGuard();
 
-    useHotkey('ArrowLeft', () => {
+    const goToPrev = useEffectEvent(() => {
         if (prevHref) requestNavigation(() => router.push(prevHref));
     });
 
-    useHotkey('A', () => {
-        if (prevHref) requestNavigation(() => router.push(prevHref));
-    });
-
-    useHotkey('ArrowRight', () => {
+    const goToNext = useEffectEvent(() => {
         if (nextHref) requestNavigation(() => router.push(nextHref));
     });
 
-    useHotkey('D', () => {
-        if (nextHref) requestNavigation(() => router.push(nextHref));
-    });
+    useHotkey('ArrowLeft', goToPrev);
+    useHotkey('A', goToPrev);
+    useHotkey('ArrowRight', goToNext);
+    useHotkey('D', goToNext);
+
+    useSwipeNavigation({ onSwipeLeft: goToNext, onSwipeRight: goToPrev });
 
     return null;
 }

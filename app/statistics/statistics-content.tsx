@@ -2,8 +2,7 @@
 
 import React from 'react';
 
-export const StatisticsContent: React.FC = () => {
-    return (
+export const StatisticsContent: React.FC = () => (
         <div className="flex h-full w-full items-center justify-center">
             <div className="text-center">
                 <h1 className="mb-4 text-2xl font-bold">Statistics Coming Soon!</h1>
@@ -13,4 +12,3 @@ export const StatisticsContent: React.FC = () => {
             </div>
         </div>
     );
-};

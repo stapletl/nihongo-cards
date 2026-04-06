@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is([data-theme$='dark'] *));
 
 @layer base {
     ::view-transition-old(root),
@@ -84,7 +84,9 @@
     --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
 }
 
-:root {
+:root,
+[data-theme='light'] {
+    color-scheme: light;
     --radius: 0.5rem;
     --background: oklch(0.9818 0.0054 95.0986);
     --foreground: oklch(0.3438 0.0269 95.7226);
@@ -137,7 +139,8 @@
     --tracking-normal: 0em;
 }
 
-.dark {
+[data-theme$='dark'] {
+    color-scheme: dark;
     --background: oklch(0.2679 0.0036 106.6427);
     --foreground: oklch(0.8074 0.0142 93.0137);
     --card: oklch(0.3085 0.0035 106.6039);
@@ -187,6 +190,114 @@
     --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
     --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
     --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+}
+
+/* Ai-iro (藍色) — Japanese indigo */
+[data-theme='ai-iro-light'] {
+    --primary: oklch(0.48 0.16 265);
+    --ring: oklch(0.48 0.16 265);
+    --background: oklch(0.9818 0.016 265);
+    --card: oklch(0.995 0.009 265);
+    --popover: oklch(0.995 0.009 265);
+    --secondary: oklch(0.9245 0.016 265);
+    --muted: oklch(0.9341 0.018 265);
+    --accent: oklch(0.9245 0.016 265);
+    --sidebar: oklch(0.9663 0.012 265);
+    --sidebar-primary: oklch(0.48 0.16 265);
+    --sidebar-accent: oklch(0.9245 0.016 265);
+}
+[data-theme='ai-iro-dark'] {
+    --primary: oklch(0.65 0.15 265);
+    --ring: oklch(0.65 0.15 265);
+    --background: oklch(0.2679 0.013 265);
+    --card: oklch(0.3085 0.014 265);
+    --popover: oklch(0.3085 0.014 265);
+    --muted: oklch(0.2213 0.015 265);
+    --accent: oklch(0.213 0.014 265);
+    --sidebar: oklch(0.2357 0.012 265);
+    --sidebar-primary: oklch(0.65 0.15 265);
+    --sidebar-accent: oklch(0.168 0.01 265);
+}
+
+/* Sakura (桜色) — cherry blossom */
+[data-theme='sakura-light'] {
+    --primary: oklch(0.62 0.15 358);
+    --ring: oklch(0.62 0.15 358);
+    --background: oklch(0.9818 0.016 358);
+    --card: oklch(0.995 0.009 358);
+    --popover: oklch(0.995 0.009 358);
+    --secondary: oklch(0.9245 0.016 358);
+    --muted: oklch(0.9341 0.018 358);
+    --accent: oklch(0.9245 0.016 358);
+    --sidebar: oklch(0.9663 0.012 358);
+    --sidebar-primary: oklch(0.62 0.15 358);
+    --sidebar-accent: oklch(0.9245 0.016 358);
+}
+[data-theme='sakura-dark'] {
+    --primary: oklch(0.72 0.13 358);
+    --ring: oklch(0.72 0.13 358);
+    --background: oklch(0.2679 0.013 358);
+    --card: oklch(0.3085 0.014 358);
+    --popover: oklch(0.3085 0.014 358);
+    --muted: oklch(0.2213 0.015 358);
+    --accent: oklch(0.213 0.014 358);
+    --sidebar: oklch(0.2357 0.012 358);
+    --sidebar-primary: oklch(0.72 0.13 358);
+    --sidebar-accent: oklch(0.168 0.01 358);
+}
+
+/* Matcha (抹茶色) — green tea */
+[data-theme='matcha-light'] {
+    --primary: oklch(0.52 0.13 148);
+    --ring: oklch(0.52 0.13 148);
+    --background: oklch(0.9818 0.016 148);
+    --card: oklch(0.995 0.009 148);
+    --popover: oklch(0.995 0.009 148);
+    --secondary: oklch(0.9245 0.016 148);
+    --muted: oklch(0.9341 0.018 148);
+    --accent: oklch(0.9245 0.016 148);
+    --sidebar: oklch(0.9663 0.012 148);
+    --sidebar-primary: oklch(0.52 0.13 148);
+    --sidebar-accent: oklch(0.9245 0.016 148);
+}
+[data-theme='matcha-dark'] {
+    --primary: oklch(0.65 0.13 148);
+    --ring: oklch(0.65 0.13 148);
+    --background: oklch(0.2679 0.013 148);
+    --card: oklch(0.3085 0.014 148);
+    --popover: oklch(0.3085 0.014 148);
+    --muted: oklch(0.2213 0.015 148);
+    --accent: oklch(0.213 0.014 148);
+    --sidebar: oklch(0.2357 0.012 148);
+    --sidebar-primary: oklch(0.65 0.13 148);
+    --sidebar-accent: oklch(0.168 0.01 148);
+}
+
+/* Murasaki (紫色) — imperial purple */
+[data-theme='murasaki-light'] {
+    --primary: oklch(0.52 0.18 305);
+    --ring: oklch(0.52 0.18 305);
+    --background: oklch(0.9818 0.016 305);
+    --card: oklch(0.995 0.009 305);
+    --popover: oklch(0.995 0.009 305);
+    --secondary: oklch(0.9245 0.016 305);
+    --muted: oklch(0.9341 0.018 305);
+    --accent: oklch(0.9245 0.016 305);
+    --sidebar: oklch(0.9663 0.012 305);
+    --sidebar-primary: oklch(0.52 0.18 305);
+    --sidebar-accent: oklch(0.9245 0.016 305);
+}
+[data-theme='murasaki-dark'] {
+    --primary: oklch(0.68 0.16 305);
+    --ring: oklch(0.68 0.16 305);
+    --background: oklch(0.2679 0.013 305);
+    --card: oklch(0.3085 0.014 305);
+    --popover: oklch(0.3085 0.014 305);
+    --muted: oklch(0.2213 0.015 305);
+    --accent: oklch(0.213 0.014 305);
+    --sidebar: oklch(0.2357 0.012 305);
+    --sidebar-primary: oklch(0.68 0.16 305);
+    --sidebar-accent: oklch(0.168 0.01 305);
 }
 
 @keyframes marquee {

@@ -4,9 +4,11 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { SpeechProvider } from '@/components/providers/speech-provider';
 import { NavigationGuardProvider } from '@/components/providers/navigation-guard-provider';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { Toaster } from '@/components/ui/sonner';
 import AppBreadcrumbs from '../app-breadcrumbs';
 import { CommandMenu } from '@/components/command-menu';
 import { GithubButton } from '@/components/github-button';
+import { NativeShareButton } from '@/components/native-share-button';
 
 type LayoutProps = {
     children: React.ReactNode;
@@ -15,10 +17,22 @@ type LayoutProps = {
 export default async function DashboardLayout({ children }: LayoutProps) {
     return (
         <ThemeProvider
-            attribute="class"
+            attribute="data-theme"
             defaultTheme="system"
             enableSystem={true}
-            disableTransitionOnChange={true}>
+            disableTransitionOnChange={true}
+            themes={[
+                'light',
+                'dark',
+                'ai-iro-light',
+                'ai-iro-dark',
+                'sakura-light',
+                'sakura-dark',
+                'matcha-light',
+                'matcha-dark',
+                'murasaki-light',
+                'murasaki-dark',
+            ]}>
             <SpeechProvider>
                 <NavigationGuardProvider>
                     <SidebarProvider>
@@ -32,11 +46,12 @@ export default async function DashboardLayout({ children }: LayoutProps) {
                                 />
                                 <AppBreadcrumbs />
                                 <div className="ml-auto flex items-center gap-1">
+                                    <NativeShareButton />
                                     <GithubButton />
                                     <CommandMenu />
                                 </div>
                             </header>
-                            <div className="flex-1 overflow-y-auto w-full overflow-x-hidden">
+                            <div className="w-full flex-1 overflow-x-hidden overflow-y-auto">
                                 <div className="flex h-full min-w-[375px] flex-col gap-4">
                                     {children}
                                 </div>
@@ -44,6 +59,7 @@ export default async function DashboardLayout({ children }: LayoutProps) {
                         </SidebarInset>
                     </SidebarProvider>
                 </NavigationGuardProvider>
+                <Toaster />
             </SpeechProvider>
         </ThemeProvider>
     );
