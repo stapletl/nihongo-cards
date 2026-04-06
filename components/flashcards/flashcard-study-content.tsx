@@ -48,9 +48,11 @@ export const FlashcardStudyContent: React.FC = () => {
     const [carouselApi, setCarouselApi] = useState<CarouselApi>();
     const [revealedIds, setRevealedIds] = useState<Set<string>>(() => new Set());
     const [deckSessionKey, setDeckSessionKey] = useState(0);
+    const [isFinishDialogOpen, setIsFinishDialogOpen] = useState(false);
     const [revealPromptSignal, setRevealPromptSignal] = useState(0);
     const canVisitNext = activeId ? revealedIds.has(activeId) : false;
-    const canAttemptNext = index < ids.length - 1;
+    const isOnLastFlashcard = ids.length > 0 && index === ids.length - 1;
+    const isReadyToFinish = isOnLastFlashcard && canVisitNext;
     const shouldPreventNavigation = ids.length > 0 && index < ids.length - 1;
 
     const replaceState = (nextState: FlashcardStudyState) => {
@@ -75,13 +77,25 @@ export const FlashcardStudyContent: React.FC = () => {
         setRevealPromptSignal((current) => current + 1);
     });
 
+    const restartStudySession = React.useEffectEvent((nextIds: string[]) => {
+        setIsFinishDialogOpen(false);
+        setRevealedIds(new Set());
+        setDeckSessionKey((current) => current + 1);
+        replaceState({ ids: nextIds, index: 0, top });
+    });
+
     const goNext = React.useEffectEvent(() => {
-        if (!canAttemptNext) {
+        if (!activeId) {
             return;
         }
 
         if (!canVisitNext) {
             promptReveal();
+            return;
+        }
+
+        if (isOnLastFlashcard) {
+            setIsFinishDialogOpen(true);
             return;
         }
 
@@ -208,14 +222,14 @@ export const FlashcardStudyContent: React.FC = () => {
         () => {
             goNext();
         },
-        { enabled: canAttemptNext }
+        { enabled: activeId !== null }
     );
     useHotkey(
         'D',
         () => {
             goNext();
         },
-        { enabled: canAttemptNext }
+        { enabled: activeId !== null }
     );
 
     if (!activeItem) {
@@ -250,20 +264,27 @@ export const FlashcardStudyContent: React.FC = () => {
                 currentIndex={index}
                 total={ids.length}
                 canGoPrevious={index > 0}
-                canGoNext={canAttemptNext}
+                canGoNext={activeId !== null}
+                nextLabel={isReadyToFinish ? 'Finish' : 'Next'}
+                nextVariant={isReadyToFinish ? 'default' : 'outline'}
                 onPrevious={() => goPrevious()}
                 onNext={() => goNext()}
                 onShuffle={() => {
-                    const shuffledIds = shuffleDeck(ids);
-                    setRevealedIds(new Set());
-                    setDeckSessionKey((current) => current + 1);
-                    replaceState({ ids: shuffledIds, index: 0, top });
+                    restartStudySession(shuffleDeck(ids));
                 }}
                 editSelectionHref={editSelectionHref}
                 topSide={top}
                 onTopSideChange={(nextTop) => {
                     setStoredTop(nextTop);
                     replaceState({ ids, index, top: nextTop });
+                }}
+                isFinishDialogOpen={isFinishDialogOpen}
+                onFinishDialogOpenChange={setIsFinishDialogOpen}
+                onRestart={() => {
+                    restartStudySession(ids);
+                }}
+                onShuffleRestart={() => {
+                    restartStudySession(shuffleDeck(ids));
                 }}
             />
 

@@ -81,8 +81,7 @@ export const StudyShortcutsHint: React.FC = () => (
                         </KbdGroup>
                     </div>
                     <p className="text-muted-foreground text-sm">
-                        Plays audio only when the pronunciation button is visible. If collapsed,
-                        nothing happens.
+                        Plays audio only when the pronunciation button is visible.
                     </p>
                 </div>
             </div>

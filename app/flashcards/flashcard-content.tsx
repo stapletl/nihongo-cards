@@ -106,7 +106,6 @@ export const FlashcardContent: React.FC = () => {
                     <ButtonGroup className="shrink-0">
                         <Button
                             type="button"
-                            variant="outline"
                             size="sm"
                             disabled={selectedIds.length === 0}
                             onClick={() => startStudy()}>
@@ -117,7 +116,6 @@ export const FlashcardContent: React.FC = () => {
                             <DropdownMenuTrigger asChild={true}>
                                 <Button
                                     type="button"
-                                    variant="outline"
                                     size="sm"
                                     className="px-2"
                                     disabled={selectedIds.length === 0}

@@ -163,9 +163,9 @@ export const StudyFlashcard: React.FC<StudyFlashcardProps> = ({
                     className="data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down overflow-hidden">
                     <CardContent className="bg-muted/30 relative border-t px-6 py-8 text-center md:px-10">
                         <Button
-                            variant="outline"
+                            variant="ghost"
                             size="icon-xs"
-                            className="absolute -top-4 -right-4 z-10 rounded-full shadow-sm"
+                            className="absolute top-4 right-4 z-10"
                             asChild={true}>
                             <Link
                                 href={detailHref}
