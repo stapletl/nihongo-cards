@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { FlashcardContent } from './flashcard-content';
 
 export default function Page() {
@@ -7,9 +9,13 @@ export default function Page() {
                 Flashcards <span className="font-bold whitespace-nowrap">(フラッシュカード)</span>
             </h1>
             <p className="leading-7">
-                Explore our flashcard system to enhance your Japanese learning experience.
+                Select the kana you want to review, choose which side appears first, then start
+                studying.
             </p>
-            <FlashcardContent />
+            <Suspense
+                fallback={<p className="text-muted-foreground mt-8">Loading flashcard setup...</p>}>
+                <FlashcardContent />
+            </Suspense>
         </div>
     );
 }

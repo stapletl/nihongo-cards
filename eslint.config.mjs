@@ -1,37 +1,11 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
-import typescriptParser from '@typescript-eslint/parser';
-import typescriptPlugin from '@typescript-eslint/eslint-plugin';
-import reactPlugin from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-});
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import nextTypescript from 'eslint-config-next/typescript';
 
 const eslintConfig = [
-    ...compat.extends('next/core-web-vitals', 'next/typescript'),
+    ...nextCoreWebVitals,
+    ...nextTypescript,
     {
         files: ['**/*.ts', '**/*.tsx'],
-        languageOptions: {
-            parser: typescriptParser,
-            parserOptions: {
-                ecmaVersion: 'latest',
-                sourceType: 'module',
-                ecmaFeatures: {
-                    jsx: true,
-                },
-            },
-        },
-        plugins: {
-            '@typescript-eslint': typescriptPlugin,
-            react: reactPlugin,
-            'react-hooks': reactHooksPlugin,
-        },
         rules: {
             // TypeScript rules
             '@typescript-eslint/no-unused-vars': 'warn',

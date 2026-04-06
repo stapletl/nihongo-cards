@@ -14,7 +14,7 @@ export const KanaRomanjiSwitch: React.FC = () => {
             ) : (
                 <Eye className="mr-1.5 h-3.5 w-3.5" />
             )}
-            <span className="text-xs">{showRomanji ? 'Hide' : 'Show'} Romaji</span>
+            <span className="text-xs">{showRomanji ? 'Hide' : 'Show'} Romanji</span>
         </Button>
     );
 };

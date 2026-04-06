@@ -32,7 +32,7 @@ export const FullKanaCard: React.FC<FullKanaCardProps> = ({ kanaItem }) => {
                     <div>
                         <CardTitle className="mb-1 text-4xl">{kanaItem.character}</CardTitle>
                         <CardDescription className="text-foreground text-lg">
-                            {kanaItem.romaji}
+                            {kanaItem.romanji}
                         </CardDescription>
                     </div>
                     <CardAction>
@@ -59,7 +59,7 @@ export const FullKanaCard: React.FC<FullKanaCardProps> = ({ kanaItem }) => {
                             />
                             {showRomanji && (
                                 <span className="text-muted-foreground text-sm italic">
-                                    {kanaItem.exampleRomaji}
+                                    {kanaItem.exampleRomanji}
                                 </span>
                             )}
                         </div>

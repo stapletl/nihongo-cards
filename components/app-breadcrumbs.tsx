@@ -18,6 +18,7 @@ export const breadcrumbTitles: Record<string, string> = {
     settings: 'Settings',
     privacy: 'Privacy Policy',
     flashcards: 'Flashcards',
+    study: 'Study',
     quiz: 'Quiz',
     statistics: 'Statistics',
 };

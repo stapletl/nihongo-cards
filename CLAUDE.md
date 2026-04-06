@@ -71,7 +71,7 @@ hooks/
 **Kana data**
 
 - All kana items live in `lib/hiragana.ts` and `lib/katakana.ts` as static arrays
-- `KanaItem` type: `{ character, romaji, example, exampleRomaji, exampleTranslation, emoji }`
+- `KanaItem` type: `{ character, romanji, example, exampleRomanji, exampleTranslation, emoji }`
 - Grid arrays (`gojuonGrid`, `dakutenHandakutenGrid`, `yoonGrid`) contain `string | null` rows — null means empty cell
 
 **IndexedDB progress tracking**

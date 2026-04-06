@@ -10,7 +10,7 @@ import { SpeechButton } from './speech-button';
 type ContentCardProps = {
     english: string;
     japanese: string;
-    romaji: string;
+    romanji: string;
     japaneseReading: string;
     emoji?: string;
 };
@@ -18,12 +18,12 @@ type ContentCardProps = {
 export function ContentCard({
     japanese,
     english,
-    romaji,
+    romanji,
     japaneseReading,
     emoji: icon,
 }: ContentCardProps) {
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [showRomaji, setShowRomaji] = useState(false);
+    const [showRomanji, setShowRomanji] = useState(false);
 
     const shouldShowReading = japanese !== japaneseReading;
 
@@ -40,19 +40,19 @@ export function ContentCard({
                             variant="ghost"
                             size="icon"
                             className="h-5 w-5"
-                            title={showRomaji ? 'Hide Romaji' : 'Show Romaji'}
-                            onClick={() => setShowRomaji(!showRomaji)}>
-                            {showRomaji ? (
+                            title={showRomanji ? 'Hide Romanji' : 'Show Romanji'}
+                            onClick={() => setShowRomanji(!showRomanji)}>
+                            {showRomanji ? (
                                 <EyeOff className="h-4 w-4" />
                             ) : (
                                 <Eye className="h-4 w-4" />
                             )}
                             <span className="sr-only">
-                                {showRomaji ? 'Hide Romaji' : 'Show Romaji'}
+                                {showRomanji ? 'Hide Romanji' : 'Show Romanji'}
                             </span>
                         </Button>
                         <span className="text-muted-foreground h-[1.25rem] text-sm italic">
-                            {showRomaji ? romaji : ''}
+                            {showRomanji ? romanji : ''}
                         </span>
                     </div>
                 </div>

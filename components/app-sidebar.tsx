@@ -19,7 +19,7 @@ import {
 import Link from 'next/link';
 import { Badge } from './ui/badge';
 import { usePathname } from 'next/navigation';
-import { Settings, CreditCardIcon, ClipboardListIcon, BarChartIcon } from 'lucide-react';
+import { BarChartIcon, ClipboardListIcon, CreditCardIcon, Settings } from 'lucide-react';
 import { AppIcon } from './app-icon';
 import { ThemeToggle } from './theme-toggle';
 import { hiraganaItems } from '@/lib/hiragana';
@@ -73,7 +73,6 @@ const navMain: NavSection[] = [
                 title: 'Flashcards',
                 url: '/flashcards',
                 enabled: true,
-                soon: true,
                 icon: <CreditCardIcon />,
             },
             {
