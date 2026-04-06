@@ -87,7 +87,6 @@ const navMain: NavSection[] = [
                 title: 'Statistics',
                 url: '/statistics',
                 enabled: true,
-                soon: true,
                 icon: <BarChartIcon />,
             },
         ],
