@@ -106,11 +106,11 @@
     --border: oklch(0.8847 0.0069 97.3627);
     --input: oklch(0.7621 0.0156 98.3528);
     --ring: oklch(0.6171 0.1375 39.0427);
-    --chart-1: oklch(0.5583 0.1276 42.9956);
-    --chart-2: oklch(0.6898 0.1581 290.4107);
-    --chart-3: oklch(0.8816 0.0276 93.128);
-    --chart-4: oklch(0.8822 0.0403 298.1792);
-    --chart-5: oklch(0.5608 0.1348 42.0584);
+    --chart-1: oklch(0.6171 0.1375 39.0427);
+    --chart-2: oklch(0.699 0.115 72);
+    --chart-3: oklch(0.9 0.03 90);
+    --chart-4: oklch(0.62 0.09 18);
+    --chart-5: oklch(0.5 0.08 330);
     --sidebar: oklch(0.9663 0.008 98.8792);
     --sidebar-foreground: oklch(0.359 0.0051 106.6524);
     --sidebar-primary: oklch(0.6171 0.1375 39.0427);
@@ -159,11 +159,11 @@
     --border: oklch(0.3618 0.0101 106.8928);
     --input: oklch(0.4336 0.0113 100.2195);
     --ring: oklch(0.6724 0.1308 38.7559);
-    --chart-1: oklch(0.5583 0.1276 42.9956);
-    --chart-2: oklch(0.6898 0.1581 290.4107);
-    --chart-3: oklch(0.213 0.0078 95.4245);
-    --chart-4: oklch(0.3074 0.0516 289.323);
-    --chart-5: oklch(0.5608 0.1348 42.0584);
+    --chart-1: oklch(0.6724 0.1308 38.7559);
+    --chart-2: oklch(0.74 0.1 78);
+    --chart-3: oklch(0.26 0.01 95);
+    --chart-4: oklch(0.68 0.09 20);
+    --chart-5: oklch(0.67 0.08 330);
     --sidebar: oklch(0.2357 0.0024 67.7077);
     --sidebar-foreground: oklch(0.8074 0.0142 93.0137);
     --sidebar-primary: oklch(0.6724 0.1308 38.7559);
@@ -205,6 +205,11 @@
     --sidebar: oklch(0.9663 0.012 265);
     --sidebar-primary: oklch(0.48 0.16 265);
     --sidebar-accent: oklch(0.9245 0.016 265);
+    --chart-1: oklch(0.48 0.16 265);
+    --chart-2: oklch(0.58 0.11 235);
+    --chart-3: oklch(0.92 0.03 255);
+    --chart-4: oklch(0.64 0.09 205);
+    --chart-5: oklch(0.54 0.08 300);
 }
 [data-theme='ai-iro-dark'] {
     --primary: oklch(0.65 0.15 265);
@@ -217,6 +222,11 @@
     --sidebar: oklch(0.2357 0.012 265);
     --sidebar-primary: oklch(0.65 0.15 265);
     --sidebar-accent: oklch(0.168 0.01 265);
+    --chart-1: oklch(0.65 0.15 265);
+    --chart-2: oklch(0.7 0.11 235);
+    --chart-3: oklch(0.28 0.02 255);
+    --chart-4: oklch(0.72 0.08 205);
+    --chart-5: oklch(0.69 0.07 300);
 }
 
 /* Sakura (桜色) — cherry blossom */
@@ -232,6 +242,11 @@
     --sidebar: oklch(0.9663 0.012 358);
     --sidebar-primary: oklch(0.62 0.15 358);
     --sidebar-accent: oklch(0.9245 0.016 358);
+    --chart-1: oklch(0.62 0.15 358);
+    --chart-2: oklch(0.72 0.11 18);
+    --chart-3: oklch(0.93 0.03 350);
+    --chart-4: oklch(0.7 0.08 330);
+    --chart-5: oklch(0.55 0.09 12);
 }
 [data-theme='sakura-dark'] {
     --primary: oklch(0.72 0.13 358);
@@ -244,6 +259,11 @@
     --sidebar: oklch(0.2357 0.012 358);
     --sidebar-primary: oklch(0.72 0.13 358);
     --sidebar-accent: oklch(0.168 0.01 358);
+    --chart-1: oklch(0.72 0.13 358);
+    --chart-2: oklch(0.77 0.1 18);
+    --chart-3: oklch(0.28 0.02 350);
+    --chart-4: oklch(0.74 0.08 330);
+    --chart-5: oklch(0.66 0.08 12);
 }
 
 /* Matcha (抹茶色) — green tea */
@@ -259,6 +279,11 @@
     --sidebar: oklch(0.9663 0.012 148);
     --sidebar-primary: oklch(0.52 0.13 148);
     --sidebar-accent: oklch(0.9245 0.016 148);
+    --chart-1: oklch(0.52 0.13 148);
+    --chart-2: oklch(0.62 0.11 128);
+    --chart-3: oklch(0.93 0.03 145);
+    --chart-4: oklch(0.68 0.09 95);
+    --chart-5: oklch(0.56 0.08 175);
 }
 [data-theme='matcha-dark'] {
     --primary: oklch(0.65 0.13 148);
@@ -271,6 +296,11 @@
     --sidebar: oklch(0.2357 0.012 148);
     --sidebar-primary: oklch(0.65 0.13 148);
     --sidebar-accent: oklch(0.168 0.01 148);
+    --chart-1: oklch(0.65 0.13 148);
+    --chart-2: oklch(0.72 0.1 128);
+    --chart-3: oklch(0.28 0.02 145);
+    --chart-4: oklch(0.74 0.08 95);
+    --chart-5: oklch(0.69 0.07 175);
 }
 
 /* Murasaki (紫色) — imperial purple */
@@ -286,6 +316,11 @@
     --sidebar: oklch(0.9663 0.012 305);
     --sidebar-primary: oklch(0.52 0.18 305);
     --sidebar-accent: oklch(0.9245 0.016 305);
+    --chart-1: oklch(0.52 0.18 305);
+    --chart-2: oklch(0.64 0.13 285);
+    --chart-3: oklch(0.93 0.03 300);
+    --chart-4: oklch(0.7 0.08 340);
+    --chart-5: oklch(0.58 0.09 255);
 }
 [data-theme='murasaki-dark'] {
     --primary: oklch(0.68 0.16 305);
@@ -298,6 +333,11 @@
     --sidebar: oklch(0.2357 0.012 305);
     --sidebar-primary: oklch(0.68 0.16 305);
     --sidebar-accent: oklch(0.168 0.01 305);
+    --chart-1: oklch(0.68 0.16 305);
+    --chart-2: oklch(0.74 0.12 285);
+    --chart-3: oklch(0.28 0.02 300);
+    --chart-4: oklch(0.75 0.08 340);
+    --chart-5: oklch(0.7 0.08 255);
 }
 
 @keyframes marquee {
