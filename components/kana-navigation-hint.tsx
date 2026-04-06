@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { CircleHelpIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import {
@@ -103,34 +102,22 @@ export function KanaNavigationHint() {
             <PopoverContent className="flex flex-col gap-4" sideOffset={8}>
                 <PopoverHeader>
                     <PopoverTitle>Navigate Kana</PopoverTitle>
-                    <PopoverDescription>
-                        Use the header buttons or your device’s navigation to move between kana
-                        quickly.
-                    </PopoverDescription>
+                    <PopoverDescription>Move between kana faster.</PopoverDescription>
                 </PopoverHeader>
                 <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-2">
-                        <div className="flex items-center gap-2">
-                            <h3 className="text-sm font-medium">Keyboard</h3>
-                            {navigationMode === 'keyboard' ? (
-                                <Badge variant="secondary">This device</Badge>
-                            ) : null}
-                        </div>
-                        <KeyboardShortcuts />
-                        <p className="text-muted-foreground text-sm">
-                            Go to the previous or next kana.
-                        </p>
-                    </div>
                     <Separator />
                     <div className="flex flex-col gap-2">
-                        <div className="flex items-center gap-2">
-                            <h3 className="text-sm font-medium">Touch</h3>
-                            {navigationMode === 'touch' ? (
-                                <Badge variant="secondary">This device</Badge>
-                            ) : null}
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="text-sm font-medium">Navigate kana</h3>
+                            <KeyboardShortcuts />
                         </div>
                         <p className="text-muted-foreground text-sm">
-                            Swipe left for the next kana and right for the previous kana.
+                            <span className="text-foreground font-medium">A</span> or{' '}
+                            <span className="text-foreground font-medium">←</span> goes to the
+                            previous kana.{' '}
+                            <span className="text-foreground font-medium">D</span> or{' '}
+                            <span className="text-foreground font-medium">→</span> goes to the
+                            next kana. Swipe left or right to navigate too.
                         </p>
                     </div>
                 </div>

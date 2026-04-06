@@ -1,12 +1,15 @@
 'use client';
 
+import Link from 'next/link';
 import React, { useId, useRef, useState } from 'react';
 import { useHotkey } from '@tanstack/react-hotkeys';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ExternalLinkIcon } from 'lucide-react';
 
 import { SpeechButton } from '@/components/speech-button';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import { useSpeech } from '@/hooks/use-speech';
 import { cn } from '@/lib/utils';
 import { FlashcardItem, FlashcardTopSide } from '@/lib/flashcards';
 
@@ -27,9 +30,12 @@ export const StudyFlashcard: React.FC<StudyFlashcardProps> = ({
 }) => {
     const [isRevealed, setIsRevealed] = useState(false);
     const [isPromptingReveal, setIsPromptingReveal] = useState(false);
+    const { speak, isSpeaking } = useSpeech();
     const answerId = useId();
     const hasReportedRevealRef = useRef(false);
     const prevSignalRef = useRef(revealPromptSignal);
+    const isPronunciationVisible = top === 'romanji' || isRevealed;
+    const detailHref = `/${item.script}/${encodeURIComponent(item.character)}`;
 
     // Only trigger prompt animation when signal increments while this card is active.
     // When non-active, keep the ref in sync so becoming active doesn't see a stale diff.
@@ -73,6 +79,13 @@ export const StudyFlashcard: React.FC<StudyFlashcardProps> = ({
         },
         { enabled: isActive }
     );
+    useHotkey(
+        'R',
+        () => {
+            speak(item.character);
+        },
+        { enabled: isActive && isPronunciationVisible && !isSpeaking }
+    );
 
     const renderJapanese = (sizeClassName: string, labelClassName: string) => (
         <div className="flex flex-col items-center gap-3">
@@ -89,9 +102,10 @@ export const StudyFlashcard: React.FC<StudyFlashcardProps> = ({
 
     const renderRomanji = (sizeClassName: string, labelClassName: string) => (
         <div className="flex flex-col items-center gap-3">
-            <div className="flex items-center gap-3">
+            <div className="flex items-end gap-3">
                 <p className={cn('font-semibold', sizeClassName)}>{item.romanji}</p>
                 <SpeechButton
+                    className="mb-1"
                     text={item.character}
                     size="icon-sm"
                     aria-label={`Listen to ${item.character}`}
@@ -147,7 +161,24 @@ export const StudyFlashcard: React.FC<StudyFlashcardProps> = ({
                 <CollapsibleContent
                     id={answerId}
                     className="data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down overflow-hidden">
-                    <CardContent className="bg-muted/30 border-t px-6 py-8 text-center md:px-10">
+                    <CardContent className="bg-muted/30 relative border-t px-6 py-8 text-center md:px-10">
+                        <Button
+                            variant="outline"
+                            size="icon-xs"
+                            className="absolute -top-4 -right-4 z-10 rounded-full shadow-sm"
+                            asChild={true}>
+                            <Link
+                                href={detailHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`Open ${item.character} details in a new tab`}
+                                title="Open detail page"
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                }}>
+                                <ExternalLinkIcon className="size-3.5" />
+                            </Link>
+                        </Button>
                         {bottomContent}
                     </CardContent>
                 </CollapsibleContent>
@@ -160,7 +191,9 @@ export const StudyFlashcard: React.FC<StudyFlashcardProps> = ({
                         <span
                             className={cn(
                                 'inline-flex items-center gap-2 transition-transform duration-300',
-                                !isRevealed && isPromptingReveal && 'animate-gentle-bounce scale-150'
+                                !isRevealed &&
+                                    isPromptingReveal &&
+                                    'animate-gentle-bounce scale-150'
                             )}>
                             {isRevealed ? 'Tap to hide' : 'Tap to reveal'}
                             <ChevronDown
@@ -178,4 +211,3 @@ export const StudyFlashcard: React.FC<StudyFlashcardProps> = ({
         </Collapsible>
     );
 };
- 

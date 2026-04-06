@@ -5,6 +5,7 @@ import React from 'react';
 import { ChevronLeft, ChevronRight, Shuffle } from 'lucide-react';
 
 import { FlashcardSettingsButton } from '@/components/flashcards/flashcard-settings-button';
+import { StudyShortcutsHint } from '@/components/flashcards/study-shortcuts-hint';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -53,7 +54,8 @@ export const StudyToolbar: React.FC<StudyToolbarProps> = ({
                     {currentIndex + 1} / {total}
                 </CardTitle>
             </div>
-            <CardAction className="ml-auto">
+            <CardAction className="ml-auto flex items-center gap-1">
+                <StudyShortcutsHint />
                 <FlashcardSettingsButton value={topSide} onChange={onTopSideChange} />
             </CardAction>
         </CardHeader>
