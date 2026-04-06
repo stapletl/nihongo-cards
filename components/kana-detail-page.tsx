@@ -7,6 +7,7 @@ import { KanaPageContent } from '@/components/kana-card/kana-page-content';
 import { MarkKanaVisited } from '@/components/kana-card/mark-kana-visited';
 import { Button } from '@/components/ui/button';
 import { KanaItem } from '@/lib/hiragana';
+import { resolveKanaStrokeGlyphs } from '@/lib/kana-stroke-registry';
 
 type KanaDetailPageProps = {
     items: KanaItem[];
@@ -23,6 +24,7 @@ export function KanaDetailPage({ items, character, backHref, backLabel }: KanaDe
     const idx = items.indexOf(kanaItem);
     const prevItem = items.at(idx - 1);
     const nextItem = items.at(idx + 1) ?? items[0];
+    const strokeOrderCharacters = resolveKanaStrokeGlyphs(kanaItem.character);
 
     return (
         <div className="flex h-full flex-col overflow-hidden">
@@ -51,7 +53,10 @@ export function KanaDetailPage({ items, character, backHref, backLabel }: KanaDe
                 </div>
             </div>
             <div className="flex-1 overflow-y-auto pt-4">
-                <KanaPageContent kanaItem={kanaItem} />
+                <KanaPageContent
+                    kanaItem={kanaItem}
+                    strokeOrderCharacters={strokeOrderCharacters}
+                />
             </div>
         </div>
     );

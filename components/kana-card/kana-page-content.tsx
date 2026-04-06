@@ -5,6 +5,7 @@ import { KanaStrokeOrderSection } from '@/components/kana-card/kana-stroke-order
 import { SpeechButton } from '@/components/speech-button';
 import { ShowRomanjiButton } from '@/components/show-romanji-button';
 import { KanaItem } from '@/lib/hiragana';
+import { LoadedKanaStrokeGlyph } from '@/lib/kana-stroke-order';
 
 // Helper to bold the kana in the example
 const renderExampleWithBoldKana = (example: string, kana: string): React.ReactNode[] =>
@@ -16,9 +17,13 @@ const renderExampleWithBoldKana = (example: string, kana: string): React.ReactNo
 
 type KanaPageContentProps = {
     kanaItem: KanaItem;
+    strokeOrderCharacters: LoadedKanaStrokeGlyph[];
 };
 
-export const KanaPageContent: React.FC<KanaPageContentProps> = ({ kanaItem }) => {
+export const KanaPageContent: React.FC<KanaPageContentProps> = ({
+    kanaItem,
+    strokeOrderCharacters,
+}) => {
     const [showRomanji, setShowRomanji] = useState(false);
 
     return (
@@ -92,7 +97,7 @@ export const KanaPageContent: React.FC<KanaPageContentProps> = ({ kanaItem }) =>
                 </div>
             </section>
 
-            <KanaStrokeOrderSection characterText={kanaItem.character} />
+            <KanaStrokeOrderSection key={kanaItem.character} characters={strokeOrderCharacters} />
         </main>
     );
 };

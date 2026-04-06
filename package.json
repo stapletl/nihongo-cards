@@ -5,7 +5,8 @@
     "license": "MIT",
     "scripts": {
         "dev": "next dev --turbopack",
-        "build": "next build",
+        "build": "bun run generate:kana-stroke-data && next build",
+        "generate:kana-stroke-data": "bun run scripts/generate-kana-stroke-data.ts",
         "start": "next start",
         "lint": "eslint .",
         "format": "prettier --write ."
