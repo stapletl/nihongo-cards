@@ -362,7 +362,7 @@ export function StatisticsContent() {
 
             return (
                 item.character.includes(normalizedQuery) ||
-                item.romaji.toLowerCase().includes(normalizedQuery)
+                item.romanji.toLowerCase().includes(normalizedQuery)
             );
         });
     }, [allKana, deferredQuery, scriptFilter]);
@@ -427,7 +427,7 @@ export function StatisticsContent() {
                     value={overview.topKana ? overview.topKana.character : 'None'}
                     description={
                         overview.topKana
-                            ? `${overview.topKana.romaji} with ${overview.topKana.totalActivityCount.toLocaleString()} tracked interactions.`
+                            ? `${overview.topKana.romanji} with ${overview.topKana.totalActivityCount.toLocaleString()} tracked interactions.`
                             : 'No kana activity has been recorded yet.'
                     }
                 />
@@ -539,7 +539,7 @@ export function StatisticsContent() {
                                             ? topKana
                                                   .map(
                                                       (item) =>
-                                                          `${item.character} (${item.romaji.toLowerCase()})`
+                                                          `${item.character} (${item.romanji.toLowerCase()})`
                                                   )
                                                   .join(', ')
                                             : 'No tracked activity yet'}
@@ -573,7 +573,7 @@ export function StatisticsContent() {
                     <CardHeader>
                         <CardTitle>Investigate individual kana</CardTitle>
                         <CardDescription>
-                            Filter by script, search by kana or romaji, then inspect the selected
+                            Filter by script, search by kana or romanji, then inspect the selected
                             character&apos;s activity.
                         </CardDescription>
                     </CardHeader>
@@ -582,7 +582,7 @@ export function StatisticsContent() {
                             <Input
                                 value={query}
                                 onChange={(event) => setQuery(event.target.value)}
-                                placeholder="Search by kana or romaji"
+                                placeholder="Search by kana or romanji"
                                 aria-label="Search kana statistics"
                             />
                             <div className="flex flex-wrap gap-2">
@@ -634,7 +634,7 @@ export function StatisticsContent() {
                                                             ? 'text-primary-foreground/80'
                                                             : 'text-muted-foreground'
                                                     )}>
-                                                    {item.romaji}
+                                                    {item.romanji}
                                                 </span>
                                             </button>
                                         );
@@ -658,7 +658,7 @@ export function StatisticsContent() {
                             <CardTitle className="flex items-center gap-3 text-3xl">
                                 <span>{selectedKana.character}</span>
                                 <span className="text-muted-foreground text-lg font-medium uppercase">
-                                    {selectedKana.romaji}
+                                    {selectedKana.romanji}
                                 </span>
                             </CardTitle>
                             <CardDescription className="flex items-center gap-2">
@@ -690,7 +690,8 @@ export function StatisticsContent() {
                             <div className="bg-muted/40 rounded-lg border p-4">
                                 <p className="text-sm font-medium">{selectedKana.example}</p>
                                 <p className="text-muted-foreground text-sm">
-                                    {selectedKana.exampleTranslation} ({selectedKana.exampleRomaji})
+                                    {selectedKana.exampleTranslation} ({selectedKana.exampleRomanji}
+                                    )
                                 </p>
                             </div>
 
