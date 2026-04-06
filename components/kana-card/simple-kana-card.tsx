@@ -52,7 +52,7 @@ export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({
                     <p className="text-2xl font-semibold md:text-4xl">{kanaItem.character}</p>
                     {showRomanji && (
                         <p className="text-muted-foreground text-md md:text-xl">
-                            {kanaItem.romaji}
+                            {kanaItem.romanji}
                         </p>
                     )}
                 </div>

@@ -5,11 +5,11 @@ export function ThemePreview() {
         <div className="bg-background border-border rounded-lg border p-4">
             <div className="mb-3 grid grid-cols-4 gap-1.5">
                 {[
-                    { char: 'あ', romaji: 'a', unvisited: false },
-                    { char: 'い', romaji: 'i', unvisited: true },
-                    { char: 'う', romaji: 'u', unvisited: false },
-                    { char: 'え', romaji: 'e', unvisited: false },
-                ].map(({ char, romaji, unvisited }) => (
+                    { char: 'あ', romanji: 'a', unvisited: false },
+                    { char: 'い', romanji: 'i', unvisited: true },
+                    { char: 'う', romanji: 'u', unvisited: false },
+                    { char: 'え', romanji: 'e', unvisited: false },
+                ].map(({ char, romanji, unvisited }) => (
                     <div
                         key={char}
                         className={`bg-card flex flex-col items-center rounded-md px-2 py-2 ${
@@ -18,7 +18,7 @@ export function ThemePreview() {
                                 : 'border-border border'
                         }`}>
                         <span className="text-card-foreground text-lg font-semibold">{char}</span>
-                        <span className="text-muted-foreground text-xs">{romaji}</span>
+                        <span className="text-muted-foreground text-xs">{romanji}</span>
                     </div>
                 ))}
             </div>

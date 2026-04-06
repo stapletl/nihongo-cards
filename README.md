@@ -21,7 +21,7 @@ bun install
 3. Run the development server:
 
 ```bash
-bun dev
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to start learning Japanese!
@@ -36,12 +36,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to start l
 
 ## Available Scripts
 
-- `bun dev` - Start the development server with Turbopack
-- `bun build` - Build the application for production
-- `bun start` - Start the production server
-- `bun lint` - Run ESLint to check code quality
-- `bun lint --fix` Have the linter fix all auto-fixable problems
-- `bun format` - Format all files using Prettier
+- `bun run dev` - Start the development server with Turbopack
+- `bun run build` - Build the application for production
+- `bun run start` - Start the production server
+- `bun run lint` - Run ESLint to check code quality
+- `bun run lint --fix` - Have the linter fix all auto-fixable problems
+- `bun run format` - Format all files using Prettier
 
 ## Contributing
 

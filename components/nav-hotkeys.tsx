@@ -3,6 +3,7 @@
 import { useEffectEvent } from 'react';
 import { useHotkey } from '@tanstack/react-hotkeys';
 import { useRouter } from 'next/navigation';
+import { useNavigationGuard } from '@/hooks/use-navigation-guard';
 
 import { useSwipeNavigation } from '@/hooks/use-swipe-navigation';
 
@@ -13,13 +14,14 @@ type NavHotkeysProps = {
 
 export function NavHotkeys({ prevHref, nextHref }: NavHotkeysProps) {
     const router = useRouter();
+    const { requestNavigation } = useNavigationGuard();
 
     const goToPrev = useEffectEvent(() => {
-        if (prevHref) router.push(prevHref);
+        if (prevHref) requestNavigation(() => router.push(prevHref));
     });
 
     const goToNext = useEffectEvent(() => {
-        if (nextHref) router.push(nextHref);
+        if (nextHref) requestNavigation(() => router.push(nextHref));
     });
 
     useHotkey('ArrowLeft', goToPrev);

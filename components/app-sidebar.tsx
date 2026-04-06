@@ -73,7 +73,6 @@ const navMain: NavSection[] = [
                 title: 'Flashcards',
                 url: '/flashcards',
                 enabled: true,
-                soon: true,
                 icon: <CreditCardIcon />,
             },
             {
