@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Loader2, Play } from 'lucide-react';
+import React, { useState } from 'react';
+import { Play } from 'lucide-react';
 
 import {
     CHARACTER_GAP_MS,
@@ -9,83 +9,21 @@ import {
     getKanaStrokeAnimationDuration,
 } from '@/components/kana-card/kana-stroke-order-svg';
 import { Button } from '@/components/ui/button';
-import { ParsedKanaStrokeSvg, loadKanaStrokeSvg } from '@/lib/kana-stroke-order';
+import { LoadedKanaStrokeGlyph, ParsedKanaStrokeSvg } from '@/lib/kana-stroke-order';
 
 type KanaStrokeOrderSectionProps = {
-    characterText: string;
+    characters: LoadedKanaStrokeGlyph[];
 };
 
-type StrokeOrderCharacter = {
-    character: string;
-    strokeOrderUrl: string;
-};
-
-type LoadedStrokeOrderCharacter = StrokeOrderCharacter & {
-    svgData: ParsedKanaStrokeSvg | null;
-};
-
-const getStrokeOrderCharacters = (characterText: string): StrokeOrderCharacter[] =>
-    Array.from(characterText).flatMap((character) => {
-        const codePoint = character.codePointAt(0);
-
-        if (codePoint === undefined) {
-            return [];
-        }
-
-        return [
-            {
-                character,
-                strokeOrderUrl: `/kana-svgs/${codePoint
-                    .toString(16)
-                    .padStart(5, '0')
-                    .toLowerCase()}.svg`,
-            },
-        ];
-    });
-
-export const KanaStrokeOrderSection: React.FC<KanaStrokeOrderSectionProps> = ({
-    characterText,
-}) => {
+export const KanaStrokeOrderSection: React.FC<KanaStrokeOrderSectionProps> = ({ characters }) => {
     const [replayToken, setReplayToken] = useState(0);
-    const [loadedStrokeOrderCharacters, setLoadedStrokeOrderCharacters] = useState<
-        LoadedStrokeOrderCharacter[]
-    >([]);
-
-    const strokeOrderCharacters = getStrokeOrderCharacters(characterText);
-
-    useEffect(() => {
-        let isCancelled = false;
-        const nextStrokeOrderCharacters = getStrokeOrderCharacters(characterText);
-
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setReplayToken(0);
-        setLoadedStrokeOrderCharacters([]);
-
-        void Promise.all(
-            nextStrokeOrderCharacters.map(async (character) => ({
-                ...character,
-                svgData: await loadKanaStrokeSvg(character.strokeOrderUrl),
-            }))
-        ).then((nextCharacters) => {
-            if (!isCancelled) {
-                setLoadedStrokeOrderCharacters(nextCharacters);
-            }
-        });
-
-        return () => {
-            isCancelled = true;
-        };
-    }, [characterText]);
-
-    const isStrokeOrderLoading =
-        loadedStrokeOrderCharacters.length !== strokeOrderCharacters.length;
     const animatedStrokeOrderCharacters: Array<
-        LoadedStrokeOrderCharacter & { svgData: ParsedKanaStrokeSvg; startDelayMs: number }
+        LoadedKanaStrokeGlyph & { svgData: ParsedKanaStrokeSvg; startDelayMs: number }
     > = [];
 
     let nextStartDelayMs = 0;
 
-    for (const character of loadedStrokeOrderCharacters) {
+    for (const character of characters) {
         if (character.svgData === null) {
             continue;
         }
@@ -132,14 +70,12 @@ export const KanaStrokeOrderSection: React.FC<KanaStrokeOrderSectionProps> = ({
                                     startDelayMs={character.startDelayMs}
                                     className={
                                         animatedStrokeOrderCharacters.length > 1
-                                            ? 'aspect-square min-w-0 w-full justify-self-center'
+                                            ? 'aspect-square w-full min-w-0 justify-self-center'
                                             : 'size-[240px] max-w-full'
                                     }
                                 />
                             ))}
                         </div>
-                    ) : isStrokeOrderLoading ? (
-                        <Loader2 className="text-muted-foreground size-12 animate-spin" />
                     ) : (
                         <p className="text-muted-foreground text-sm">
                             Stroke order is unavailable for this kana.
