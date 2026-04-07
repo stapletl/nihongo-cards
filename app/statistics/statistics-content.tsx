@@ -167,7 +167,7 @@ function SummaryMetric({
     value: string;
 }) {
     return (
-        <Card>
+        <Card className="min-w-0">
             <CardHeader>
                 <CardDescription className="flex items-center gap-2">
                     {icon}
@@ -195,9 +195,28 @@ function ProgressBar({ value }: { value: number }) {
 
 function SectionStatRow({ label, value }: { label: string; value: string }) {
     return (
-        <div className="flex items-center justify-between gap-4 text-sm">
-            <span className="text-muted-foreground">{label}</span>
-            <span className="font-medium tabular-nums">{value}</span>
+        <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1 text-sm">
+            <span className="text-muted-foreground min-w-0">{label}</span>
+            <span className="max-w-full min-w-0 text-right font-medium break-words tabular-nums">
+                {value}
+            </span>
+        </div>
+    );
+}
+
+function SectionStatCard({
+    label,
+    value,
+    valueClassName,
+}: {
+    label: string;
+    value: string;
+    valueClassName?: string;
+}) {
+    return (
+        <div className="bg-muted/40 flex min-w-0 flex-col gap-2 rounded-lg border p-4">
+            <p className="text-muted-foreground text-sm leading-tight">{label}</p>
+            <p className={cn('text-2xl font-semibold tabular-nums', valueClassName)}>{value}</p>
         </div>
     );
 }
@@ -382,7 +401,7 @@ export function StatisticsContent() {
 
     if (isLoading) {
         return (
-            <div className="flex flex-col gap-6">
+            <div className="flex min-w-0 flex-col gap-6">
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                     {Array.from({ length: 4 }, (_, index) => (
                         <Skeleton key={index} className="h-36 w-full rounded-xl" />
@@ -401,7 +420,7 @@ export function StatisticsContent() {
     }
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex min-w-0 flex-col gap-6">
             <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <SummaryMetric
                     icon={<BarChart3 className="text-muted-foreground size-4" />}
@@ -434,14 +453,14 @@ export function StatisticsContent() {
             </section>
 
             <section className="grid gap-4 xl:grid-cols-2">
-                <Card>
+                <Card className="min-w-0">
                     <CardHeader>
                         <CardTitle>Progress by script</CardTitle>
                         <CardDescription>
                             Visited versus remaining kana across Hiragana and Katakana.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="min-w-0">
                         <ChartContainer
                             config={progressChartConfig}
                             className="min-h-[18rem] w-full">
@@ -484,8 +503,8 @@ export function StatisticsContent() {
                     return (
                         <Card key={script}>
                             <CardHeader>
-                                <div className="flex items-start justify-between gap-4">
-                                    <div className="flex flex-col gap-1">
+                                <div className="flex flex-wrap items-start justify-between gap-3">
+                                    <div className="min-w-0 flex-1">
                                         <CardTitle>{summary.label}</CardTitle>
                                         <CardDescription>
                                             {summary.visitedKana.toLocaleString()} visited,{' '}
@@ -493,7 +512,9 @@ export function StatisticsContent() {
                                             {summary.quizzedKana.toLocaleString()} quizzed.
                                         </CardDescription>
                                     </div>
-                                    <Badge variant="secondary">
+                                    <Badge
+                                        variant="secondary"
+                                        className="max-w-full whitespace-normal">
                                         {formatPercent(
                                             getProgressPercent(
                                                 summary.visitedKana,
@@ -512,38 +533,47 @@ export function StatisticsContent() {
                                     )}
                                 />
                                 <div className="grid gap-3 sm:grid-cols-2">
-                                    <SectionStatRow
+                                    <SectionStatCard
                                         label="Detail views"
                                         value={summary.detailsViewCount.toLocaleString()}
                                     />
-                                    <SectionStatRow
+                                    <SectionStatCard
                                         label="Flashcard views"
                                         value={summary.flashcardViewCount.toLocaleString()}
                                     />
-                                    <SectionStatRow
+                                    <SectionStatCard
                                         label="Quiz correct"
                                         value={summary.quizCorrectCount.toLocaleString()}
                                     />
-                                    <SectionStatRow
+                                    <SectionStatCard
                                         label="Quiz incorrect"
                                         value={summary.quizIncorrectCount.toLocaleString()}
                                     />
                                 </div>
-                                <div className="flex flex-col gap-2">
-                                    <p className="text-muted-foreground text-sm">
-                                        Last activity: {formatTimestamp(summary.lastActiveAt)}
-                                    </p>
-                                    <p className="text-muted-foreground text-sm">
-                                        Top kana:{' '}
-                                        {topKana.length > 0
-                                            ? topKana
-                                                  .map(
-                                                      (item) =>
-                                                          `${item.character} (${item.romanji.toLowerCase()})`
-                                                  )
-                                                  .join(', ')
-                                            : 'No tracked activity yet'}
-                                    </p>
+                                <div className="grid gap-3 sm:grid-cols-2">
+                                    <div className="bg-muted/30 rounded-lg border px-4 py-3">
+                                        <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                                            Last activity
+                                        </p>
+                                        <p className="mt-1 text-sm font-medium">
+                                            {formatTimestamp(summary.lastActiveAt)}
+                                        </p>
+                                    </div>
+                                    <div className="bg-muted/30 rounded-lg border px-4 py-3">
+                                        <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                                            Top kana
+                                        </p>
+                                        <p className="mt-1 text-sm font-medium">
+                                            {topKana.length > 0
+                                                ? topKana
+                                                      .map(
+                                                          (item) =>
+                                                              `${item.character} (${item.romanji.toLowerCase()})`
+                                                      )
+                                                      .join(', ')
+                                                : 'No tracked activity yet'}
+                                        </p>
+                                    </div>
                                 </div>
                             </CardContent>
                             <CardFooter className="justify-end">
@@ -568,8 +598,8 @@ export function StatisticsContent() {
             <section
                 id="kana-inspector"
                 ref={inspectorRef}
-                className="grid gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(320px,1fr)]">
-                <Card>
+                className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1.45fr)_minmax(320px,1fr)]">
+                <Card className="min-w-0">
                     <CardHeader>
                         <CardTitle>Investigate individual kana</CardTitle>
                         <CardDescription>
@@ -577,7 +607,7 @@ export function StatisticsContent() {
                             character&apos;s activity.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent className="flex flex-col gap-4">
+                    <CardContent className="flex min-w-0 flex-col gap-4">
                         <div className="flex flex-col gap-3">
                             <Input
                                 value={query}
@@ -653,15 +683,27 @@ export function StatisticsContent() {
                 </Card>
 
                 {selectedKana ? (
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-3 text-3xl">
+                    <Card className="min-w-0">
+                        <CardHeader className="grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+                            <CardTitle className="flex flex-wrap items-end gap-x-3 gap-y-1 text-2xl sm:text-3xl">
                                 <span>{selectedKana.character}</span>
                                 <span className="text-muted-foreground text-lg font-medium uppercase">
                                     {selectedKana.romanji}
                                 </span>
                             </CardTitle>
-                            <CardDescription className="flex items-center gap-2">
+                            <CardAction className="col-start-2 row-start-1 justify-self-end">
+                                <Button
+                                    asChild={true}
+                                    variant="outline"
+                                    size="sm"
+                                    className="w-full sm:w-auto">
+                                    <Link href={selectedKana.href}>
+                                        Open kana page
+                                        <ArrowUpRight />
+                                    </Link>
+                                </Button>
+                            </CardAction>
+                            <CardDescription className="flex flex-wrap items-center gap-2">
                                 <Badge variant="outline">
                                     {SCRIPT_META[selectedKana.script].label}
                                 </Badge>
@@ -677,14 +719,6 @@ export function StatisticsContent() {
                                     <Badge variant="secondary">Quizzed</Badge>
                                 ) : null}
                             </CardDescription>
-                            <CardAction>
-                                <Button asChild={true} variant="outline" size="sm">
-                                    <Link href={selectedKana.href}>
-                                        Open kana page
-                                        <ArrowUpRight />
-                                    </Link>
-                                </Button>
-                            </CardAction>
                         </CardHeader>
                         <CardContent className="flex flex-col gap-6">
                             <div className="bg-muted/40 rounded-lg border p-4">
