@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffectEvent } from 'react';
 import { useHotkey } from '@tanstack/react-hotkeys';
 import { useRouter } from 'next/navigation';
 import { useNavigationGuard } from '@/hooks/use-navigation-guard';
@@ -16,13 +15,13 @@ export function NavHotkeys({ prevHref, nextHref }: NavHotkeysProps) {
     const router = useRouter();
     const { requestNavigation } = useNavigationGuard();
 
-    const goToPrev = useEffectEvent(() => {
+    const goToPrev = () => {
         if (prevHref) requestNavigation(() => router.push(prevHref));
-    });
+    };
 
-    const goToNext = useEffectEvent(() => {
+    const goToNext = () => {
         if (nextHref) requestNavigation(() => router.push(nextHref));
-    });
+    };
 
     useHotkey('ArrowLeft', goToPrev);
     useHotkey('A', goToPrev);
