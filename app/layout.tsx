@@ -3,7 +3,12 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import DashboardLayout from '@/components/layout/dashboard-layout';
-import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/site';
+import {
+    SITE_AUTHOR,
+    SITE_DESCRIPTION,
+    SITE_HOMEPAGE_URL,
+    SITE_NAME,
+} from '@/lib/site';
 import './globals.css';
 
 const geistSans = Geist({
@@ -17,8 +22,44 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: SITE_NAME,
+    metadataBase: new URL(SITE_HOMEPAGE_URL),
+    title: {
+        default: SITE_NAME,
+        template: `%s | ${SITE_NAME}`,
+    },
     description: SITE_DESCRIPTION,
+    applicationName: SITE_NAME,
+    authors: [{ name: SITE_AUTHOR }],
+    alternates: {
+        canonical: '/',
+    },
+    openGraph: {
+        type: 'website',
+        url: '/',
+        siteName: SITE_NAME,
+        title: SITE_NAME,
+        description: SITE_DESCRIPTION,
+        locale: 'en_US',
+        images: [
+            {
+                url: '/opengraph-image',
+                width: 1200,
+                height: 630,
+                alt: `${SITE_NAME} logo and title`,
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: SITE_NAME,
+        description: SITE_DESCRIPTION,
+        images: [
+            {
+                url: '/twitter-image',
+                alt: `${SITE_NAME} logo and title`,
+            },
+        ],
+    },
 };
 
 export default function RootLayout({
