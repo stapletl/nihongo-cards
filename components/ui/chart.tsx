@@ -75,9 +75,7 @@ function ChartContainer({
 }
 
 function ChartStyle({ id, config }: { id: string; config: ChartConfig }) {
-    const colorConfig = Object.entries(config).filter(([, itemConfig]) => {
-        return itemConfig.theme ?? itemConfig.color;
-    });
+    const colorConfig = Object.entries(config).filter(([, itemConfig]) => itemConfig.theme ?? itemConfig.color);
 
     if (!colorConfig.length) {
         return null;
@@ -231,7 +229,7 @@ function ChartTooltipContent({
                                                     {itemConfig?.label ?? item.name}
                                                 </span>
                                             </div>
-                                            {item.value != null && (
+                                            {item.value !== null && item.value !== undefined && (
                                                 <span className="text-foreground font-mono font-medium tabular-nums">
                                                     {typeof item.value === 'number'
                                                         ? item.value.toLocaleString()

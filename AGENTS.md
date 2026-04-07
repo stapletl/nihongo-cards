@@ -11,7 +11,7 @@ bun run lint      # ESLint
 bun run format    # Prettier (auto-fix)
 ```
 
-No test suite exists yet. `bun run build` is the primary verification step — it runs the TypeScript compiler and generates all 216 static pages.
+No test suite exists yet. Agents should run `bun run lint` for any code change and verify their changes do not introduce lint errors. `bun run build` is the primary verification step — it runs the TypeScript compiler and generates all 216 static pages.
 
 ## Stack
 

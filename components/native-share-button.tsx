@@ -139,7 +139,7 @@ export function NativeShareButton() {
                     setCopied(false);
                 }
             }}>
-            <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
+            <PopoverTrigger asChild={true}>{triggerButton}</PopoverTrigger>
             <PopoverContent className="w-80">
                 <PopoverHeader>
                     <PopoverTitle>Share link</PopoverTitle>
