@@ -1,36 +1,56 @@
-import { Button } from '@/components/ui/button';
+'use client';
+
+import { useEffect, useState } from 'react';
 import { StarIcon } from 'lucide-react';
-import { unstable_cache } from 'next/cache';
-import { SITE_GITHUB_API_URL, SITE_GITHUB_URL, SITE_NAME } from '@/lib/site';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { SITE_GITHUB_URL } from '@/lib/site';
 
 const REPO_URL = SITE_GITHUB_URL;
-const API_URL = SITE_GITHUB_API_URL;
-const STAR_CACHE_TTL_SECONDS = 3600;
+const STAR_COUNT_ENDPOINT = '/api/github-stars';
 
-const getStarCount = unstable_cache(
-    async (): Promise<number | null> => {
-        try {
-            const res = await fetch(API_URL, {
-                headers: { 'User-Agent': SITE_NAME },
-                cache: 'no-store',
-            });
-            if (!res.ok) {
-                console.error('GitHub API error:', res.status, await res.text());
-                return null;
+type GithubStarsResponse = {
+    stars: number | null;
+};
+
+export function GithubButton() {
+    const [stars, setStars] = useState<number | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const controller = new AbortController();
+
+        async function loadStars() {
+            try {
+                const res = await fetch(STAR_COUNT_ENDPOINT, {
+                    signal: controller.signal,
+                });
+
+                if (!res.ok) {
+                    setIsLoading(false);
+                    return;
+                }
+
+                const data = (await res.json()) as GithubStarsResponse;
+
+                if (typeof data.stars === 'number') {
+                    setStars(data.stars);
+                }
+            } catch (error) {
+                if (error instanceof DOMException && error.name === 'AbortError') {
+                    return;
+                }
+            } finally {
+                setIsLoading(false);
             }
-            const data = await res.json();
-            return data.stargazers_count ?? null;
-        } catch (err) {
-            console.error('GitHub fetch failed:', err);
-            return null;
         }
-    },
-    ['github-star-count', API_URL],
-    { revalidate: STAR_CACHE_TTL_SECONDS },
-);
 
-export async function GithubButton() {
-    const stars = await getStarCount();
+        void loadStars();
+
+        return () => {
+            controller.abort();
+        };
+    }, []);
 
     return (
         <Button className="has-[>svg]:px-2" variant="ghost" size="sm" asChild={true}>
@@ -41,7 +61,8 @@ export async function GithubButton() {
                         fill="currentColor"
                     />
                 </svg>
-                {stars !== null && (
+                {isLoading && <Skeleton className="h-3 w-12 rounded-full" />}
+                {!isLoading && stars !== null && (
                     <span className="flex items-center gap-1 text-xs">
                         <StarIcon className="size-3" />
                         {stars.toLocaleString()}
