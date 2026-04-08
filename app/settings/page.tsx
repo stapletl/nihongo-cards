@@ -76,8 +76,10 @@ export default function SettingsPage() {
                     <Card>
                         <CardContent>
                             <p className="text-base">
-                                We do not collect or sell your data. For more information view our{' '}
-                                <Link href="settings/privacy" className="text-primary underline">
+                                Nihongo Cards stores your study progress and preferences on your
+                                device and uses Vercel&apos;s built-in analytics and performance
+                                monitoring. For details, view our{' '}
+                                <Link href="/settings/privacy" className="text-primary underline">
                                     Privacy Policy
                                 </Link>
                                 .

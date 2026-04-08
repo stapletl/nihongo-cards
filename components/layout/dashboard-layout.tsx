@@ -5,10 +5,12 @@ import { SpeechProvider } from '@/components/providers/speech-provider';
 import { NavigationGuardProvider } from '@/components/providers/navigation-guard-provider';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
+import Link from 'next/link';
 import AppBreadcrumbs from '../app-breadcrumbs';
 import { CommandMenu } from '@/components/command-menu';
 import { GithubButton } from '@/components/github-button';
 import { NativeShareButton } from '@/components/native-share-button';
+import { SITE_GITHUB_URL } from '@/lib/site';
 
 type LayoutProps = {
     children: React.ReactNode;
@@ -52,8 +54,27 @@ export default async function DashboardLayout({ children }: LayoutProps) {
                                 </div>
                             </header>
                             <div className="w-full flex-1 overflow-x-hidden overflow-y-auto">
-                                <div className="flex h-full min-w-[375px] flex-col gap-4">
-                                    {children}
+                                <div className="flex min-h-full min-w-[375px] flex-col">
+                                    <div className="flex flex-1 flex-col gap-4">{children}</div>
+                                    <footer className="border-t px-4 py-3">
+                                        <div className="text-muted-foreground flex flex-wrap items-center justify-between gap-3 text-sm">
+                                            <span>Nihongo Cards</span>
+                                            <div className="flex flex-wrap items-center gap-4">
+                                                <Link
+                                                    href="/settings/privacy"
+                                                    className="hover:text-foreground underline-offset-4 hover:underline">
+                                                    Privacy Policy
+                                                </Link>
+                                                <a
+                                                    href={SITE_GITHUB_URL}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="hover:text-foreground underline-offset-4 hover:underline">
+                                                    GitHub
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </footer>
                                 </div>
                             </div>
                         </SidebarInset>
