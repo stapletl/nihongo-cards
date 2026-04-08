@@ -20,7 +20,6 @@ import Link from 'next/link';
 import { Badge } from './ui/badge';
 import { usePathname } from 'next/navigation';
 import { BarChartIcon, ClipboardListIcon, CreditCardIcon, Settings } from 'lucide-react';
-import { AppIcon } from './app-icon';
 import { ThemeToggle } from './theme-toggle';
 import { hiraganaItems } from '@/lib/hiragana';
 import { katakanaItems } from '@/lib/katakana';
@@ -145,8 +144,7 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
             <SidebarHeader>
                 <SidebarMenuButton className="h-12" asChild={true} isActive={pathname === '/'}>
                     <Link href="/" className="block" onClick={handleNavigationClick}>
-                        <div className="flex items-center gap-2">
-                            <AppIcon size={32} />
+                        <div className="flex items-center">
                             <h2 className="text-primary text-2xl font-semibold">Nihongo Cards</h2>
                         </div>
                     </Link>
