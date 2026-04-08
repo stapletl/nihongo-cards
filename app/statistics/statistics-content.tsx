@@ -3,7 +3,6 @@
 import { type ReactNode, useDeferredValue, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowUpRight, BarChart3, BookOpen, Search, Trophy } from 'lucide-react';
-import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
 import { KanaProgress, isVisited } from '@/lib/kana-db';
 import { type KanaItem, hiraganaItems } from '@/lib/hiragana';
@@ -20,14 +19,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import {
-    ChartConfig,
-    ChartContainer,
-    ChartLegend,
-    ChartLegendContent,
-    ChartTooltip,
-    ChartTooltipContent,
-} from '@/components/ui/chart';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -72,17 +63,6 @@ const SCRIPT_META: Record<KanaScript, { hrefPrefix: string; items: KanaItem[]; l
         label: 'Katakana',
     },
 };
-
-const progressChartConfig = {
-    visited: {
-        label: 'Visited',
-        color: 'var(--primary)',
-    },
-    remaining: {
-        label: 'Remaining',
-        color: 'var(--muted)',
-    },
-} satisfies ChartConfig;
 
 function createEmptyProgress(character: string): KanaProgress {
     return {
@@ -357,16 +337,6 @@ export function StatisticsContent() {
         };
     }, [allKana]);
 
-    const progressChartData = useMemo(
-        () =>
-            (Object.keys(scriptSummaries) as KanaScript[]).map((script) => ({
-                remaining: scriptSummaries[script].remainingKana,
-                script: scriptSummaries[script].label,
-                visited: scriptSummaries[script].visitedKana,
-            })),
-        [scriptSummaries]
-    );
-
     const filteredKana = useMemo(() => {
         const normalizedQuery = deferredQuery.trim().toLowerCase();
 
@@ -450,49 +420,6 @@ export function StatisticsContent() {
                             : 'No kana activity has been recorded yet.'
                     }
                 />
-            </section>
-
-            <section className="grid gap-4 xl:grid-cols-2">
-                <Card className="min-w-0">
-                    <CardHeader>
-                        <CardTitle>Progress by script</CardTitle>
-                        <CardDescription>
-                            Visited versus remaining kana across Hiragana and Katakana.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="min-w-0">
-                        <ChartContainer
-                            config={progressChartConfig}
-                            className="min-h-[18rem] w-full">
-                            <BarChart accessibilityLayer={true} data={progressChartData}>
-                                <CartesianGrid vertical={false} />
-                                <XAxis
-                                    dataKey="script"
-                                    tickLine={false}
-                                    axisLine={false}
-                                    tickMargin={10}
-                                />
-                                <ChartTooltip
-                                    cursor={false}
-                                    content={<ChartTooltipContent indicator="dashed" />}
-                                />
-                                <ChartLegend content={<ChartLegendContent />} />
-                                <Bar
-                                    dataKey="visited"
-                                    stackId="progress"
-                                    fill="var(--color-visited)"
-                                    radius={[4, 4, 0, 0]}
-                                />
-                                <Bar
-                                    dataKey="remaining"
-                                    stackId="progress"
-                                    fill="var(--color-remaining)"
-                                    radius={[4, 4, 0, 0]}
-                                />
-                            </BarChart>
-                        </ChartContainer>
-                    </CardContent>
-                </Card>
             </section>
 
             <section className="grid gap-4 xl:grid-cols-2">
