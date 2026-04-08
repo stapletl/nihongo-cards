@@ -14,7 +14,7 @@ type LayoutProps = {
     children: React.ReactNode;
 };
 
-export default async function DashboardLayout({ children }: LayoutProps) {
+export default function DashboardLayout({ children }: LayoutProps) {
     return (
         <ThemeProvider
             attribute="data-theme"
