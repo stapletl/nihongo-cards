@@ -45,7 +45,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to start l
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+The goal for this app is to have an extremely narrow scope and be virtually no work to maintain. If you have suggestions, comments, concerns, feel free to open an Issue. It is unlikely that large features will be added or large PRs will be reviewed.
 
 ## License
 
