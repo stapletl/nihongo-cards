@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { StarIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import { useLocalStorageState } from '@/hooks/use-local-storage';
 import { SITE_GITHUB_URL } from '@/lib/site';
 
 const CACHE_KEY = 'github-stars';
@@ -11,28 +12,38 @@ const CACHE_TTL_MS = 3_600_000;
 
 type CachedStars = { stars: number; ts: number };
 
-function getCachedStars(): number | null {
-    if (typeof window === 'undefined') return null;
+function parseCachedStars(value: string): number | null {
     try {
-        const raw = localStorage.getItem(CACHE_KEY);
-        if (!raw) return null;
-        const cached: CachedStars = JSON.parse(raw);
-        if (Date.now() - cached.ts < CACHE_TTL_MS) return cached.stars;
+        const cached = JSON.parse(value) as CachedStars;
+        if (Date.now() - cached.ts < CACHE_TTL_MS) {
+            return cached.stars;
+        }
     } catch {
         /* ignore malformed cache */
     }
+
     return null;
 }
 
-function setCachedStars(stars: number): void {
-    localStorage.setItem(CACHE_KEY, JSON.stringify({ stars, ts: Date.now() }));
+function serializeCachedStars(stars: number | null): string {
+    return JSON.stringify({
+        stars,
+        ts: Date.now(),
+    });
 }
 
 export function GithubButton() {
-    const [stars, setStars] = useState<number | null>(getCachedStars);
+    const { hasLoaded, setValue: setStars, value: stars } = useLocalStorageState<number | null>(
+        CACHE_KEY,
+        {
+            deserialize: parseCachedStars,
+            initialValue: null,
+            serialize: serializeCachedStars,
+        },
+    );
 
     useEffect(() => {
-        if (stars !== null) return;
+        if (!hasLoaded || stars !== null) return;
 
         let cancelled = false;
         fetch('/api/github-stars')
@@ -40,14 +51,13 @@ export function GithubButton() {
             .then((data: { stars: number | null }) => {
                 if (!cancelled && data.stars !== null) {
                     setStars(data.stars);
-                    setCachedStars(data.stars);
                 }
             })
             .catch((err) => console.error('Failed to fetch star count:', err));
         return () => {
             cancelled = true;
         };
-    }, [stars]);
+    }, [hasLoaded, setStars, stars]);
 
     return (
         <Button className="has-[>svg]:px-2" variant="ghost" size="sm" asChild={true}>
