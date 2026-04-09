@@ -10,7 +10,7 @@ Nihongo Cards has flashcard study and character browsing fully implemented, but 
 - User-selectable direction: Kana → Romanji or Romanji → Kana (persisted to localStorage)
 - Character selection: same grid-based picker as flashcards (hiragana/katakana sections with per-row, per-subsection, and per-section select/clear)
 - Full deck: all selected characters quizzed once in random order
-- Immediate feedback: correct (green) / incorrect (red) shown after each answer, then auto-advance
+- Immediate feedback: correct (green) / incorrect (red) shown after each answer, user manually advances
 - Smart distractors: prefer visually/phonetically similar characters over random choices
 - Results screen: score + percentage, list of missed characters, retry-missed and retry-all actions
 - IndexedDB progress tracking using existing `KanaProgress` fields
@@ -132,14 +132,14 @@ Question display:
 
 Interaction flow:
 1. User selects an answer (click or keyboard 1/2/3/4)
-2. Immediate feedback: correct button → green, incorrect selection → red
-3. Auto-advance after delay: ~800ms for correct, ~1200ms for incorrect
+2. Immediate feedback: correct button → green, incorrect selection → red + correct answer highlighted green
+3. User manually advances to next question via "Next" button (or Enter/Space/→ key)
 4. `recordQuizResult()` called on each answer
 5. Answers stored in local state array for results screen
 
 Keyboard support:
-- 1/2/3/4 keys to select answers
-- Disabled during feedback delay (prevent double-answer)
+- 1/2/3/4 keys to select answers (disabled after answering current question)
+- Enter/Space/→ to advance to next question after feedback is shown
 
 Navigation guard: warn before leaving mid-quiz (reuse `useNavigationGuard` pattern from flashcard study)
 
