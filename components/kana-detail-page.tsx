@@ -14,9 +14,16 @@ type KanaDetailPageProps = {
     character: string;
     backHref: string;
     backLabel: string;
+    scriptLabel: 'hiragana' | 'katakana';
 };
 
-export function KanaDetailPage({ items, character, backHref, backLabel }: KanaDetailPageProps) {
+export function KanaDetailPage({
+    items,
+    character,
+    backHref,
+    backLabel,
+    scriptLabel,
+}: KanaDetailPageProps) {
     const decodedCharacter = decodeURIComponent(character);
     const kanaItem = items.find((item) => item.character === decodedCharacter);
     if (!kanaItem) notFound();
@@ -56,6 +63,7 @@ export function KanaDetailPage({ items, character, backHref, backLabel }: KanaDe
                 <KanaPageContent
                     kanaItem={kanaItem}
                     strokeOrderCharacters={strokeOrderCharacters}
+                    scriptLabel={scriptLabel}
                 />
             </div>
         </div>
