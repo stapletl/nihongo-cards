@@ -1,103 +1,115 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { KanaStrokeOrderSection } from '@/components/kana-card/kana-stroke-order-section';
 import { SpeechButton } from '@/components/speech-button';
-import { ShowRomanjiButton } from '@/components/show-romanji-button';
 import { KanaItem } from '@/lib/hiragana';
 import { LoadedKanaStrokeGlyph } from '@/lib/kana-stroke-order';
 
 // Helper to bold the kana in the example
 const renderExampleWithBoldKana = (example: string, kana: string): React.ReactNode[] =>
     example.split(kana).reduce<React.ReactNode[]>((acc, part, index) => {
-        if (index > 0) acc.push(<strong key={index}>{kana}</strong>);
+        if (index > 0)
+            acc.push(
+                <div className="text-primary inline-flex font-extrabold" key={index}>
+                    {kana}
+                </div>
+            );
         if (part) acc.push(part);
         return acc;
     }, []);
 
+const splitCardFooterClassName = 'bg-accent/70 min-h-[7rem] border-t px-6 py-5 sm:px-8';
+
 type KanaPageContentProps = {
     kanaItem: KanaItem;
     strokeOrderCharacters: LoadedKanaStrokeGlyph[];
+    scriptLabel: 'hiragana' | 'katakana';
 };
 
 export const KanaPageContent: React.FC<KanaPageContentProps> = ({
     kanaItem,
     strokeOrderCharacters,
-}) => {
-    const [showRomanji, setShowRomanji] = useState(false);
-
-    return (
-        <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-            {/* Main character display */}
-            <section className="mb-12">
-                <div className="flex flex-col items-center space-y-6 sm:flex-row sm:items-start sm:space-y-0 sm:space-x-12">
-                    {/* Character display */}
-                    <div className="flex flex-col items-center space-y-4">
-                        <span className="text-center text-8xl font-bold sm:text-9xl">
+    scriptLabel,
+}) => (
+    <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="grid gap-5 lg:grid-cols-5 lg:grid-rows-[minmax(0,1fr)_auto]">
+            <section className="bg-card overflow-hidden rounded-xl border shadow-sm lg:col-span-2">
+                <div className="flex min-h-[18rem] flex-col gap-4 p-6 sm:p-8">
+                    <p className="text-muted-foreground text-sm font-medium uppercase">
+                        {scriptLabel}
+                    </p>
+                    <div className="flex flex-1 items-center justify-center">
+                        <span className="text-card-foreground text-center text-9xl font-bold">
                             {kanaItem.character}
                         </span>
-                        <SpeechButton text={kanaItem.character} size="sm" />
                     </div>
+                </div>
+                <div
+                    className={`${splitCardFooterClassName} flex items-center justify-between gap-4`}>
+                    <div className="space-y-1">
+                        <p className="text-muted-foreground text-xs font-medium uppercase">
+                            Romanji
+                        </p>
+                        <h2 className="text-primary text-3xl font-semibold sm:text-4xl">
+                            {kanaItem.romanji}
+                        </h2>
+                    </div>
+                    <SpeechButton text={kanaItem.character} size="icon" className="shrink-0" />
+                </div>
+            </section>
 
-                    {/* Character details */}
-                    <div className="flex-1 space-y-6 text-center sm:text-left">
-                        {/* Romanji */}
+            <section className="bg-card overflow-hidden rounded-xl border shadow-sm lg:col-span-3">
+                <div className="flex h-full flex-col">
+                    <div className="flex flex-1 flex-col gap-8 p-6 sm:p-8">
                         <div className="space-y-2">
-                            <h2 className="text-primary text-3xl font-semibold sm:text-4xl">
-                                {kanaItem.romanji}
-                            </h2>
-                        </div>
-
-                        {/* Example section */}
-                        <div className="space-y-4">
-                            <div className="space-y-3">
-                                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                                    <span className="text-muted-foreground shrink-0 text-lg font-medium">
-                                        Example:
-                                    </span>
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-2xl leading-relaxed sm:text-3xl">
-                                            {renderExampleWithBoldKana(
-                                                kanaItem.example,
-                                                kanaItem.character
-                                            )}
-                                        </span>
-                                        <SpeechButton text={kanaItem.example} size="xs" />
-                                    </div>
-                                </div>
-
-                                {/* Romanji toggle */}
-                                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                                    <ShowRomanjiButton
-                                        showRomanji={showRomanji}
-                                        setShowRomanji={setShowRomanji}
-                                    />
-                                    {showRomanji && (
-                                        <span className="text-muted-foreground text-base italic">
-                                            {kanaItem.exampleRomanji}
-                                        </span>
+                            <p className="text-muted-foreground text-sm font-medium uppercase">
+                                Example
+                            </p>
+                            <div className="flex items-start justify-between gap-4">
+                                <div className="text-4xl leading-tight font-semibold sm:text-5xl">
+                                    {renderExampleWithBoldKana(
+                                        kanaItem.example,
+                                        kanaItem.character
                                     )}
                                 </div>
+                                <SpeechButton
+                                    text={kanaItem.example}
+                                    size="icon"
+                                    className="mt-1 shrink-0"
+                                />
                             </div>
+                        </div>
 
-                            {/* Translation */}
-                            <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
-                                <span className="text-muted-foreground shrink-0 text-lg font-medium">
-                                    Translation:
-                                </span>
-                                <div className="flex items-center justify-center gap-3">
-                                    <span className="text-3xl">{kanaItem.emoji}</span>
-                                    <span className="text-xl sm:text-2xl">
-                                        {kanaItem.exampleTranslation}
-                                    </span>
-                                </div>
-                            </div>
+                        <div className="space-y-2">
+                            <p className="text-muted-foreground text-xs font-medium uppercase">
+                                Romanji
+                            </p>
+                            <p className="text-muted-foreground text-lg italic sm:text-xl">
+                                {kanaItem.exampleRomanji}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className={`${splitCardFooterClassName} flex flex-col justify-center`}>
+                        <p className="text-muted-foreground text-xs font-medium uppercase">
+                            Translation
+                        </p>
+                        <div className="mt-3 flex items-center gap-3">
+                            <span className="text-3xl sm:text-4xl">{kanaItem.emoji}</span>
+                            <p className="text-xl font-medium sm:text-2xl">
+                                {kanaItem.exampleTranslation}
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <KanaStrokeOrderSection key={kanaItem.character} characters={strokeOrderCharacters} />
-        </main>
-    );
-};
+            <KanaStrokeOrderSection
+                key={kanaItem.character}
+                characters={strokeOrderCharacters}
+                className="lg:col-span-5"
+            />
+        </div>
+    </main>
+);

@@ -15,6 +15,7 @@ export default async function Page({ params }: { params: Promise<{ character: st
             character={character}
             backHref="/katakana"
             backLabel="Back to Katakana"
+            scriptLabel="katakana"
         />
     );
 }
