@@ -15,6 +15,7 @@ export default async function Page({ params }: { params: Promise<{ character: st
             character={character}
             backHref="/hiragana"
             backLabel="Back to Hiragana"
+            scriptLabel="hiragana"
         />
     );
 }

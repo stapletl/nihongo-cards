@@ -12,7 +12,7 @@ import {
     PopoverTitle,
     PopoverTrigger,
 } from '@/components/ui/popover';
-import { SITE_NAME } from '@/lib/site';
+import { SITE_HOMEPAGE_URL, SITE_NAME } from '@/lib/site';
 import { cn } from '@/lib/utils';
 
 export function NativeShareButton() {
@@ -41,8 +41,8 @@ export function NativeShareButton() {
         }
 
         const shareData: ShareData = {
-            title: document.title || SITE_NAME,
-            url: window.location.href,
+            title: SITE_NAME,
+            url: SITE_HOMEPAGE_URL,
         };
 
         if (typeof navigator.canShare === 'function' && !navigator.canShare(shareData)) {
@@ -87,11 +87,9 @@ export function NativeShareButton() {
     };
 
     const handleCopy = async () => {
-        const currentUrl = window.location.href;
-
         try {
             if (typeof navigator.clipboard?.writeText === 'function') {
-                await navigator.clipboard.writeText(currentUrl);
+                await navigator.clipboard.writeText(SITE_HOMEPAGE_URL);
                 animateCopied();
                 return;
             }
@@ -99,7 +97,7 @@ export function NativeShareButton() {
             // Fall through to the legacy copy path.
         }
 
-        if (copyWithFallback(currentUrl)) {
+        if (copyWithFallback(SITE_HOMEPAGE_URL)) {
             animateCopied();
         }
     };
@@ -127,8 +125,6 @@ export function NativeShareButton() {
         );
     }
 
-    const currentUrl = typeof window === 'undefined' ? '' : window.location.href;
-
     return (
         <Popover
             open={open}
@@ -143,13 +139,13 @@ export function NativeShareButton() {
             <PopoverContent className="w-80">
                 <PopoverHeader>
                     <PopoverTitle>Share link</PopoverTitle>
-                    <PopoverDescription>Copy this page URL.</PopoverDescription>
+                    <PopoverDescription>Copy the Nihongo Cards home page URL.</PopoverDescription>
                 </PopoverHeader>
                 <div className="mt-3 flex items-center gap-2">
                     <Input
                         readOnly={true}
-                        value={currentUrl}
-                        aria-label="Current page URL"
+                        value={SITE_HOMEPAGE_URL}
+                        aria-label="Nihongo Cards home page URL"
                         onFocus={(event) => event.currentTarget.select()}
                     />
                     <Button

@@ -1,4 +1,4 @@
-import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import * as KanaStrokeOrder from '@/lib/kana-stroke-order';
@@ -51,29 +51,16 @@ const parseKanaSourceSvg = (svgMarkup: string, glyphCode: string): ParsedKanaStr
     };
 };
 
-const formatDataModule = (glyphCode: string, data: ParsedKanaStrokeSvg) => `${GENERATED_HEADER}
-import type { ParsedKanaStrokeSvg } from '@/lib/kana-stroke-order';
-
-const data = ${JSON.stringify(data, null, 4)} satisfies ParsedKanaStrokeSvg;
-
-export default data;
-`;
-
-const formatRegistryModule = (glyphCodes: string[]) => {
-    const imports = glyphCodes
+const formatRegistryModule = (glyphEntries: Array<[string, ParsedKanaStrokeSvg]>) => {
+    const entries = glyphEntries
         .map(
-            (glyphCode) =>
-                `import glyph${glyphCode} from '@/generated/kana-stroke-data/${glyphCode}';`
+            ([glyphCode, data]) =>
+                `    '${glyphCode}': ${JSON.stringify(data, null, 4).replace(/\n/g, '\n    ')},`
         )
-        .join('\n');
-
-    const entries = glyphCodes
-        .map((glyphCode) => `    '${glyphCode}': glyph${glyphCode},`)
         .join('\n');
 
     return `${GENERATED_HEADER}
 import type { ParsedKanaStrokeSvg } from '@/lib/kana-stroke-order';
-${imports}
 
 export const kanaStrokeRegistry: Record<string, ParsedKanaStrokeSvg> = {
 ${entries}
@@ -92,25 +79,30 @@ const getUsedGlyphCodes = (): string[] =>
         )
     ).sort();
 
-const removeGeneratedModules = async () => {
+const removeStaleGeneratedModules = async () => {
     const existingEntries = await readdir(OUTPUT_DIR, { withFileTypes: true }).catch(() => []);
 
     await Promise.all(
         existingEntries
-            .filter((entry) => entry.isFile() && entry.name.endsWith('.ts'))
+            .filter((entry) => {
+                if (!entry.isFile() || !entry.name.endsWith('.ts')) {
+                    return false;
+                }
+
+                return entry.name !== 'index.ts';
+            })
             .map((entry) => rm(path.join(OUTPUT_DIR, entry.name)))
     );
 };
 
 const main = async () => {
     const glyphCodes = getUsedGlyphCodes();
+    const glyphEntries: Array<[string, ParsedKanaStrokeSvg]> = [];
 
     await mkdir(OUTPUT_DIR, { recursive: true });
-    await removeGeneratedModules();
 
     for (const glyphCode of glyphCodes) {
         const sourcePath = path.join(SOURCE_DIR, `${glyphCode}.svg`);
-        const outputPath = path.join(OUTPUT_DIR, `${glyphCode}.ts`);
         const svgMarkup = await readFile(sourcePath, 'utf8').catch(() => null);
 
         if (svgMarkup === null) {
@@ -118,10 +110,18 @@ const main = async () => {
         }
 
         const parsedSvg = parseKanaSourceSvg(svgMarkup, glyphCode);
-        await writeFile(outputPath, formatDataModule(glyphCode, parsedSvg));
+        glyphEntries.push([glyphCode, parsedSvg]);
     }
 
-    await writeFile(path.join(OUTPUT_DIR, 'index.ts'), formatRegistryModule(glyphCodes));
+    const indexPath = path.join(OUTPUT_DIR, 'index.ts');
+    const tempIndexPath = path.join(
+        OUTPUT_DIR,
+        `index.ts.${process.pid}.${Date.now()}.tmp`
+    );
+
+    await writeFile(tempIndexPath, formatRegistryModule(glyphEntries));
+    await rename(tempIndexPath, indexPath);
+    await removeStaleGeneratedModules();
     process.stdout.write(`Generated kana stroke data for ${glyphCodes.length} glyphs.\n`);
 };
 
