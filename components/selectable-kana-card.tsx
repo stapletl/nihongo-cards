@@ -3,11 +3,11 @@
 import React from 'react';
 
 import { Button } from '@/components/ui/button';
-import { FlashcardItem } from '@/lib/flashcards';
+import { type KanaStudyItem } from '@/lib/kana-items';
 import { cn } from '@/lib/utils';
 
 type SelectableKanaCardProps = {
-    item: FlashcardItem;
+    item: KanaStudyItem;
     selected: boolean;
     onToggle: (id: string) => void;
 };
@@ -22,7 +22,7 @@ export const SelectableKanaCard: React.FC<SelectableKanaCardProps> = ({
         variant="outline"
         size="lg"
         className={cn(
-            'h-12 w-full px-2 sm:h-14 lg:px-4 transition-transform duration-200 hover:scale-[1.02]',
+            'h-12 w-full px-2 transition-transform duration-200 hover:scale-[1.02] sm:h-14 lg:px-4',
             selected && 'border-primary dark:border-primary bg-primary/10'
         )}
         aria-pressed={selected}

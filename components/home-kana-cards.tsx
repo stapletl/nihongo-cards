@@ -21,10 +21,10 @@ function KanaNavCard({ href, character, label, visited, total, isLoading }: Kana
     return (
         <Button
             variant="outline"
-            className="h-44 w-40 flex-col gap-1.5 border-2 border-primary transition-all duration-300 hover:scale-105 dark:border-primary"
+            className="border-primary dark:border-primary h-44 w-40 flex-col gap-1.5 border-2 transition-all duration-300 hover:scale-105"
             asChild={true}>
             <Link href={href}>
-                <span className="text-8xl font-semibold leading-none">{character}</span>
+                <span className="text-8xl leading-none font-semibold">{character}</span>
                 <span className="text-sm font-bold">{label}</span>
                 {isLoading ? (
                     <Skeleton className="h-4 w-20 rounded-full" />

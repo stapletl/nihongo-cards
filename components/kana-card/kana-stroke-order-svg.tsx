@@ -90,9 +90,7 @@ export const KanaStrokeOrderSvg: React.FC<KanaStrokeOrderSvgProps> = ({
                 </g>
                 <g fontSize={8} fill="currentColor" className="text-muted-foreground">
                     {svgData.numbers.map((number, index) => (
-                        <text
-                            key={`${number.transform}-${index}`}
-                            transform={number.transform}>
+                        <text key={`${number.transform}-${index}`} transform={number.transform}>
                             {number.value}
                         </text>
                     ))}
