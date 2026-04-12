@@ -7,7 +7,7 @@ const japaneseTitle = '日本語カード';
 
 export default function Page() {
     return (
-        <div className="flex h-full flex-col items-center justify-center gap-6 py-8">
+        <div className="flex h-full flex-col items-center justify-center gap-4 py-2 sm:gap-6 sm:py-8">
             <HiraganaMarquee />
 
             <div className="flex max-w-[980px] flex-col items-center gap-4 px-8 text-center">
