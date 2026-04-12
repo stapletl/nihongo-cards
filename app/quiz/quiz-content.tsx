@@ -9,7 +9,7 @@ import { KanaQuickSelectButton } from '@/components/kana-quick-select-button';
 import { KanaSelectionGrid } from '@/components/kana-selection-grid';
 import { QuizDirectionButton } from '@/components/quiz/quiz-direction-button';
 import { Button } from '@/components/ui/button';
-import { Item, ItemActions, ItemContent, ItemTitle } from '@/components/ui/item';
+import { ItemActions, ItemContent, ItemTitle } from '@/components/ui/item';
 import {
     allStudyItemIds,
     hiraganaSelectionSection,
@@ -81,47 +81,45 @@ export const QuizContent: React.FC = () => {
     };
 
     return (
-        <div className="mt-8 flex flex-col gap-8">
-            <Item
-                variant="outline"
-                size="sm"
-                className="bg-card sticky top-4 z-10 flex-nowrap items-center justify-between gap-2 overflow-x-auto shadow-sm backdrop-blur">
-                <ItemContent className="min-w-0 shrink">
-                    <ItemTitle className="gap-1.5 text-sm whitespace-nowrap">
-                        <span className="text-xl font-semibold tabular-nums">
-                            {selectedIds.length}
-                        </span>
-                        selected
-                    </ItemTitle>
-                </ItemContent>
-
-                <ItemActions className="ml-auto shrink-0 flex-row items-center gap-2">
-                    <KanaQuickSelectButton
-                        onApply={(ids) => {
-                            replaceSetupState(ids);
-                        }}
-                    />
-                    <QuizDirectionButton
-                        value={direction}
-                        onChange={(nextDirection) => {
-                            setStoredDirection(nextDirection);
-                            replaceSetupState(selectedIds, nextDirection);
-                        }}
-                    />
-                    <Button
-                        type="button"
-                        size="sm"
-                        disabled={selectedIds.length === 0}
-                        onClick={startQuiz}>
-                        <PlayIcon data-icon="inline-start" aria-hidden="true" />
-                        Start Quiz
-                    </Button>
-                </ItemActions>
-            </Item>
-
+        <div className="mt-8">
             <KanaSelectionGrid
                 sections={[hiraganaSelectionSection, katakanaSelectionSection]}
                 selectedIds={selectedIdSet}
+                stickyHeaderContent={
+                    <>
+                        <ItemContent className="min-w-0 shrink">
+                            <ItemTitle className="gap-1.5 text-sm whitespace-nowrap">
+                                <span className="text-xl font-semibold tabular-nums">
+                                    {selectedIds.length}
+                                </span>
+                                selected
+                            </ItemTitle>
+                        </ItemContent>
+
+                        <ItemActions className="ml-auto shrink-0 flex-row items-center gap-2">
+                            <KanaQuickSelectButton
+                                onApply={(ids) => {
+                                    replaceSetupState(ids);
+                                }}
+                            />
+                            <QuizDirectionButton
+                                value={direction}
+                                onChange={(nextDirection) => {
+                                    setStoredDirection(nextDirection);
+                                    replaceSetupState(selectedIds, nextDirection);
+                                }}
+                            />
+                            <Button
+                                type="button"
+                                size="sm"
+                                disabled={selectedIds.length === 0}
+                                onClick={startQuiz}>
+                                <PlayIcon data-icon="inline-start" aria-hidden="true" />
+                                Start Quiz
+                            </Button>
+                        </ItemActions>
+                    </>
+                }
                 onToggle={(id) => {
                     const nextIds = orderSelectedIds(
                         selectedIdSet.has(id)

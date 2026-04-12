@@ -17,7 +17,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Item, ItemActions, ItemContent, ItemTitle } from '@/components/ui/item';
+import { ItemActions, ItemContent, ItemTitle } from '@/components/ui/item';
 import {
     FLASHCARD_TOP_SIDE_STORAGE_KEY,
     FlashcardTopSide,
@@ -90,74 +90,77 @@ export const FlashcardContent: React.FC = () => {
     };
 
     return (
-        <div className="mt-8 flex flex-col gap-8">
-            <Item
-                variant="outline"
-                size="sm"
-                className="bg-card sticky top-4 z-10 flex-nowrap items-center justify-between gap-2 overflow-x-auto shadow-sm backdrop-blur">
-                <ItemContent className="min-w-0 shrink">
-                    <ItemTitle className="gap-1.5 text-sm whitespace-nowrap">
-                        <span className="text-xl font-semibold tabular-nums">
-                            {selectedIds.length}
-                        </span>
-                        selected
-                    </ItemTitle>
-                </ItemContent>
-
-                <ItemActions className="ml-auto shrink-0 flex-row items-center gap-2">
-                    <KanaQuickSelectButton
-                        onApply={(ids) => {
-                            replaceSetupState(ids);
-                        }}
-                    />
-                    <FlashcardSettingsButton
-                        value={top}
-                        onChange={(nextTop) => {
-                            setStoredTop(nextTop);
-                            replaceSetupState(selectedIds, nextTop);
-                        }}
-                    />
-                    <ButtonGroup className="shrink-0">
-                        <Button
-                            type="button"
-                            size="sm"
-                            disabled={selectedIds.length === 0}
-                            onClick={() => startStudy()}>
-                            <PlayIcon data-icon="inline-start" aria-hidden="true" />
-                            Study
-                        </Button>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild={true}>
-                                <Button
-                                    type="button"
-                                    size="sm"
-                                    className="px-2"
-                                    disabled={selectedIds.length === 0}
-                                    aria-label="Study actions">
-                                    <ChevronDownIcon data-icon="inline-end" aria-hidden="true" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-44">
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem onClick={() => startStudy()}>
-                                        <PlayIcon aria-hidden="true" />
-                                        Study
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        onClick={() => startStudy(shuffleDeck(selectedIds))}>
-                                        <ShuffleIcon aria-hidden="true" />
-                                        Shuffle and study
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </ButtonGroup>
-                </ItemActions>
-            </Item>
-
+        <div className="mt-8">
             <KanaSelectionGrid
                 sections={[hiraganaSelectionSection, katakanaSelectionSection]}
                 selectedIds={selectedIdSet}
+                stickyHeaderContent={
+                    <>
+                        <ItemContent className="min-w-0 shrink">
+                            <ItemTitle className="gap-1.5 text-sm whitespace-nowrap">
+                                <span className="text-xl font-semibold tabular-nums">
+                                    {selectedIds.length}
+                                </span>
+                                selected
+                            </ItemTitle>
+                        </ItemContent>
+
+                        <ItemActions className="ml-auto shrink-0 flex-row items-center gap-2">
+                            <KanaQuickSelectButton
+                                onApply={(ids) => {
+                                    replaceSetupState(ids);
+                                }}
+                            />
+                            <FlashcardSettingsButton
+                                value={top}
+                                onChange={(nextTop) => {
+                                    setStoredTop(nextTop);
+                                    replaceSetupState(selectedIds, nextTop);
+                                }}
+                            />
+                            <ButtonGroup className="shrink-0">
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    disabled={selectedIds.length === 0}
+                                    onClick={() => startStudy()}>
+                                    <PlayIcon data-icon="inline-start" aria-hidden="true" />
+                                    Study
+                                </Button>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild={true}>
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            className="px-2"
+                                            disabled={selectedIds.length === 0}
+                                            aria-label="Study actions">
+                                            <ChevronDownIcon
+                                                data-icon="inline-end"
+                                                aria-hidden="true"
+                                            />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="w-44">
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuItem onClick={() => startStudy()}>
+                                                <PlayIcon aria-hidden="true" />
+                                                Study
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                onClick={() =>
+                                                    startStudy(shuffleDeck(selectedIds))
+                                                }>
+                                                <ShuffleIcon aria-hidden="true" />
+                                                Shuffle and study
+                                            </DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </ButtonGroup>
+                        </ItemActions>
+                    </>
+                }
                 onToggle={(id) => {
                     const nextIds = orderSelectedIds(
                         selectedIdSet.has(id)

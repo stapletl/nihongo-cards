@@ -5,6 +5,7 @@ import React from 'react';
 import { SelectableKanaCard } from '@/components/selectable-kana-card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Item } from '@/components/ui/item';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { type SelectionSection, type SelectionSubsection } from '@/lib/kana-items';
 import { cn } from '@/lib/utils';
@@ -15,6 +16,7 @@ type KanaSelectionGridProps = {
     onToggle: (id: string) => void;
     onSelectMany: (ids: string[]) => void;
     onClearMany: (ids: string[]) => void;
+    stickyHeaderContent?: React.ReactNode;
 };
 
 function getCheckedState(selectedCount: number, total: number): boolean | 'indeterminate' {
@@ -139,6 +141,7 @@ export const KanaSelectionGrid: React.FC<KanaSelectionGridProps> = ({
     onToggle,
     onSelectMany,
     onClearMany,
+    stickyHeaderContent,
 }) => {
     const [activeSectionKey, setActiveSectionKey] = React.useState<SelectionSection['key']>(
         sections[0]?.key ?? 'hiragana'
@@ -158,18 +161,29 @@ export const KanaSelectionGrid: React.FC<KanaSelectionGridProps> = ({
             value={activeSection.key}
             onValueChange={(value) => setActiveSectionKey(value as SelectionSection['key'])}
             className="space-y-4">
-            <TabsList className="h-auto w-full">
-                {sections.map((section) => {
-                    const selectedCount = countSelected(section.itemIds, selectedIds);
+            <Item
+                variant="outline"
+                size="sm"
+                className="bg-card sticky top-4 z-10 flex-col items-stretch gap-3 shadow-sm backdrop-blur">
+                {stickyHeaderContent ? (
+                    <div className="flex flex-nowrap items-center justify-between gap-2 overflow-x-auto">
+                        {stickyHeaderContent}
+                    </div>
+                ) : null}
 
-                    return (
-                        <TabsTrigger value={section.key} key={section.key}>
-                            {section.title}
-                            <span>{selectedCount} selected</span>
-                        </TabsTrigger>
-                    );
-                })}
-            </TabsList>
+                <TabsList className="h-auto w-full">
+                    {sections.map((section) => {
+                        const selectedCount = countSelected(section.itemIds, selectedIds);
+
+                        return (
+                            <TabsTrigger value={section.key} key={section.key}>
+                                {section.title}
+                                <span>{selectedCount} selected</span>
+                            </TabsTrigger>
+                        );
+                    })}
+                </TabsList>
+            </Item>
 
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight">
