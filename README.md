@@ -1,5 +1,7 @@
 # Nihongo Cards
 
+[![Vercel Deploy](https://deploy-badge.vercel.app/vercel/nihongo-cards-two?style=for-the-badge)](https://nihongo-cards-two.vercel.app/) [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](./LICENSE)
+
 A modern Japanese learning application built with Next.js for mastering Hiragana and Katakana through interactive flashcards and quizzes.
 
 ## Features
