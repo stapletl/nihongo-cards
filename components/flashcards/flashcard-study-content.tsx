@@ -4,7 +4,7 @@ import Link from 'next/link';
 import React, { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useHotkey } from '@tanstack/react-hotkeys';
-import { useLocalStorage } from 'usehooks-ts';
+import { useReadLocalStorage } from 'usehooks-ts';
 
 import { StudyFlashcard } from '@/components/flashcards/study-flashcard';
 import { StudyToolbar } from '@/components/flashcards/study-toolbar';
@@ -22,10 +22,12 @@ import {
     FlashcardTopSide,
     buildFlashcardQuery,
     flashcardItemMap,
+    isFlashcardTopSide,
     parseFlashcardStudyState,
     shuffleDeck,
 } from '@/lib/flashcards';
 import { incrementFlashcardView } from '@/lib/kana-db';
+import { setStoredValue } from '@/lib/local-storage';
 
 export const FlashcardStudyContent: React.FC = () => {
     const router = useRouter();
@@ -33,12 +35,13 @@ export const FlashcardStudyContent: React.FC = () => {
     const searchParams = useSearchParams();
     const parsedState = useMemo(() => parseFlashcardStudyState(searchParams), [searchParams]);
     const { setNavigationGuard } = useNavigationGuard();
-    const [storedTop, setStoredTop] = useLocalStorage<FlashcardTopSide>(
-        FLASHCARD_TOP_SIDE_STORAGE_KEY,
-        'japanese'
-    );
+    const storedTop = useReadLocalStorage<FlashcardTopSide>(FLASHCARD_TOP_SIDE_STORAGE_KEY);
     const hasTopParam = searchParams.has('top');
-    const top = hasTopParam ? parsedState.top : storedTop;
+    const top = hasTopParam
+        ? parsedState.top
+        : isFlashcardTopSide(storedTop)
+          ? storedTop
+          : 'japanese';
     const ids = parsedState.ids;
     const index = ids.length > 0 ? Math.min(parsedState.index, ids.length - 1) : 0;
     const activeId = ids[index] ?? null;
@@ -54,6 +57,12 @@ export const FlashcardStudyContent: React.FC = () => {
     const isOnLastFlashcard = ids.length > 0 && index === ids.length - 1;
     const isReadyToFinish = isOnLastFlashcard && canVisitNext;
     const shouldPreventNavigation = ids.length > 0 && index < ids.length - 1;
+
+    useEffect(() => {
+        if (hasTopParam) {
+            setStoredValue(FLASHCARD_TOP_SIDE_STORAGE_KEY, parsedState.top);
+        }
+    }, [hasTopParam, parsedState.top]);
 
     const replaceState = (nextState: FlashcardStudyState) => {
         const nextQuery = buildFlashcardQuery(nextState).toString();
@@ -276,7 +285,7 @@ export const FlashcardStudyContent: React.FC = () => {
                 editSelectionHref={editSelectionHref}
                 topSide={top}
                 onTopSideChange={(nextTop) => {
-                    setStoredTop(nextTop);
+                    setStoredValue(FLASHCARD_TOP_SIDE_STORAGE_KEY, nextTop);
                     replaceState({ ids, index, top: nextTop });
                 }}
                 isFinishDialogOpen={isFinishDialogOpen}

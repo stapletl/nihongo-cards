@@ -30,7 +30,7 @@ export async function GET() {
                 {
                     status: 502,
                     headers: createCacheHeaders(),
-                },
+                }
             );
         }
 
@@ -40,7 +40,7 @@ export async function GET() {
 
         return NextResponse.json(
             { stars: data.stargazers_count ?? null },
-            { headers: createCacheHeaders() },
+            { headers: createCacheHeaders() }
         );
     } catch {
         return NextResponse.json(
@@ -48,7 +48,7 @@ export async function GET() {
             {
                 status: 502,
                 headers: createCacheHeaders(),
-            },
+            }
         );
     }
 }

@@ -114,10 +114,9 @@ export function KanaNavigationHint() {
                         <p className="text-muted-foreground text-sm">
                             <span className="text-foreground font-medium">A</span> or{' '}
                             <span className="text-foreground font-medium">←</span> goes to the
-                            previous kana.{' '}
-                            <span className="text-foreground font-medium">D</span> or{' '}
-                            <span className="text-foreground font-medium">→</span> goes to the
-                            next kana. Swipe left or right to navigate too.
+                            previous kana. <span className="text-foreground font-medium">D</span> or{' '}
+                            <span className="text-foreground font-medium">→</span> goes to the next
+                            kana. Swipe left or right to navigate too.
                         </p>
                     </div>
                 </div>

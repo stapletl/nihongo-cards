@@ -24,7 +24,7 @@ export const useThemeToggle = () => {
 
             applyThemeWithTransition(setTheme, newTheme, origin);
         },
-        [theme, resolvedTheme, setTheme],
+        [theme, resolvedTheme, setTheme]
     );
 
     return { toggleTheme, resolvedTheme };

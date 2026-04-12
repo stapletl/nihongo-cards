@@ -67,7 +67,6 @@ export const appNavSections: AppNavSection[] = [
                 url: '/quiz',
                 segment: 'quiz',
                 enabled: true,
-                soon: true,
                 icon: createLucideIcon(ClipboardListIcon),
             },
             {

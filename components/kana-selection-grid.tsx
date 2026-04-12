@@ -2,18 +2,21 @@
 
 import React from 'react';
 
-import { SelectableKanaCard } from '@/components/flashcards/selectable-kana-card';
+import { SelectableKanaCard } from '@/components/selectable-kana-card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { FlashcardSelectionSection, FlashcardSubsection } from '@/lib/flashcards';
+import { Item } from '@/components/ui/item';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { type SelectionSection, type SelectionSubsection } from '@/lib/kana-items';
 import { cn } from '@/lib/utils';
 
-type FlashcardSelectionGridProps = {
-    section: FlashcardSelectionSection;
+type KanaSelectionGridProps = {
+    sections: SelectionSection[];
     selectedIds: Set<string>;
     onToggle: (id: string) => void;
     onSelectMany: (ids: string[]) => void;
     onClearMany: (ids: string[]) => void;
+    stickyHeaderContent?: React.ReactNode;
 };
 
 function getCheckedState(selectedCount: number, total: number): boolean | 'indeterminate' {
@@ -32,14 +35,14 @@ function countSelected(ids: string[], selectedIds: Set<string>): number {
     return ids.filter((id) => selectedIds.has(id)).length;
 }
 
-function FlashcardSubsectionGrid({
+function SelectionSubsectionGrid({
     subsection,
     selectedIds,
     onToggle,
     onSelectMany,
     onClearMany,
 }: {
-    subsection: FlashcardSubsection;
+    subsection: SelectionSubsection;
     selectedIds: Set<string>;
     onToggle: (id: string) => void;
     onSelectMany: (ids: string[]) => void;
@@ -51,13 +54,13 @@ function FlashcardSubsectionGrid({
     return (
         <div className="space-y-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-                <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight">
+                <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
                     {subsection.title}
                 </h3>
 
                 <div className="flex flex-wrap items-center gap-2">
                     <p className="text-muted-foreground text-sm">
-                        {selectedCount} / {subsection.itemIds.length} selected
+                        {selectedCount} / {subsection.itemIds.length}
                     </p>
                     <Button
                         type="button"
@@ -132,54 +135,97 @@ function FlashcardSubsectionGrid({
     );
 }
 
-export const FlashcardSelectionGrid: React.FC<FlashcardSelectionGridProps> = ({
-    section,
+export const KanaSelectionGrid: React.FC<KanaSelectionGridProps> = ({
+    sections,
     selectedIds,
     onToggle,
     onSelectMany,
     onClearMany,
+    stickyHeaderContent,
 }) => {
-    const selectedCount = countSelected(section.itemIds, selectedIds);
+    const [activeSectionKey, setActiveSectionKey] = React.useState<SelectionSection['key']>(
+        sections[0]?.key ?? 'hiragana'
+    );
+
+    if (sections.length === 0) {
+        return null;
+    }
+
+    const activeSection =
+        sections.find((section) => section.key === activeSectionKey) ?? sections[0];
+
+    const activeSelectedCount = countSelected(activeSection.itemIds, selectedIds);
 
     return (
-        <section className="space-y-8">
+        <Tabs
+            value={activeSection.key}
+            onValueChange={(value) => setActiveSectionKey(value as SelectionSection['key'])}
+            className="space-y-4">
+            <Item
+                variant="outline"
+                size="sm"
+                className="bg-card sticky top-4 z-10 flex-col items-stretch gap-3 shadow-sm backdrop-blur">
+                {stickyHeaderContent ? (
+                    <div className="flex flex-nowrap items-center justify-between gap-2 overflow-x-auto">
+                        {stickyHeaderContent}
+                    </div>
+                ) : null}
+
+                <TabsList className="h-auto w-full">
+                    {sections.map((section) => {
+                        const selectedCount = countSelected(section.itemIds, selectedIds);
+
+                        return (
+                            <TabsTrigger value={section.key} key={section.key}>
+                                {section.title}
+                                <span>{selectedCount} selected</span>
+                            </TabsTrigger>
+                        );
+                    })}
+                </TabsList>
+            </Item>
+
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-                <div className="space-y-1">
-                    <h2 className="text-2xl font-semibold">{section.title}</h2>
-                </div>
+                <h3 className="scroll-m-20 text-3xl font-semibold tracking-tight">
+                    {activeSection.title}
+                </h3>
 
                 <div className="flex flex-wrap items-center gap-2">
                     <p className="text-muted-foreground text-sm">
-                        {selectedCount} / {section.itemIds.length} selected
+                        {activeSelectedCount} / {activeSection.itemIds.length}
                     </p>
                     <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={() => onSelectMany(section.itemIds)}>
+                        onClick={() => onSelectMany(activeSection.itemIds)}>
                         Select all
                     </Button>
                     <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        disabled={selectedCount === 0}
-                        onClick={() => onClearMany(section.itemIds)}>
+                        disabled={activeSelectedCount === 0}
+                        onClick={() => onClearMany(activeSection.itemIds)}>
                         Clear
                     </Button>
                 </div>
             </div>
 
-            {section.subsections.map((subsection) => (
-                <FlashcardSubsectionGrid
-                    key={subsection.key}
-                    subsection={subsection}
-                    selectedIds={selectedIds}
-                    onToggle={onToggle}
-                    onSelectMany={onSelectMany}
-                    onClearMany={onClearMany}
-                />
+            {sections.map((section) => (
+                <TabsContent key={section.key} value={section.key} className="space-y-4">
+                    {section.subsections.map((subsection) => (
+                        <SelectionSubsectionGrid
+                            key={subsection.key}
+                            subsection={subsection}
+                            selectedIds={selectedIds}
+                            onToggle={onToggle}
+                            onSelectMany={onSelectMany}
+                            onClearMany={onClearMany}
+                        />
+                    ))}
+                </TabsContent>
             ))}
-        </section>
+        </Tabs>
     );
 };

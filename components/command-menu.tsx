@@ -116,11 +116,18 @@ export function CommandMenu() {
                 onOpenChange={setOpen}
                 className={isMobile ? 'top-4 translate-y-0' : undefined}>
                 <CommandInput
-                    placeholder={page === 'color-theme' ? 'Search color themes...' : 'Type a command or search...'}
+                    placeholder={
+                        page === 'color-theme'
+                            ? 'Search color themes...'
+                            : 'Type a command or search...'
+                    }
                     value={search}
                     onValueChange={setSearch}
                     onKeyDown={(e) => {
-                        if (pages.length > 0 && (e.key === 'Escape' || (e.key === 'Backspace' && !search))) {
+                        if (
+                            pages.length > 0 &&
+                            (e.key === 'Escape' || (e.key === 'Backspace' && !search))
+                        ) {
                             e.preventDefault();
                             e.stopPropagation();
                             setPages((prev) => prev.slice(0, -1));
@@ -143,7 +150,7 @@ export function CommandMenu() {
                                         <ArrowRightIcon className="text-primary" />
                                         <span>
                                             View Next Hiragana —{' '}
-                                            <span className="font-semibold text-primary">
+                                            <span className="text-primary font-semibold">
                                                 {nextHiragana.character}
                                             </span>{' '}
                                             ({nextHiragana.romanji})
@@ -161,7 +168,7 @@ export function CommandMenu() {
                                         <ArrowRightIcon className="text-primary" />
                                         <span>
                                             View Next Katakana —{' '}
-                                            <span className="font-semibold text-primary">
+                                            <span className="text-primary font-semibold">
                                                 {nextKatakana.character}
                                             </span>{' '}
                                             ({nextKatakana.romanji})
@@ -188,7 +195,11 @@ export function CommandMenu() {
                                     <span>Light / Dark Mode Toggle</span>
                                     <CommandShortcut>T</CommandShortcut>
                                 </CommandItem>
-                                <CommandItem onSelect={() => { setPages([...pages, 'color-theme']); setSearch(''); }}>
+                                <CommandItem
+                                    onSelect={() => {
+                                        setPages([...pages, 'color-theme']);
+                                        setSearch('');
+                                    }}>
                                     <PaletteIcon />
                                     <span>Color Theme…</span>
                                 </CommandItem>
@@ -248,11 +259,17 @@ export function CommandMenu() {
                                     }}>
                                     <span
                                         className="flex size-4 shrink-0 rounded-full"
-                                        style={{ backgroundColor: isDarkTheme ? theme.dark : theme.light }}
+                                        style={{
+                                            backgroundColor: isDarkTheme ? theme.dark : theme.light,
+                                        }}
                                     />
                                     <span>{theme.name}</span>
-                                    <span className="text-muted-foreground text-xs">{theme.japanese}</span>
-                                    {colorTheme === theme.id && <CheckIcon className="ml-auto text-primary" />}
+                                    <span className="text-muted-foreground text-xs">
+                                        {theme.japanese}
+                                    </span>
+                                    {colorTheme === theme.id && (
+                                        <CheckIcon className="text-primary ml-auto" />
+                                    )}
                                 </CommandItem>
                             ))}
                         </CommandGroup>
