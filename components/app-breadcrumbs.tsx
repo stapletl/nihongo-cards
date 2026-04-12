@@ -17,6 +17,7 @@ export const breadcrumbTitles: Record<string, string> = {
     katakana: 'Katakana',
     settings: 'Settings',
     privacy: 'Privacy Policy',
+    terms: 'Terms & Conditions',
     flashcards: 'Flashcards',
     study: 'Study',
     quiz: 'Quiz',
