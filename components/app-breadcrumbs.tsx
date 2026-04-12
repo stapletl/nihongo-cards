@@ -11,18 +11,7 @@ import { House } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
-
-export const breadcrumbTitles: Record<string, string> = {
-    hiragana: 'Hiragana',
-    katakana: 'Katakana',
-    settings: 'Settings',
-    privacy: 'Privacy Policy',
-    terms: 'Terms & Conditions',
-    flashcards: 'Flashcards',
-    study: 'Study',
-    quiz: 'Quiz',
-    statistics: 'Statistics',
-};
+import { breadcrumbTitles, getTopLevelNavItem } from '@/lib/app-navigation';
 
 export default function AppBreadcrumbs() {
     const pathname = usePathname();
@@ -46,15 +35,32 @@ export default function AppBreadcrumbs() {
                     // Use friendly title if available, else decodeURIComponent for dynamic segments
                     const isLast = segmentPaths[index] === pathname;
                     const label = breadcrumbTitles[segment] ?? decodeURIComponent(segment);
+                    const useTopLevelIcon = segments.length > 1 && index === 0;
+                    const topLevelNavItem = useTopLevelIcon ? getTopLevelNavItem(segment) : undefined;
+
+                    const content =
+                        useTopLevelIcon && topLevelNavItem ? (
+                            <>
+                                {topLevelNavItem.icon}
+                                <span className="sr-only">{label}</span>
+                            </>
+                        ) : (
+                            label
+                        );
+
                     return (
                         <React.Fragment key={index}>
                             <BreadcrumbSeparator className="md:block" />
                             <BreadcrumbItem className="md:block">
                                 {isLast ? (
-                                    <BreadcrumbPage>{label}</BreadcrumbPage>
+                                    <BreadcrumbPage>{content}</BreadcrumbPage>
                                 ) : (
                                     <BreadcrumbLink asChild={true}>
-                                        <Link href={segmentPaths[index]}>{label}</Link>
+                                        <Link
+                                            href={segmentPaths[index]}
+                                            aria-label={useTopLevelIcon ? label : undefined}>
+                                            {content}
+                                        </Link>
                                     </BreadcrumbLink>
                                 )}
                             </BreadcrumbItem>
