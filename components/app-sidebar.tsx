@@ -19,12 +19,12 @@ import {
 import Link from 'next/link';
 import { Badge } from './ui/badge';
 import { usePathname } from 'next/navigation';
-import { BarChartIcon, ClipboardListIcon, CreditCardIcon, Settings } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { hiraganaItems } from '@/lib/hiragana';
 import { katakanaItems } from '@/lib/katakana';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
 import { isVisited } from '@/lib/kana-db';
+import { appNavSections, settingsNavItem } from '@/lib/app-navigation';
 import { Skeleton } from './ui/skeleton';
 
 type NavItem = {
@@ -41,82 +41,7 @@ type NavSection = {
     items: NavItem[];
 };
 
-const KanjiIcon = ({ char }: { char: string }) => (
-    <span className="flex size-4 items-center justify-center text-sm font-semibold">{char}</span>
-);
-
-const navMain: NavSection[] = [
-    {
-        title: 'Getting Started',
-        url: '#',
-        items: [
-            {
-                title: 'Hiragana',
-                url: '/hiragana',
-                enabled: true,
-                icon: <KanjiIcon char="あ" />,
-            },
-            {
-                title: 'Katakana',
-                url: '/katakana',
-                enabled: true,
-                icon: <KanjiIcon char="ア" />,
-            },
-        ],
-    },
-    {
-        title: 'Study',
-        url: '#',
-        items: [
-            {
-                title: 'Flashcards',
-                url: '/flashcards',
-                enabled: true,
-                icon: <CreditCardIcon />,
-            },
-            {
-                title: 'Quiz',
-                url: '/quiz',
-                enabled: true,
-                soon: true,
-                icon: <ClipboardListIcon />,
-            },
-            {
-                title: 'Statistics',
-                url: '/statistics',
-                enabled: true,
-                icon: <BarChartIcon />,
-            },
-        ],
-    },
-
-    // {
-    //     title: 'Tools & Resources',
-    //     url: '#',
-    //     items: [
-    //         {
-    //             title: 'Dictionary',
-    //             url: '/dictionary',
-    //             enabled: false,
-    //         },
-    //         {
-    //             title: 'Stroke Order',
-    //             url: '/stroke-order',
-    //             enabled: false,
-    //         },
-    //         {
-    //             title: 'Study Tips',
-    //             url: '/study-tips',
-    //             enabled: false,
-    //         },
-    //         {
-    //             title: 'External Resources',
-    //             url: '/external-resources',
-    //             enabled: false,
-    //         },
-    //     ],
-    // },
-];
+const navMain: NavSection[] = appNavSections;
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar>;
 
@@ -200,11 +125,11 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
                 <div className="flex items-center justify-between gap-2">
                     <SidebarMenuButton
                         asChild={true}
-                        isActive={pathname === '/settings'}
+                        isActive={pathname === settingsNavItem.url}
                         onClick={handleNavigationClick}>
-                        <Link href="/settings" className="flex items-center gap-2">
-                            <Settings className="h-4 w-4" />
-                            Settings
+                        <Link href={settingsNavItem.url} className="flex items-center gap-2">
+                            {settingsNavItem.icon}
+                            {settingsNavItem.title}
                         </Link>
                     </SidebarMenuButton>
                     <ThemeToggle />

@@ -103,7 +103,7 @@ export function CommandMenu() {
             {/* Trigger button */}
             <button
                 onClick={() => setOpen(true)}
-                className="text-muted-foreground hover:bg-accent hover:text-accent-foreground md:border-input md:bg-background flex h-9 w-9 items-center justify-center rounded-md transition-colors md:w-56 md:justify-start md:gap-2 md:border md:px-3 md:text-sm">
+                className="text-muted-foreground hover:bg-accent hover:text-accent-foreground md:border-input md:bg-background flex h-9 w-9 items-center justify-center rounded-md transition-colors md:w-42 md:justify-start md:gap-2 md:border md:px-3 md:text-sm">
                 <SearchIcon className="h-4 w-4 shrink-0" />
                 <span className="hidden flex-1 text-left md:block">Search...</span>
                 <kbd className="bg-muted text-muted-foreground pointer-events-none hidden h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium md:flex">
