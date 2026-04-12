@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { ChevronDownIcon, PlayIcon, ShuffleIcon } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocalStorage } from 'usehooks-ts';
 
+import { KanaQuickSelectButton } from '@/components/kana-quick-select-button';
+import { KanaSelectionGrid } from '@/components/kana-selection-grid';
 import { FlashcardSettingsButton } from '@/components/flashcards/flashcard-settings-button';
-import { FlashcardSelectionGrid } from '@/components/flashcards/flashcard-selection-grid';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
 import {
@@ -20,18 +21,20 @@ import { Item, ItemActions, ItemContent, ItemTitle } from '@/components/ui/item'
 import {
     FLASHCARD_TOP_SIDE_STORAGE_KEY,
     FlashcardTopSide,
-    allFlashcardIds,
     buildFlashcardQuery,
-    hiraganaFlashcardSelectionSection,
-    katakanaFlashcardSelectionSection,
     parseFlashcardStudyState,
     shuffleDeck,
 } from '@/lib/flashcards';
+import {
+    allStudyItemIds,
+    hiraganaSelectionSection,
+    katakanaSelectionSection,
+} from '@/lib/kana-items';
 
 function orderSelectedIds(ids: Iterable<string>): string[] {
     const selectedSet = new Set(ids);
 
-    return allFlashcardIds.filter((id) => selectedSet.has(id));
+    return allStudyItemIds.filter((id) => selectedSet.has(id));
 }
 
 export const FlashcardContent: React.FC = () => {
@@ -47,6 +50,12 @@ export const FlashcardContent: React.FC = () => {
     const top = hasTopParam ? parsedState.top : storedTop;
     const selectedIds = parsedState.ids;
     const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds]);
+
+    useEffect(() => {
+        if (top !== storedTop) {
+            setStoredTop(top);
+        }
+    }, [setStoredTop, storedTop, top]);
 
     const replaceSetupState = (ids: string[], nextTop: FlashcardTopSide = top) => {
         const nextQuery = buildFlashcardQuery(
@@ -96,6 +105,11 @@ export const FlashcardContent: React.FC = () => {
                 </ItemContent>
 
                 <ItemActions className="ml-auto shrink-0 flex-row items-center gap-2">
+                    <KanaQuickSelectButton
+                        onApply={(ids) => {
+                            replaceSetupState(ids);
+                        }}
+                    />
                     <FlashcardSettingsButton
                         value={top}
                         onChange={(nextTop) => {
@@ -141,23 +155,8 @@ export const FlashcardContent: React.FC = () => {
                 </ItemActions>
             </Item>
 
-            <FlashcardSelectionGrid
-                section={hiraganaFlashcardSelectionSection}
-                selectedIds={selectedIdSet}
-                onToggle={(id) => {
-                    const nextIds = orderSelectedIds(
-                        selectedIdSet.has(id)
-                            ? selectedIds.filter((selectedId) => selectedId !== id)
-                            : [...selectedIds, id]
-                    );
-                    replaceSetupState(nextIds);
-                }}
-                onSelectMany={selectMany}
-                onClearMany={clearMany}
-            />
-
-            <FlashcardSelectionGrid
-                section={katakanaFlashcardSelectionSection}
+            <KanaSelectionGrid
+                sections={[hiraganaSelectionSection, katakanaSelectionSection]}
                 selectedIds={selectedIdSet}
                 onToggle={(id) => {
                     const nextIds = orderSelectedIds(

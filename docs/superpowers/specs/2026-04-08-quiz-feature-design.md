@@ -24,6 +24,7 @@ The flashcard code has types, item registries, selection data, and utilities tha
 #### `lib/kana-items.ts` (new)
 
 Moved from `lib/flashcards.ts`:
+
 - `KanaScript` type (renamed from `FlashcardScript`): `'hiragana' | 'katakana'`
 - `KanaStudyItem` type (renamed from `FlashcardItem`): `KanaItem & { id: string; script: KanaScript }`
 - Selection data types: `SelectionRow`, `SelectionSubsection`, `SelectionSection` (renamed from `FlashcardRow`, `FlashcardSubsection`, `FlashcardSelectionSection`)
@@ -37,6 +38,7 @@ Moved from `lib/flashcards.ts`:
 #### `lib/flashcards.ts` (slimmed)
 
 Keeps only flashcard-specific concerns:
+
 - `FlashcardTopSide` type
 - `FlashcardStudyState` type
 - `FLASHCARD_TOP_SIDE_STORAGE_KEY`
@@ -47,6 +49,7 @@ Keeps only flashcard-specific concerns:
 #### `components/kana-selection-grid.tsx` (moved)
 
 Moved from `components/flashcards/flashcard-selection-grid.tsx`:
+
 - Rename props/types from `Flashcard*` to generic names (`SelectionSection`, etc.)
 - Component logic unchanged — it already accepts generic callbacks
 - `SelectableKanaCard` also moves to `components/selectable-kana-card.tsx`
@@ -60,6 +63,7 @@ All flashcard files that imported from `lib/flashcards` or `components/flashcard
 #### `lib/quiz.ts` (new)
 
 Types:
+
 ```
 QuizDirection = 'kana-to-romanji' | 'romanji-to-kana'
 QuizQuestion = { item: KanaStudyItem; choices: KanaStudyItem[]; correctIndex: number }
@@ -69,6 +73,7 @@ QuizSessionResult = { answers: QuizAnswer[]; score: number; total: number; misse
 ```
 
 Functions:
+
 - `generateQuizQuestions(ids: string[], direction: QuizDirection): QuizQuestion[]` — shuffles IDs, generates questions with smart distractors
 - `pickDistractors(correct: KanaStudyItem, pool: KanaStudyItem[], count: 3): KanaStudyItem[]` — selects similar characters using the similarity map, with fallback chain
 - `parseQuizStudyState(searchParams): QuizStudyState` — URL deserialization
@@ -78,6 +83,7 @@ Functions:
 #### `lib/kana-similarity.ts` (new)
 
 Hand-authored similarity groups for smart distractor generation. Each group is an array of character strings that are commonly confused with each other:
+
 - Visual similarity groups (e.g., `['は','ほ','ば','ぱ']`, `['き','さ']`, `['シ','ツ','ン','ソ']`, `['ア','マ']`)
 - Phonetic similarity groups — dakuten pairs sharing the same base consonant (e.g., `['か','が']`, `['た','だ']`, `['さ','ざ']`)
 - Groups are within-script only (hiragana characters only confuse with other hiragana, same for katakana)
@@ -85,6 +91,7 @@ Hand-authored similarity groups for smart distractor generation. Each group is a
 Exported as `similarityGroups: string[][]` (array of character groups). `pickDistractors` builds a lookup index from this at call time.
 
 Distractor selection fallback chain:
+
 1. Same similarity group as the correct answer
 2. Same subsection/row (e.g., same gojuon column)
 3. Same script (hiragana/katakana)
@@ -95,9 +102,11 @@ If fewer than 4 characters total are selected, pad from outside the selection po
 #### `lib/kana-db.ts` (updated)
 
 New function:
+
 ```typescript
-export async function recordQuizResult(character: string, correct: boolean): Promise<void>
+export async function recordQuizResult(character: string, correct: boolean): Promise<void>;
 ```
+
 - Follows the same upsert pattern as `incrementDetailView` and `incrementFlashcardView`
 - Increments `quizCorrectCount` or `quizIncorrectCount`
 - Sets `lastQuizzed = Date.now()`
@@ -112,6 +121,7 @@ export async function recordQuizResult(character: string, correct: boolean): Pro
 **`app/quiz/quiz-content.tsx`** — client component replacing the placeholder
 
 Layout (mirrors flashcard setup):
+
 - Sticky toolbar: selected count, direction picker (settings popover), "Start Quiz" button
 - Direction picker: popover with "Kana → Romanji" / "Romanji → Kana" options, persisted to localStorage via `QUIZ_DIRECTION_STORAGE_KEY`
 - Two `KanaSelectionGrid` instances (hiragana + katakana)
@@ -126,11 +136,13 @@ Layout (mirrors flashcard setup):
 **`components/quiz/quiz-session-content.tsx`** — client component
 
 Question display:
+
 - Prompt area: large kana character (kana→romanji) or large romanji text (romanji→kana)
 - 4 answer buttons in a 2x2 grid
 - Progress indicator: "Question 3 / 20" with thin progress bar at top
 
 Interaction flow:
+
 1. User selects an answer (click or keyboard 1/2/3/4)
 2. Immediate feedback: correct button → green, incorrect selection → red + correct answer highlighted green
 3. User manually advances to next question via "Next" button (or Enter/Space/→ key)
@@ -138,6 +150,7 @@ Interaction flow:
 5. Answers stored in local state array for results screen
 
 Keyboard support:
+
 - 1/2/3/4 keys to select answers (disabled after answering current question)
 - Enter/Space/→ to advance to next question after feedback is shown
 
@@ -148,20 +161,22 @@ Navigation guard: warn before leaving mid-quiz (reuse `useNavigationGuard` patte
 **`components/quiz/quiz-results.tsx`** — rendered inline when all questions answered (not a separate route)
 
 Layout:
+
 - Score header: "18 / 20" (90%) with performance message
-  - 100%: "Perfect!"
-  - ≥80%: "Great job!"
-  - ≥60%: "Good effort!"
-  - <60%: "Keep practicing!"
+    - 100%: "Perfect!"
+    - ≥80%: "Great job!"
+    - ≥60%: "Good effort!"
+    - <60%: "Keep practicing!"
 - Missed characters section (if any): grid showing each missed character with its correct reading
 - Action buttons:
-  - "Retry missed" — starts new session with only `missedIds`
-  - "Retry all" — restarts with same full deck
-  - "Back to setup" — navigates to `/quiz`
+    - "Retry missed" — starts new session with only `missedIds`
+    - "Retry all" — restarts with same full deck
+    - "Back to setup" — navigates to `/quiz`
 
 ### File Summary
 
 **New files:**
+
 - `lib/kana-items.ts` — shared types, item registry, selection data, utilities
 - `lib/kana-similarity.ts` — character similarity groups for smart distractors
 - `lib/quiz.ts` — quiz types, question generation, URL serialization
@@ -173,6 +188,7 @@ Layout:
 - `app/quiz/session/page.tsx` — session route
 
 **Modified files:**
+
 - `lib/flashcards.ts` — slimmed down, re-exports from `kana-items.ts`
 - `lib/kana-db.ts` — add `recordQuizResult()`
 - `app/quiz/page.tsx` — minor layout adjustments if needed

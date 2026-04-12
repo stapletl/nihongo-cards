@@ -17,6 +17,7 @@
 ### Task 1: Create `lib/kana-items.ts` with shared types and item registry
 
 **Files:**
+
 - Create: `lib/kana-items.ts`
 - Reference: `lib/flashcards.ts`
 - Reference: `lib/hiragana.ts`
@@ -137,14 +138,38 @@ function buildSelectionSection(
 }
 
 export const hiraganaSelectionSection = buildSelectionSection('hiragana', 'Hiragana', [
-    buildSubsection('hiragana-gojuon', 'Gojūon (五十音)', 5, hiraganaGojuonGrid, hiraganaIdByCharacter),
-    buildSubsection('hiragana-dakuten-handakuten', 'Dakuten and Handakuten (濁点と半濁点)', 5, hiraganaDakutenHandakutenGrid, hiraganaIdByCharacter),
+    buildSubsection(
+        'hiragana-gojuon',
+        'Gojūon (五十音)',
+        5,
+        hiraganaGojuonGrid,
+        hiraganaIdByCharacter
+    ),
+    buildSubsection(
+        'hiragana-dakuten-handakuten',
+        'Dakuten and Handakuten (濁点と半濁点)',
+        5,
+        hiraganaDakutenHandakutenGrid,
+        hiraganaIdByCharacter
+    ),
     buildSubsection('hiragana-yoon', 'Yōon (拗音)', 3, hiraganaYoonGrid, hiraganaIdByCharacter),
 ]);
 
 export const katakanaSelectionSection = buildSelectionSection('katakana', 'Katakana', [
-    buildSubsection('katakana-gojuon', 'Gojūon (五十音)', 5, katakanaGojuonGrid, katakanaIdByCharacter),
-    buildSubsection('katakana-dakuten-handakuten', 'Dakuten and Handakuten (濁点と半濁点)', 5, katakanaDakutenHandakutenGrid, katakanaIdByCharacter),
+    buildSubsection(
+        'katakana-gojuon',
+        'Gojūon (五十音)',
+        5,
+        katakanaGojuonGrid,
+        katakanaIdByCharacter
+    ),
+    buildSubsection(
+        'katakana-dakuten-handakuten',
+        'Dakuten and Handakuten (濁点と半濁点)',
+        5,
+        katakanaDakutenHandakutenGrid,
+        katakanaIdByCharacter
+    ),
     buildSubsection('katakana-yoon', 'Yōon (拗音)', 3, katakanaYoonGrid, katakanaIdByCharacter),
 ]);
 
@@ -177,7 +202,10 @@ export function shuffleDeck(ids: string[]): string[] {
     const shuffledIds = [...normalizedIds];
     for (let index = shuffledIds.length - 1; index > 0; index -= 1) {
         const randomIndex = Math.floor(Math.random() * (index + 1));
-        [shuffledIds[index], shuffledIds[randomIndex]] = [shuffledIds[randomIndex], shuffledIds[index]];
+        [shuffledIds[index], shuffledIds[randomIndex]] = [
+            shuffledIds[randomIndex],
+            shuffledIds[index],
+        ];
     }
     return shuffledIds;
 }
@@ -201,6 +229,7 @@ git commit -m "feat: extract shared kana item types and utilities into lib/kana-
 ### Task 2: Slim down `lib/flashcards.ts` to re-export from shared module
 
 **Files:**
+
 - Modify: `lib/flashcards.ts`
 - Reference: `lib/kana-items.ts`
 
@@ -316,6 +345,7 @@ git commit -m "refactor: slim lib/flashcards.ts to re-export shared types from k
 ### Task 3: Move selection grid and selectable card to shared location
 
 **Files:**
+
 - Create: `components/kana-selection-grid.tsx` (moved from `components/flashcards/flashcard-selection-grid.tsx`)
 - Create: `components/selectable-kana-card.tsx` (moved from `components/flashcards/selectable-kana-card.tsx`)
 - Delete: `components/flashcards/flashcard-selection-grid.tsx`
@@ -556,10 +586,13 @@ export const KanaSelectionGrid: React.FC<KanaSelectionGridProps> = ({
 - [ ] **Step 3: Update `app/flashcards/flashcard-content.tsx` import**
 
 Change:
+
 ```typescript
 import { FlashcardSelectionGrid } from '@/components/flashcards/flashcard-selection-grid';
 ```
+
 To:
+
 ```typescript
 import { KanaSelectionGrid } from '@/components/kana-selection-grid';
 ```
@@ -567,6 +600,7 @@ import { KanaSelectionGrid } from '@/components/kana-selection-grid';
 Then replace the two `<FlashcardSelectionGrid` usages with `<KanaSelectionGrid`, and update the `section` props from `hiraganaFlashcardSelectionSection` / `katakanaFlashcardSelectionSection` to use the shared names imported from `@/lib/kana-items`:
 
 Update the imports block to add:
+
 ```typescript
 import { hiraganaSelectionSection, katakanaSelectionSection } from '@/lib/kana-items';
 ```
@@ -605,6 +639,7 @@ git commit -m "refactor: move selection grid and selectable card to shared compo
 ### Task 4: Create `lib/kana-similarity.ts`
 
 **Files:**
+
 - Create: `lib/kana-similarity.ts`
 
 - [ ] **Step 1: Create the similarity groups file**
@@ -755,6 +790,7 @@ git commit -m "feat: add kana character similarity groups for quiz distractors"
 ### Task 5: Add `recordQuizResult` to `lib/kana-db.ts`
 
 **Files:**
+
 - Modify: `lib/kana-db.ts`
 
 - [ ] **Step 1: Add the `recordQuizResult` function**
@@ -808,6 +844,7 @@ git commit -m "feat: add recordQuizResult to kana-db for quiz progress tracking"
 ### Task 6: Create `lib/quiz.ts`
 
 **Files:**
+
 - Create: `lib/quiz.ts`
 - Reference: `lib/kana-items.ts`
 - Reference: `lib/kana-similarity.ts`
@@ -926,9 +963,7 @@ function pickDistractors(
         pickFrom(similarGlobal);
     }
     if (result.length < count) {
-        const sameScriptGlobal = allStudyItems.filter(
-            (item) => item.script === correct.script
-        );
+        const sameScriptGlobal = allStudyItems.filter((item) => item.script === correct.script);
         pickFrom(sameScriptGlobal);
     }
     if (result.length < count) {
@@ -938,10 +973,7 @@ function pickDistractors(
     return result;
 }
 
-export function generateQuizQuestions(
-    ids: string[],
-    direction: QuizDirection
-): QuizQuestion[] {
+export function generateQuizQuestions(ids: string[], direction: QuizDirection): QuizQuestion[] {
     const shuffledIds = shuffleDeck(ids);
     const pool = shuffledIds
         .map((id) => studyItemMap.get(id))
@@ -1046,6 +1078,7 @@ git commit -m "feat: add quiz data layer with question generation and smart dist
 ### Task 7: Create quiz direction picker component
 
 **Files:**
+
 - Create: `components/quiz/quiz-direction-button.tsx`
 - Reference: `components/flashcards/flashcard-settings-button.tsx` (pattern to follow)
 
@@ -1135,6 +1168,7 @@ git commit -m "feat: add quiz direction picker settings button"
 ### Task 8: Build quiz setup page (`app/quiz/quiz-content.tsx`)
 
 **Files:**
+
 - Modify: `app/quiz/quiz-content.tsx`
 - Reference: `app/flashcards/flashcard-content.tsx` (pattern to follow)
 
@@ -1301,6 +1335,7 @@ git commit -m "feat: replace quiz placeholder with character selection setup pag
 ### Task 9: Create quiz session page and content component
 
 **Files:**
+
 - Create: `app/quiz/session/page.tsx`
 - Create: `components/quiz/quiz-session-content.tsx`
 
@@ -1580,6 +1615,7 @@ git commit -m "feat: add quiz session page with question display and keyboard sh
 ### Task 10: Create quiz results component
 
 **Files:**
+
 - Create: `components/quiz/quiz-results.tsx`
 
 - [ ] **Step 1: Create `components/quiz/quiz-results.tsx`**
@@ -1708,6 +1744,7 @@ git commit -m "feat: add quiz results screen with score, missed characters, and 
 ### Task 11: Full build verification and final lint pass
 
 **Files:**
+
 - All files from previous tasks
 
 - [ ] **Step 1: Run full build**

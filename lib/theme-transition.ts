@@ -3,7 +3,7 @@ import { flushSync } from 'react-dom';
 export function applyThemeWithTransition(
     setTheme: (theme: string) => void,
     newTheme: string,
-    origin?: { x: number; y: number },
+    origin?: { x: number; y: number }
 ) {
     const applyTheme = () => setTheme(newTheme);
 
@@ -16,10 +16,7 @@ export function applyThemeWithTransition(
     const y = origin?.y ?? (window.visualViewport?.height ?? window.innerHeight) / 2;
     const viewportWidth = window.visualViewport?.width ?? window.innerWidth;
     const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
-    const maxRadius = Math.hypot(
-        Math.max(x, viewportWidth - x),
-        Math.max(y, viewportHeight - y),
-    );
+    const maxRadius = Math.hypot(Math.max(x, viewportWidth - x), Math.max(y, viewportHeight - y));
 
     const transition = document.startViewTransition(() => {
         flushSync(applyTheme);
@@ -37,7 +34,7 @@ export function applyThemeWithTransition(
                 duration: 400,
                 easing: 'ease-in-out',
                 pseudoElement: '::view-transition-new(root)',
-            },
+            }
         );
     });
 }

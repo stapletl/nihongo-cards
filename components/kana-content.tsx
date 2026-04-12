@@ -83,7 +83,7 @@ export const KanaContent: React.FC<KanaContentProps> = ({
 
             {showScrollButton && (
                 <Button
-                    className="fixed right-6 bottom-6 z-50 gap-1 shadow-lg animate-gentle-bounce"
+                    className="animate-gentle-bounce fixed right-6 bottom-6 z-50 gap-1 shadow-lg"
                     size="sm"
                     onClick={() =>
                         firstUnvisitedRef.current?.scrollIntoView({

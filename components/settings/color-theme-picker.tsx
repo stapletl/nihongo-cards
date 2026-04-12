@@ -24,7 +24,7 @@ export function ColorThemePicker() {
                             'flex items-center gap-2.5 rounded-lg border px-3 py-2 text-sm transition-all',
                             isActive
                                 ? 'border-primary bg-primary/5 text-foreground'
-                                : 'border-border text-muted-foreground hover:border-primary/50 hover:text-foreground',
+                                : 'border-border text-muted-foreground hover:border-primary/50 hover:text-foreground'
                         )}
                         title={t.japanese}>
                         <span

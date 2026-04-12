@@ -55,6 +55,35 @@ export async function incrementFlashcardView(character: string): Promise<void> {
     window.dispatchEvent(new CustomEvent(KANA_PROGRESS_UPDATED_EVENT));
 }
 
+export async function recordQuizResult(character: string, correct: boolean): Promise<void> {
+    const db = await getDB();
+    const tx = db.transaction('kanaProgress', 'readwrite');
+    const store = tx.objectStore('kanaProgress');
+    const existing = await store.get(character);
+    const record: KanaProgress = existing ?? {
+        character,
+        detailsViewCount: 0,
+        flashcardViewCount: 0,
+        quizCorrectCount: 0,
+        quizIncorrectCount: 0,
+        lastVisited: null,
+        lastStudied: null,
+        lastQuizzed: null,
+    };
+
+    if (correct) {
+        record.quizCorrectCount += 1;
+    } else {
+        record.quizIncorrectCount += 1;
+    }
+
+    record.lastQuizzed = Date.now();
+
+    await store.put(record);
+    await tx.done;
+    window.dispatchEvent(new CustomEvent(KANA_PROGRESS_UPDATED_EVENT));
+}
+
 export function isVisited(progress: KanaProgress | undefined): boolean {
     return (progress?.detailsViewCount ?? 0) > 0;
 }

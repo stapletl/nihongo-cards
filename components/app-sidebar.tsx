@@ -78,7 +78,6 @@ const navMain: NavSection[] = [
                 title: 'Quiz',
                 url: '/quiz',
                 enabled: true,
-                soon: true,
                 icon: <ClipboardListIcon />,
             },
             {

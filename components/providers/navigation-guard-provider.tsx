@@ -125,7 +125,11 @@ export function NavigationGuardProvider({ children }: NavigationGuardProviderPro
             return;
         }
 
-        window.history.pushState({ ...currentState, [HISTORY_SENTINEL_KEY]: true }, '', window.location.href);
+        window.history.pushState(
+            { ...currentState, [HISTORY_SENTINEL_KEY]: true },
+            '',
+            window.location.href
+        );
     }, []);
 
     const restoreHistorySentinel = React.useCallback(() => {

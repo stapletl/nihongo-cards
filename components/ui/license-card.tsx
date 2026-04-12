@@ -11,7 +11,7 @@ export type LicenseCardProps = {
     licenseType?: string;
     licenseUrl?: string;
     modifications?: string;
-}
+};
 
 export function LicenseCard({
     name,

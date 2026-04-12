@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { QuizContent } from './quiz-content';
 
 export default function Page() {
@@ -7,9 +9,12 @@ export default function Page() {
                 Quiz <span className="font-bold whitespace-nowrap">(クイズ)</span>
             </h1>
             <p className="leading-7">
-                Explore our quiz system to enhance your Japanese learning experience.
+                Select the kana you want to quiz, choose the direction, then work through the deck.
             </p>
-            <QuizContent />
+            <Suspense
+                fallback={<p className="text-muted-foreground mt-8">Loading quiz setup...</p>}>
+                <QuizContent />
+            </Suspense>
         </div>
     );
 }

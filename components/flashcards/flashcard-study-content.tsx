@@ -55,6 +55,12 @@ export const FlashcardStudyContent: React.FC = () => {
     const isReadyToFinish = isOnLastFlashcard && canVisitNext;
     const shouldPreventNavigation = ids.length > 0 && index < ids.length - 1;
 
+    useEffect(() => {
+        if (top !== storedTop) {
+            setStoredTop(top);
+        }
+    }, [setStoredTop, storedTop, top]);
+
     const replaceState = (nextState: FlashcardStudyState) => {
         const nextQuery = buildFlashcardQuery(nextState).toString();
         router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
