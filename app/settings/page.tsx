@@ -72,7 +72,7 @@ export default function SettingsPage() {
                 </section>
 
                 <section className="space-y-4">
-                    <h2 className="text-2xl font-bold">Privacy</h2>
+                    <h2 className="text-2xl font-bold">Legal</h2>
                     <Card>
                         <CardContent>
                             <p className="text-base">
@@ -81,6 +81,10 @@ export default function SettingsPage() {
                                 monitoring. For details, view our{' '}
                                 <Link href="/settings/privacy" className="text-primary underline">
                                     Privacy Policy
+                                </Link>{' '}
+                                and{' '}
+                                <Link href="/settings/terms" className="text-primary underline">
+                                    Terms &amp; Conditions
                                 </Link>
                                 .
                             </p>

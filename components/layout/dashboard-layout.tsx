@@ -17,6 +17,8 @@ type LayoutProps = {
 };
 
 export default async function DashboardLayout({ children }: LayoutProps) {
+    const currentYear = new Date().getFullYear();
+
     return (
         <ThemeProvider
             attribute="data-theme"
@@ -58,12 +60,17 @@ export default async function DashboardLayout({ children }: LayoutProps) {
                                     <div className="flex flex-1 flex-col gap-4">{children}</div>
                                     <footer className="border-t px-4 py-3">
                                         <div className="text-muted-foreground flex flex-wrap items-center justify-between gap-3 text-sm">
-                                            <span>Nihongo Cards</span>
+                                            <span>© {currentYear} Nihongo Cards</span>
                                             <div className="flex flex-wrap items-center gap-4">
                                                 <Link
                                                     href="/settings/privacy"
                                                     className="hover:text-foreground underline-offset-4 hover:underline">
-                                                    Privacy Policy
+                                                    Privacy
+                                                </Link>
+                                                <Link
+                                                    href="/settings/terms"
+                                                    className="hover:text-foreground underline-offset-4 hover:underline">
+                                                    Terms
                                                 </Link>
                                                 <a
                                                     href={SITE_GITHUB_URL}

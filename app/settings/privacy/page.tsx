@@ -1,58 +1,46 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { SITE_GITHUB_NEW_ISSUE_URL, SITE_GITHUB_URL, SITE_NAME } from '@/lib/site';
+import { SITE_AUTHOR, SITE_CONTACT_EMAIL, SITE_NAME } from '@/lib/site';
 
 export const metadata: Metadata = {
     title: `Privacy Policy | ${SITE_NAME}`,
     description:
-        'How Nihongo Cards handles study progress, app preferences, analytics, and privacy requests.',
+        'How Nihongo Cards handles browser-stored study data, cookies, analytics, and privacy requests.',
 };
 
-const LAST_UPDATED = 'April 8, 2026';
+const LAST_UPDATED = 'April 12, 2026';
 
-const dataCategories = [
-    {
-        category: 'Learning progress stored on your device',
-        details:
-            'Kana you visited, flashcard review counts, quiz counts, and timestamps such as last visited or last studied.',
-        purpose: 'To show your progress, statistics, and study history inside the app.',
-    },
-    {
-        category: 'Preferences stored on your device',
-        details:
-            'Theme choice, speech voice selection, speech rate and pitch, and whether certain in-app navigation hints have already been shown.',
-        purpose: 'To remember your interface and speech settings between visits.',
-    },
-    {
-        category: 'First-party cookie',
-        details: 'sidebar_state, which stores whether the sidebar is expanded or collapsed.',
-        purpose: 'To preserve the sidebar layout you last chose.',
-    },
-    {
-        category: 'Usage analytics processed by Vercel Web Analytics',
-        details:
-            'Anonymous page-view data such as timestamp, URL, dynamic route, referrer, filtered query parameters, rough geolocation, browser and version, device type, and operating system.',
-        purpose: 'To understand how the site is used and improve content and navigation.',
-    },
-    {
-        category: 'Performance data processed by Vercel Speed Insights',
-        details:
-            'Anonymous performance metrics such as route, URL, network speed, browser, device type, operating system, country, and Core Web Vitals data points.',
-        purpose: 'To measure and improve page speed and overall reliability.',
-    },
-    {
-        category: 'Hosting and security data processed by Vercel',
-        details:
-            'Technical request information such as IP address, user agent, request path, and location derived from IP as part of delivering, securing, and operating the hosted service.',
-        purpose: 'To host the app, prevent abuse, and keep the service available.',
-    },
+const analyticsItems = [
+    'Vercel Web Analytics may receive anonymous page usage information such as page URL, referrer, browser, operating system, device type, timestamp, and rough location derived from IP address.',
+    'Vercel Speed Insights may receive anonymous performance data such as route, browser, device type, network information, and Core Web Vitals measurements.',
+    'Vercel also processes technical request data such as IP address, user agent, and request path to host, secure, and operate the site.',
 ];
 
-const rights = [
-    'Access and export: you can export the study progress stored in your browser from the Data section in Settings.',
-    'Correction: because most app data is stored locally on your device, you can change preferences directly in the app or replace progress data by importing a corrected backup.',
-    'Deletion: you can clear study progress from Settings, clear browser storage for this site, or ask us privacy questions through GitHub.',
-    'Objection or limitation: you can block analytics or performance scripts with browser tools or content blockers, although parts of the site may then report less usage or performance data.',
+const storageItems = [
+    'IndexedDB stores your kana study progress on your own device, including detail views, flashcard counts, quiz counts, and related timestamps.',
+    'Local storage stores interface and speech preferences such as theme, selected voice, speech rate, speech pitch, and whether certain one-time hints have already been shown.',
+    'A first-party cookie named `sidebar_state` stores whether the sidebar is expanded or collapsed for up to 7 days.',
+];
+
+const choiceItems = [
+    'You can clear your study progress from the Data section in Settings.',
+    'You can clear cookies, local storage, and IndexedDB from your browser settings at any time.',
+    'You can block cookies or analytics scripts with browser settings, extensions, or content blockers, though some features may become less convenient.',
+];
+
+const thirdPartyLinks = [
+    {
+        href: 'https://vercel.com/docs/analytics/privacy-policy',
+        label: 'Vercel Web Analytics privacy and compliance',
+    },
+    {
+        href: 'https://vercel.com/docs/speed-insights/privacy-policy',
+        label: 'Vercel Speed Insights privacy and compliance',
+    },
+    {
+        href: 'https://vercel.com/legal/privacy-policy',
+        label: 'Vercel privacy notice',
+    },
 ];
 
 export default function PrivacyPage() {
@@ -60,236 +48,220 @@ export default function PrivacyPage() {
         <div className="flex justify-center p-4 pb-8">
             <div className="container max-w-3xl space-y-8">
                 <header className="space-y-4">
-                    <p className="text-muted-foreground text-sm">Last updated: {LAST_UPDATED}</p>
+                    <p className="text-muted-foreground text-sm">
+                        Effective / last updated: {LAST_UPDATED}
+                    </p>
                     <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
                         Privacy Policy
                     </h1>
                     <div className="space-y-3 text-base leading-7">
                         <p>
-                            This Privacy Policy explains how Nihongo Cards collects, uses, shares,
-                            and stores information when you use the web app.
+                            Nihongo Cards is operated by {SITE_AUTHOR}. This Privacy Policy explains
+                            what information is collected when you use the app, how that information
+                            is used, and what choices you have.
                         </p>
                         <p>
                             Nihongo Cards does not currently offer user accounts, sign-up forms,
-                            email newsletters, or paid purchases. Most study data is stored locally
-                            in your browser on your own device.
+                            paid purchases, or in-app email collection. All study data stays in your
+                            browser on your own device.
+                        </p>
+                        <p>
+                            You should also review the{' '}
+                            <Link href="/settings/terms" className="text-primary underline">
+                                Terms &amp; Conditions
+                            </Link>
+                            .
                         </p>
                     </div>
                 </header>
 
                 <section className="space-y-4">
-                    <h2 className="text-2xl font-semibold tracking-tight">
-                        Information We Collect
-                    </h2>
-                    <div className="overflow-x-auto rounded-xl border">
-                        <table className="w-full min-w-[720px] border-collapse text-left text-sm">
-                            <thead className="bg-muted/40">
-                                <tr>
-                                    <th className="px-4 py-3 font-semibold">Category</th>
-                                    <th className="px-4 py-3 font-semibold">What this includes</th>
-                                    <th className="px-4 py-3 font-semibold">Why it is used</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {dataCategories.map((item, index) => (
-                                    <tr key={item.category} className={index > 0 ? 'border-t' : ''}>
-                                        <td className="px-4 py-3 align-top font-medium">
-                                            {item.category}
-                                        </td>
-                                        <td className="text-muted-foreground px-4 py-3 align-top">
-                                            {item.details}
-                                        </td>
-                                        <td className="text-muted-foreground px-4 py-3 align-top">
-                                            {item.purpose}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <h2 className="text-2xl font-semibold tracking-tight">1. Personal Data</h2>
+                    <div className="space-y-3 text-base leading-7">
+                        <p>
+                            Nihongo Cards does not ask you to create an account or directly submit
+                            personal details in order to use the app.
+                        </p>
+                        <p>
+                            If you contact {SITE_AUTHOR} by email, the personal information received
+                            will generally be limited to your email address and whatever information
+                            you include in your message. That information is used only to respond to
+                            you, handle your request, or keep a record of the correspondence.
+                        </p>
+                        <p>
+                            The app is not designed to intentionally collect names, mailing
+                            addresses, payment information, precise geolocation, or sensitive
+                            personal data through the normal learning flow.
+                        </p>
                     </div>
-                    <p className="text-muted-foreground text-sm leading-6">
-                        We do not intentionally collect names, email addresses, payment information,
-                        precise geolocation, government identifiers, or special category sensitive
-                        personal data through the app.
+                </section>
+
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-semibold tracking-tight">
+                        2. Usage, Analytics, and Hosting Data
+                    </h2>
+                    <div className="space-y-3 text-base leading-7">
+                        <p>
+                            Nihongo Cards uses Vercel services to host the app and understand
+                            overall usage and performance trends. This currently includes Vercel Web
+                            Analytics and Vercel Speed Insights.
+                        </p>
+                        <ul className="list-disc space-y-2 pl-6">
+                            {analyticsItems.map((item) => (
+                                <li key={item}>{item}</li>
+                            ))}
+                        </ul>
+                        <p>
+                            This information is used to keep the app available, measure performance,
+                            understand which pages are being used, and improve the product over
+                            time.
+                        </p>
+                    </div>
+                </section>
+
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-semibold tracking-tight">
+                        3. Cookies and Browser Storage
+                    </h2>
+                    <div className="space-y-3 text-base leading-7">
+                        <p>
+                            Nihongo Cards uses a small amount of browser storage to make the app
+                            function properly and remember your preferences.
+                        </p>
+                        <ul className="list-disc space-y-2 pl-6">
+                            {storageItems.map((item) => (
+                                <li key={item}>{item}</li>
+                            ))}
+                        </ul>
+                        <p>
+                            Nihongo Cards does not currently set first-party advertising cookies.
+                            Vercel Web Analytics is designed to work without third-party tracking
+                            cookies.
+                        </p>
+                    </div>
+                </section>
+
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-semibold tracking-tight">
+                        4. Opting Out and Browser Controls
+                    </h2>
+                    <div className="space-y-3 text-base leading-7">
+                        <p>
+                            You can limit or remove browser-side storage and analytics exposure with
+                            your own browser controls.
+                        </p>
+                        <ul className="list-disc space-y-2 pl-6">
+                            {choiceItems.map((item) => (
+                                <li key={item}>{item}</li>
+                            ))}
+                        </ul>
+                    </div>
+                </section>
+
+                <section className="space-y-4">
+                    <h2 className="text-2xl font-semibold tracking-tight">
+                        5. Do Not Track Signals
+                    </h2>
+                    <p className="text-base leading-7">
+                        Nihongo Cards does not currently respond to browser Do Not Track signals
+                        with a separate behavior. If you want to limit cookies or analytics, use
+                        your browser settings or privacy tools directly.
                     </p>
                 </section>
 
                 <section className="space-y-4">
                     <h2 className="text-2xl font-semibold tracking-tight">
-                        Cookies, Local Storage, and Similar Technologies
+                        6. Retention and Deletion
                     </h2>
                     <div className="space-y-3 text-base leading-7">
                         <p>
-                            Nihongo Cards uses browser storage technologies to make the app work as
-                            expected.
-                        </p>
-                        <ul className="list-disc space-y-2 pl-6">
-                            <li>
-                                IndexedDB stores your study progress on your device until you clear
-                                it.
-                            </li>
-                            <li>
-                                Local storage stores your theme, speech settings, and certain
-                                one-time UI hint preferences on your device.
-                            </li>
-                            <li>
-                                A first-party cookie named <code>sidebar_state</code> remembers the
-                                sidebar state for up to 7 days after it is set or refreshed.
-                            </li>
-                            <li>
-                                Vercel Web Analytics is configured as a privacy-focused analytics
-                                tool that does not rely on third-party cookies.
-                            </li>
-                        </ul>
-                    </div>
-                </section>
-
-                <section className="space-y-4">
-                    <h2 className="text-2xl font-semibold tracking-tight">
-                        How We Share Information
-                    </h2>
-                    <div className="space-y-3 text-base leading-7">
-                        <p>We do not sell your personal information.</p>
-                        <ul className="list-disc space-y-2 pl-6">
-                            <li>
-                                Vercel hosts the site and provides Web Analytics and Speed Insights
-                                for usage and performance monitoring.
-                            </li>
-                            <li>
-                                If you click a GitHub link or open an issue for support, GitHub will
-                                process the information you choose to provide under GitHub&apos;s
-                                own terms and privacy practices.
-                            </li>
-                            <li>
-                                We may disclose information if required by law or reasonably needed
-                                to protect the app, users, or the public.
-                            </li>
-                        </ul>
-                    </div>
-                </section>
-
-                <section className="space-y-4">
-                    <h2 className="text-2xl font-semibold tracking-tight">
-                        Retention and Deletion
-                    </h2>
-                    <div className="space-y-3 text-base leading-7">
-                        <p>
-                            Data stored on your device remains there until you delete it, clear site
-                            data in your browser, or use the in-app reset tools.
+                            Study progress and preference data stored in your browser stays there
+                            until you remove it, reset it from{' '}
+                            <Link href="/settings" className="text-primary underline">
+                                Settings
+                            </Link>
+                            , or clear your browser storage.
                         </p>
                         <p>
                             The <code>sidebar_state</code> cookie expires after 7 days unless it is
                             refreshed by continued use.
                         </p>
                         <p>
-                            Vercel Web Analytics uses a daily request hash rather than a permanent
-                            visitor identifier, and the visitor session hash is discarded after 24
-                            hours. Aggregated analytics and performance reports may remain in
-                            Vercel&apos;s systems longer under Vercel&apos;s own retention settings,
-                            account plan, and legal obligations.
+                            Analytics, performance, and technical request data handled by Vercel may
+                            remain subject to Vercel&apos;s own retention periods, account settings,
+                            and legal obligations.
                         </p>
                         <p>
-                            You can delete locally stored progress at any time from the{' '}
-                            <Link href="/settings" className="text-primary underline">
-                                Settings
-                            </Link>{' '}
-                            page.
+                            If you emailed {SITE_AUTHOR} and want that correspondence deleted where
+                            reasonably possible, contact{' '}
+                            <a
+                                href={`mailto:${SITE_CONTACT_EMAIL}`}
+                                className="text-primary underline">
+                                {SITE_CONTACT_EMAIL}
+                            </a>
+                            .
                         </p>
                     </div>
                 </section>
 
                 <section className="space-y-4">
-                    <h2 className="text-2xl font-semibold tracking-tight">
-                        Your Rights and Choices
-                    </h2>
-                    <ul className="list-disc space-y-2 pl-6 text-base leading-7">
-                        {rights.map((right) => (
-                            <li key={right}>{right}</li>
-                        ))}
-                    </ul>
+                    <h2 className="text-2xl font-semibold tracking-tight">7. Security</h2>
                     <p className="text-base leading-7">
-                        Depending on where you live, you may have additional privacy rights under
-                        applicable law. If you want to make a privacy-related request, use the
-                        contact method below.
+                        Reasonable efforts are made to keep Nihongo Cards and its supporting
+                        services secure, but no method of storage or transmission is completely
+                        secure and absolute security cannot be guaranteed.
                     </p>
                 </section>
 
                 <section className="space-y-4">
-                    <h2 className="text-2xl font-semibold tracking-tight">Third-Party Services</h2>
+                    <h2 className="text-2xl font-semibold tracking-tight">
+                        8. Third-Party Services
+                    </h2>
                     <div className="space-y-3 text-base leading-7">
                         <p>
-                            Nihongo Cards currently depends on Vercel for hosting, analytics, and
-                            performance monitoring. You can review Vercel&apos;s documentation and
-                            privacy materials here:
+                            Nihongo Cards currently relies on Vercel for hosting, analytics, and
+                            performance monitoring. Those services have their own privacy
+                            documentation:
                         </p>
                         <ul className="list-disc space-y-2 pl-6">
-                            <li>
-                                <a
-                                    href="https://vercel.com/docs/analytics/privacy-policy"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-primary underline">
-                                    Vercel Web Analytics privacy and compliance
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="https://vercel.com/docs/speed-insights/privacy-policy"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-primary underline">
-                                    Vercel Speed Insights privacy and compliance
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="https://vercel.com/legal/privacy-policy"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-primary underline">
-                                    Vercel privacy notice
-                                </a>
-                            </li>
+                            {thirdPartyLinks.map((item) => (
+                                <li key={item.href}>
+                                    <a
+                                        href={item.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-primary underline">
+                                        {item.label}
+                                    </a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </section>
 
                 <section className="space-y-4">
                     <h2 className="text-2xl font-semibold tracking-tight">
-                        Changes to This Policy
+                        9. Changes to This Policy
                     </h2>
                     <p className="text-base leading-7">
-                        We may update this Privacy Policy as the app changes. When we do, we will
-                        post the updated version on this page and change the &quot;Last
-                        updated&quot; date.
+                        This Privacy Policy may be updated from time to time as Nihongo Cards
+                        changes. Any updates will be posted on this page with a revised effective
+                        date.
                     </p>
                 </section>
 
                 <section className="space-y-4">
-                    <h2 className="text-2xl font-semibold tracking-tight">Contact</h2>
+                    <h2 className="text-2xl font-semibold tracking-tight">10. Contact</h2>
                     <div className="space-y-3 text-base leading-7">
                         <p>
-                            For privacy questions, deletion requests, or complaints, please open an
-                            issue on GitHub:
-                        </p>
-                        <p>
+                            If you have questions, privacy requests, or concerns about this policy,
+                            contact {SITE_AUTHOR} at{' '}
                             <a
-                                href={SITE_GITHUB_NEW_ISSUE_URL}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                href={`mailto:${SITE_CONTACT_EMAIL}`}
                                 className="text-primary underline">
-                                {SITE_GITHUB_NEW_ISSUE_URL}
+                                {SITE_CONTACT_EMAIL}
                             </a>
-                        </p>
-                        <p>
-                            Repository:{' '}
-                            <a
-                                href={SITE_GITHUB_URL}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-primary underline">
-                                {SITE_GITHUB_URL}
-                            </a>
+                            .
                         </p>
                     </div>
                 </section>
