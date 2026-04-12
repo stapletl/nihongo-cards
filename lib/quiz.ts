@@ -203,7 +203,7 @@ function pickDistractors(
     return result;
 }
 
-function isQuizDirection(value: string | null | undefined): value is QuizDirection {
+export function isQuizDirection(value: string | null | undefined): value is QuizDirection {
     return value === 'kana-to-romanji' || value === 'romanji-to-kana';
 }
 

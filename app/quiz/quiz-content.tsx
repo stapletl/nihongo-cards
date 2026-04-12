@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { PlayIcon } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useLocalStorage } from 'usehooks-ts';
+import { useReadLocalStorage } from 'usehooks-ts';
 
 import { KanaQuickSelectButton } from '@/components/kana-quick-select-button';
 import { KanaSelectionGrid } from '@/components/kana-selection-grid';
@@ -19,8 +19,10 @@ import {
     QUIZ_DIRECTION_STORAGE_KEY,
     type QuizDirection,
     buildQuizQuery,
+    isQuizDirection,
     parseQuizStudyState,
 } from '@/lib/quiz';
+import { setStoredValue } from '@/lib/local-storage';
 
 function orderSelectedIds(ids: Iterable<string>): string[] {
     const selectedSet = new Set(ids);
@@ -33,20 +35,21 @@ export const QuizContent: React.FC = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const parsedState = useMemo(() => parseQuizStudyState(searchParams), [searchParams]);
-    const [storedDirection, setStoredDirection] = useLocalStorage<QuizDirection>(
-        QUIZ_DIRECTION_STORAGE_KEY,
-        'kana-to-romanji'
-    );
+    const storedDirection = useReadLocalStorage<QuizDirection>(QUIZ_DIRECTION_STORAGE_KEY);
     const hasDirectionParam = searchParams.has('direction');
-    const direction = hasDirectionParam ? parsedState.direction : storedDirection;
+    const direction = hasDirectionParam
+        ? parsedState.direction
+        : isQuizDirection(storedDirection)
+          ? storedDirection
+          : 'kana-to-romanji';
     const selectedIds = parsedState.ids;
     const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds]);
 
     useEffect(() => {
-        if (direction !== storedDirection) {
-            setStoredDirection(direction);
+        if (hasDirectionParam) {
+            setStoredValue(QUIZ_DIRECTION_STORAGE_KEY, parsedState.direction);
         }
-    }, [direction, setStoredDirection, storedDirection]);
+    }, [hasDirectionParam, parsedState.direction]);
 
     const replaceSetupState = (ids: string[], nextDirection: QuizDirection = direction) => {
         const nextQuery = buildQuizQuery(
@@ -105,7 +108,7 @@ export const QuizContent: React.FC = () => {
                             <QuizDirectionButton
                                 value={direction}
                                 onChange={(nextDirection) => {
-                                    setStoredDirection(nextDirection);
+                                    setStoredValue(QUIZ_DIRECTION_STORAGE_KEY, nextDirection);
                                     replaceSetupState(selectedIds, nextDirection);
                                 }}
                             />

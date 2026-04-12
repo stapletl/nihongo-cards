@@ -37,7 +37,7 @@ export const flashcardItemMap = studyItemMap;
 export const hiraganaFlashcardSelectionSection = hiraganaSelectionSection;
 export const katakanaFlashcardSelectionSection = katakanaSelectionSection;
 
-function isFlashcardTopSide(value: string | null | undefined): value is FlashcardTopSide {
+export function isFlashcardTopSide(value: string | null | undefined): value is FlashcardTopSide {
     return value === 'japanese' || value === 'romanji';
 }
 

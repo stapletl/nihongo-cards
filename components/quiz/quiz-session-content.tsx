@@ -5,7 +5,6 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { ArrowRightIcon, ExternalLinkIcon } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useHotkey } from '@tanstack/react-hotkeys';
-import { useLocalStorage } from 'usehooks-ts';
 
 import { QuizShortcutsHint } from '@/components/quiz/quiz-shortcuts-hint';
 import { QuizResults } from '@/components/quiz/quiz-results';
@@ -25,6 +24,7 @@ import {
     materializeQuizAnswers,
     parseQuizSessionState,
 } from '@/lib/quiz';
+import { setStoredValue } from '@/lib/local-storage';
 import { cn } from '@/lib/utils';
 
 type QuizSessionProps = {
@@ -81,10 +81,6 @@ const QuizSession: React.FC<QuizSessionProps> = ({ sessionState }) => {
     const isLastQuestion = currentIndex === questions.length - 1;
     const isMobile = useIsMobile();
     const { setNavigationGuard } = useNavigationGuard();
-    const [storedDirection, setStoredDirection] = useLocalStorage<QuizDirection>(
-        QUIZ_DIRECTION_STORAGE_KEY,
-        'kana-to-romanji'
-    );
     const shouldPreventNavigation = questions.length > 0 && !isFinished;
     const answerLockRef = useRef(hasAnswered);
     const replaceSessionState = React.useCallback(
@@ -102,10 +98,8 @@ const QuizSession: React.FC<QuizSessionProps> = ({ sessionState }) => {
     }, [currentIndex, hasAnswered]);
 
     useEffect(() => {
-        if (sessionState.direction !== storedDirection) {
-            setStoredDirection(sessionState.direction);
-        }
-    }, [sessionState.direction, setStoredDirection, storedDirection]);
+        setStoredValue(QUIZ_DIRECTION_STORAGE_KEY, sessionState.direction);
+    }, [sessionState.direction]);
 
     useEffect(() => {
         if (!shouldPreventNavigation) {

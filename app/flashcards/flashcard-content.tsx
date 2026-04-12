@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { ChevronDownIcon, PlayIcon, ShuffleIcon } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useLocalStorage } from 'usehooks-ts';
+import { useReadLocalStorage } from 'usehooks-ts';
 
 import { KanaQuickSelectButton } from '@/components/kana-quick-select-button';
 import { KanaSelectionGrid } from '@/components/kana-selection-grid';
@@ -22,6 +22,7 @@ import {
     FLASHCARD_TOP_SIDE_STORAGE_KEY,
     FlashcardTopSide,
     buildFlashcardQuery,
+    isFlashcardTopSide,
     parseFlashcardStudyState,
     shuffleDeck,
 } from '@/lib/flashcards';
@@ -30,6 +31,7 @@ import {
     hiraganaSelectionSection,
     katakanaSelectionSection,
 } from '@/lib/kana-items';
+import { setStoredValue } from '@/lib/local-storage';
 
 function orderSelectedIds(ids: Iterable<string>): string[] {
     const selectedSet = new Set(ids);
@@ -42,20 +44,21 @@ export const FlashcardContent: React.FC = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const parsedState = useMemo(() => parseFlashcardStudyState(searchParams), [searchParams]);
-    const [storedTop, setStoredTop] = useLocalStorage<FlashcardTopSide>(
-        FLASHCARD_TOP_SIDE_STORAGE_KEY,
-        'japanese'
-    );
+    const storedTop = useReadLocalStorage<FlashcardTopSide>(FLASHCARD_TOP_SIDE_STORAGE_KEY);
     const hasTopParam = searchParams.has('top');
-    const top = hasTopParam ? parsedState.top : storedTop;
+    const top = hasTopParam
+        ? parsedState.top
+        : isFlashcardTopSide(storedTop)
+          ? storedTop
+          : 'japanese';
     const selectedIds = parsedState.ids;
     const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds]);
 
     useEffect(() => {
-        if (top !== storedTop) {
-            setStoredTop(top);
+        if (hasTopParam) {
+            setStoredValue(FLASHCARD_TOP_SIDE_STORAGE_KEY, parsedState.top);
         }
-    }, [setStoredTop, storedTop, top]);
+    }, [hasTopParam, parsedState.top]);
 
     const replaceSetupState = (ids: string[], nextTop: FlashcardTopSide = top) => {
         const nextQuery = buildFlashcardQuery(
@@ -114,7 +117,7 @@ export const FlashcardContent: React.FC = () => {
                             <FlashcardSettingsButton
                                 value={top}
                                 onChange={(nextTop) => {
-                                    setStoredTop(nextTop);
+                                    setStoredValue(FLASHCARD_TOP_SIDE_STORAGE_KEY, nextTop);
                                     replaceSetupState(selectedIds, nextTop);
                                 }}
                             />
