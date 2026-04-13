@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { SITE_AUTHOR, SITE_CONTACT_EMAIL, SITE_NAME } from '@/lib/site';
+import { buildPageMetadata } from '@/lib/seo';
+import { SITE_AUTHOR, SITE_CONTACT_EMAIL } from '@/lib/site';
 
-export const metadata: Metadata = {
-    title: `Privacy Policy | ${SITE_NAME}`,
+export const metadata: Metadata = buildPageMetadata({
+    title: 'Privacy Policy',
     description:
         'How Nihongo Cards handles browser-stored study data, cookies, analytics, and privacy requests.',
-};
+    path: '/settings/privacy',
+});
 
 const LAST_UPDATED = 'April 12, 2026';
 

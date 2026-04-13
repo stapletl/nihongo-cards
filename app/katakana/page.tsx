@@ -1,11 +1,27 @@
+import type { Metadata } from 'next';
+import { StructuredData } from '@/components/structured-data';
 import { KanaContent } from '@/components/kana-content';
 import { MarkAllKanaViewedButton } from '@/components/mark-all-kana-viewed-button';
 import { SpeechButton } from '@/components/speech-button';
 import { dakutenHandakutenGrid, gojuonGrid, katakanaItems, yoonGrid } from '@/lib/katakana';
+import { buildPageMetadata } from '@/lib/seo';
+import { buildKanaDefinedTermSetStructuredData } from '@/lib/structured-data';
+
+export const metadata: Metadata = buildPageMetadata({
+    title: 'Katakana Chart',
+    description:
+        'Browse every katakana character with pronunciation, stroke order, example words, and progress tracking.',
+    path: '/katakana',
+    keywords: ['katakana chart', 'learn katakana', 'Japanese katakana', 'katakana alphabet'],
+});
 
 export default function Page() {
     return (
         <div className="p-4">
+            <StructuredData
+                id="katakana-schema"
+                data={buildKanaDefinedTermSetStructuredData('katakana', katakanaItems)}
+            />
             <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
                 <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                     Katakana{' '}

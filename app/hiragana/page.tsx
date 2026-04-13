@@ -1,11 +1,27 @@
+import type { Metadata } from 'next';
+import { StructuredData } from '@/components/structured-data';
 import { KanaContent } from '@/components/kana-content';
 import { MarkAllKanaViewedButton } from '@/components/mark-all-kana-viewed-button';
 import { SpeechButton } from '@/components/speech-button';
 import { dakutenHandakutenGrid, gojuonGrid, hiraganaItems, yoonGrid } from '@/lib/hiragana';
+import { buildPageMetadata } from '@/lib/seo';
+import { buildKanaDefinedTermSetStructuredData } from '@/lib/structured-data';
+
+export const metadata: Metadata = buildPageMetadata({
+    title: 'Hiragana Chart',
+    description:
+        'Browse every hiragana character with pronunciation, stroke order, example words, and progress tracking.',
+    path: '/hiragana',
+    keywords: ['hiragana chart', 'learn hiragana', 'Japanese hiragana', 'hiragana alphabet'],
+});
 
 export default function Page() {
     return (
         <div className="p-4">
+            <StructuredData
+                id="hiragana-schema"
+                data={buildKanaDefinedTermSetStructuredData('hiragana', hiraganaItems)}
+            />
             <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
                 <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                     Hiragana{' '}
