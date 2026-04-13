@@ -1,13 +1,29 @@
+import type { Metadata } from 'next';
 import { HiraganaMarquee, KatakanaMarquee } from '@/components/kana-slider/kana-marquees';
 import { SpeechButton } from '@/components/speech-button';
 import { HomeKanaCards } from '@/components/home-kana-cards';
+import { buildPageMetadata } from '@/lib/seo';
 import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/site';
 
 const japaneseTitle = '日本語カード';
 
+export const metadata: Metadata = buildPageMetadata({
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    path: '/',
+    absoluteTitle: true,
+    keywords: [
+        'learn Japanese kana',
+        'hiragana chart',
+        'katakana chart',
+        'Japanese flashcards',
+        'kana quiz',
+    ],
+});
+
 export default function Page() {
     return (
-        <div className="flex h-full flex-col items-center justify-center gap-4 py-2 sm:gap-6 sm:py-8">
+        <div className="flex h-full flex-col items-center justify-center gap-2 py-2 sm:gap-6 sm:py-8">
             <HiraganaMarquee />
 
             <div className="flex max-w-[980px] flex-col items-center gap-4 px-8 text-center">
@@ -18,7 +34,7 @@ export default function Page() {
                         </h2>
                         <SpeechButton text={japaneseTitle} />
                     </div>
-                    <h1 className="text-4xl leading-tight font-bold tracking-tighter text-nowrap md:text-6xl lg:leading-[1.1]">
+                    <h1 className="text-primary text-5xl leading-tight font-bold tracking-tighter text-nowrap md:text-8xl lg:leading-[1.1]">
                         {SITE_NAME}
                     </h1>
                 </div>

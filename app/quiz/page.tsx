@@ -1,6 +1,15 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
-
+import { buildPageMetadata } from '@/lib/seo';
 import { QuizContent } from './quiz-content';
+
+export const metadata: Metadata = buildPageMetadata({
+    title: 'Kana Quiz',
+    description:
+        'Create kana quizzes for hiragana and katakana, choose the answer direction, and test your recall.',
+    path: '/quiz',
+    keywords: ['Japanese quiz', 'kana quiz', 'hiragana quiz', 'katakana quiz'],
+});
 
 export default function Page() {
     return (

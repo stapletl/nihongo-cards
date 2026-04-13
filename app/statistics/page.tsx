@@ -1,4 +1,19 @@
+import type { Metadata } from 'next';
+import { buildPageMetadata } from '@/lib/seo';
 import { StatisticsContent } from './statistics-content';
+
+export const metadata: Metadata = buildPageMetadata({
+    title: 'Kana Statistics',
+    description:
+        'Review kana study progress, quiz accuracy, and per-character activity across hiragana and katakana.',
+    path: '/statistics',
+    keywords: [
+        'kana statistics',
+        'Japanese study progress',
+        'hiragana progress tracker',
+        'katakana progress tracker',
+    ],
+});
 
 export default function Page() {
     return (

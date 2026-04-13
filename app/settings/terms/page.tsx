@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { buildPageMetadata } from '@/lib/seo';
 import { SITE_AUTHOR, SITE_CONTACT_EMAIL, SITE_NAME } from '@/lib/site';
 
-export const metadata: Metadata = {
-    title: `Terms & Conditions | ${SITE_NAME}`,
+export const metadata: Metadata = buildPageMetadata({
+    title: 'Terms & Conditions',
     description: 'The terms that govern use of the Nihongo Cards web app.',
-};
+    path: '/settings/terms',
+});
 
 const LAST_UPDATED = 'April 12, 2026';
 
