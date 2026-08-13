@@ -1,11 +1,12 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router';
 import DashboardLayout from '@/components/layout/dashboard-layout';
+import { NotFound } from '@/components/not-found';
 import { StructuredData } from '@/components/structured-data';
 import { buildSiteHead } from '@/lib/head';
 import { buildSiteStructuredData } from '@/lib/structured-data';
 import geistMonoCss from '@fontsource-variable/geist-mono/index.css?url';
 import geistSansCss from '@fontsource-variable/geist/index.css?url';
-import appCss from '@/app/globals.css?url';
+import appCss from '@/src/styles/globals.css?url';
 
 export const Route = createRootRoute({
     head: () => {
@@ -22,6 +23,7 @@ export const Route = createRootRoute({
         };
     },
     shellComponent: RootDocument,
+    notFoundComponent: NotFound,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {

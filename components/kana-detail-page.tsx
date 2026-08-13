@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { Link, notFound } from '@tanstack/react-router';
 
 import { KanaNavigationHint } from '@/components/kana-navigation-hint';
 import { NavHotkeys } from '@/components/nav-hotkeys';
@@ -26,35 +25,39 @@ export function KanaDetailPage({
 }: KanaDetailPageProps) {
     const decodedCharacter = decodeURIComponent(character);
     const kanaItem = items.find((item) => item.character === decodedCharacter);
-    if (!kanaItem) notFound();
+    if (!kanaItem) throw notFound();
 
     const idx = items.indexOf(kanaItem);
     const prevItem = items.at(idx - 1);
     const nextItem = items.at(idx + 1) ?? items[0];
     const strokeOrderCharacters = resolveKanaStrokeGlyphs(kanaItem.character);
+    const detailHref = (item: KanaItem) => `${backHref}/${encodeURIComponent(item.character)}`;
 
     return (
         <div className="flex h-full flex-col overflow-hidden">
             <MarkKanaVisited character={kanaItem.character} />
-            <NavHotkeys prevHref={prevItem?.character} nextHref={nextItem?.character} />
+            <NavHotkeys
+                prevHref={prevItem ? detailHref(prevItem) : undefined}
+                nextHref={nextItem ? detailHref(nextItem) : undefined}
+            />
             <div className="grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-2 border-b p-2">
                 <div className="flex justify-start">
                     {prevItem ? (
                         <Button asChild={true} variant="ghost">
-                            <Link href={`${prevItem.character}`}>←{prevItem.character}</Link>
+                            <Link to={detailHref(prevItem)}>←{prevItem.character}</Link>
                         </Button>
                     ) : null}
                 </div>
                 <div className="flex items-center justify-center gap-2">
                     <Button asChild={true} variant="ghost">
-                        <Link href={backHref}>{backLabel}</Link>
+                        <Link to={backHref}>{backLabel}</Link>
                     </Button>
                     <KanaNavigationHint />
                 </div>
                 <div className="flex justify-end">
                     {nextItem ? (
                         <Button asChild={true} variant="ghost">
-                            <Link href={`${nextItem.character}`}>{nextItem.character}→</Link>
+                            <Link to={detailHref(nextItem)}>{nextItem.character}→</Link>
                         </Button>
                     ) : null}
                 </div>

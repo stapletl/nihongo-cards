@@ -1,20 +1,23 @@
 import React from 'react';
-import Image from 'next/image';
 
 type AppIconProps = {
     size: number; // Size in pixels
 };
 
 export const AppIcon: React.FC<AppIconProps> = ({ size }) => (
-    <div className={`relative h-[${size}px] w-[${size}px] overflow-hidden rounded-md border`}>
-        <Image
+    // Sized inline rather than with Tailwind classes: arbitrary values built from a
+    // template string are invisible to the class scanner and never get generated.
+    <div
+        className="relative overflow-hidden rounded-md border"
+        style={{ width: size, height: size }}>
+        <img
             src="/logo-light.png"
             alt="Nihongo Cards Logo"
             width={size}
             height={size}
             className="block dark:hidden"
         />
-        <Image
+        <img
             src="/logo-dark.png"
             alt="Nihongo Cards Logo"
             width={size}

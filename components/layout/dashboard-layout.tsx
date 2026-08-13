@@ -5,7 +5,7 @@ import { SpeechProvider } from '@/components/providers/speech-provider';
 import { NavigationGuardProvider } from '@/components/providers/navigation-guard-provider';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
-import Link from 'next/link';
+import { Link } from '@tanstack/react-router';
 import AppBreadcrumbs from '../app-breadcrumbs';
 import { CommandMenu } from '@/components/command-menu';
 import { GithubButton } from '@/components/github-button';
@@ -63,12 +63,12 @@ export default function DashboardLayout({ children }: LayoutProps) {
                                             <span>© {currentYear} Nihongo Cards</span>
                                             <div className="flex flex-wrap items-center gap-4">
                                                 <Link
-                                                    href="/settings/privacy"
+                                                    to="/settings/privacy"
                                                     className="hover:text-foreground underline-offset-4 hover:underline">
                                                     Privacy
                                                 </Link>
                                                 <Link
-                                                    href="/settings/terms"
+                                                    to="/settings/terms"
                                                     className="hover:text-foreground underline-offset-4 hover:underline">
                                                     Terms
                                                 </Link>

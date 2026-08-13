@@ -114,10 +114,7 @@ const main = async () => {
     }
 
     const indexPath = path.join(OUTPUT_DIR, 'index.ts');
-    const tempIndexPath = path.join(
-        OUTPUT_DIR,
-        `index.ts.${process.pid}.${Date.now()}.tmp`
-    );
+    const tempIndexPath = path.join(OUTPUT_DIR, `index.ts.${process.pid}.${Date.now()}.tmp`);
 
     await writeFile(tempIndexPath, formatRegistryModule(glyphEntries));
     await rename(tempIndexPath, indexPath);

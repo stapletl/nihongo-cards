@@ -44,10 +44,12 @@ export const KanaStrokeOrderSection: React.FC<KanaStrokeOrderSectionProps> = ({
     }
 
     return (
-        <section className={cn('overflow-hidden rounded-xl border bg-card shadow-sm', className)}>
+        <section className={cn('bg-card overflow-hidden rounded-xl border shadow-sm', className)}>
             <div className="flex items-center justify-between gap-4 p-6">
                 <div>
-                    <p className="text-muted-foreground text-sm font-medium uppercase">Stroke Order</p>
+                    <p className="text-muted-foreground text-sm font-medium uppercase">
+                        Stroke Order
+                    </p>
                 </div>
                 <Button
                     variant="outline"

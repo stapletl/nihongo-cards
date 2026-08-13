@@ -1,8 +1,7 @@
 'use client';
 
-import Link from 'next/link';
+import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import React, { startTransition, useEffect, useMemo, useRef, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useHotkey } from '@tanstack/react-hotkeys';
 import { useReadLocalStorage } from 'usehooks-ts';
 
@@ -28,15 +27,15 @@ import {
 } from '@/lib/flashcards';
 import { incrementFlashcardView } from '@/lib/kana-db';
 import { setStoredValue } from '@/lib/local-storage';
+import { type StringSearch, searchFromQuery, searchToQueryString } from '@/lib/search';
 
 export const FlashcardStudyContent: React.FC = () => {
-    const router = useRouter();
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
+    const navigate = useNavigate();
+    const searchParams = useSearch({ strict: false }) as StringSearch;
     const parsedState = useMemo(() => parseFlashcardStudyState(searchParams), [searchParams]);
     const { setNavigationGuard } = useNavigationGuard();
     const storedTop = useReadLocalStorage<FlashcardTopSide>(FLASHCARD_TOP_SIDE_STORAGE_KEY);
-    const hasTopParam = searchParams.has('top');
+    const hasTopParam = searchParams.top !== undefined;
     const top = hasTopParam
         ? parsedState.top
         : isFlashcardTopSide(storedTop)
@@ -65,8 +64,12 @@ export const FlashcardStudyContent: React.FC = () => {
     }, [hasTopParam, parsedState.top]);
 
     const replaceState = (nextState: FlashcardStudyState) => {
-        const nextQuery = buildFlashcardQuery(nextState).toString();
-        router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, { scroll: false });
+        void navigate({
+            to: '/flashcards/study',
+            search: searchFromQuery(buildFlashcardQuery(nextState)),
+            replace: true,
+            resetScroll: false,
+        });
     };
 
     const goPrevious = React.useEffectEvent(() => {
@@ -150,12 +153,17 @@ export const FlashcardStudyContent: React.FC = () => {
             return;
         }
 
-        const normalizedQuery = buildFlashcardQuery({ ids, index, top }).toString();
+        const normalizedQuery = buildFlashcardQuery({ ids, index, top });
 
-        if (normalizedQuery !== searchParams.toString()) {
-            router.replace(`${pathname}?${normalizedQuery}`, { scroll: false });
+        if (normalizedQuery.toString() !== searchToQueryString(searchParams)) {
+            void navigate({
+                to: '/flashcards/study',
+                search: searchFromQuery(normalizedQuery),
+                replace: true,
+                resetScroll: false,
+            });
         }
-    }, [ids, index, pathname, router, searchParams, top]);
+    }, [ids, index, navigate, searchParams, top]);
 
     useEffect(() => {
         if (!activeItem || viewedIdsRef.current.has(activeItem.id)) {
@@ -249,7 +257,7 @@ export const FlashcardStudyContent: React.FC = () => {
                     <h2 className="text-2xl font-semibold">No flashcards selected</h2>
                 </div>
                 <Button asChild={true}>
-                    <Link href="/flashcards">Back to flashcard setup</Link>
+                    <Link to="/flashcards">Back to flashcard setup</Link>
                 </Button>
             </div>
         );

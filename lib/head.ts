@@ -8,8 +8,8 @@ import {
 } from '@/lib/site';
 
 /**
- * Head-tag builders for TanStack Router routes. These mirror the Next.js `Metadata`
- * objects in `lib/seo.ts` tag for tag; `scripts/snapshot-seo.ts` verifies the parity.
+ * Head-tag builders for routes. `buildSiteHead` covers the tags shared by every page and
+ * is applied once by the root route; each route adds its own with `buildPageHead`.
  */
 
 type MetaTag = Record<string, string>;
@@ -44,8 +44,8 @@ function buildFullTitle(title: string, absoluteTitle = false): string {
 }
 
 /**
- * Next resolved `metadataBase` against a path and dropped the root's trailing slash;
- * canonical URLs have to match that exactly or search engines see two distinct URLs.
+ * Absolute URL with any trailing slash removed, so the root canonical is
+ * `https://nihongo-cards.com` rather than a second, competing `.../` URL.
  */
 function canonicalUrl(path: string): string {
     return createAbsoluteUrl(path).replace(/\/$/, '');
@@ -106,7 +106,9 @@ export function buildPageHead({
     }
 
     if (noIndex) {
+        // Googlebot honours its own directive over the generic one, so set both.
         meta.push({ name: 'robots', content: 'noindex, follow' });
+        meta.push({ name: 'googlebot', content: 'noindex, follow' });
     }
 
     return { meta, links: [{ rel: 'canonical', href: url }] };

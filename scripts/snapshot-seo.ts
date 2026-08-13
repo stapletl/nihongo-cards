@@ -1,16 +1,14 @@
 /**
  * Captures the SEO-relevant head tags of every prerendered page into a single JSON
- * snapshot, so the Next.js baseline can be diffed against the TanStack Start output.
+ * snapshot. Diff two snapshots to prove a change did not alter page metadata.
  *
- * Temporary migration tool — delete once the migration is verified.
- *
- *   bun run scripts/snapshot-seo.ts <html-dir> <output-file>
+ *   bun run snapshot:seo dist/client before.json
+ *   # ...make a change, rebuild...
+ *   bun run snapshot:seo dist/client after.json
+ *   diff before.json after.json
  */
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-
-/** Files that exist only as framework internals and have no route equivalent. */
-const IGNORED_ROUTES = new Set(['/_global-error']);
 
 /** Head tags carrying no SEO meaning — bundler assets and framework markers. */
 const isAssetTag = (tag: ParsedTag): boolean => {
@@ -22,10 +20,6 @@ const isAssetTag = (tag: ParsedTag): boolean => {
         const rel = tag.attributes.rel ?? '';
 
         return ['preload', 'prefetch', 'stylesheet', 'modulepreload', 'preconnect'].includes(rel);
-    }
-
-    if (tag.name === 'meta') {
-        return tag.attributes.name === 'next-size-adjust';
     }
 
     return false;
@@ -155,13 +149,7 @@ const files = await collectHtmlFiles(baseDirectory);
 const snapshot: Record<string, string[]> = {};
 
 for (const file of files) {
-    const route = toRoute(file, baseDirectory);
-
-    if (IGNORED_ROUTES.has(route)) {
-        continue;
-    }
-
-    snapshot[route] = extractSeoTags(await readFile(file, 'utf8'));
+    snapshot[toRoute(file, baseDirectory)] = extractSeoTags(await readFile(file, 'utf8'));
 }
 
 const sorted = Object.fromEntries(

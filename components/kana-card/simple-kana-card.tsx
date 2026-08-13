@@ -4,8 +4,8 @@ import { KanaItem } from '@/lib/hiragana';
 import React from 'react';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link } from '@tanstack/react-router';
+import { usePathname } from '@/hooks/use-pathname';
 
 type SimpleKanaCardProps = {
     kanaItem: KanaItem;
@@ -43,7 +43,7 @@ export const SimpleKanaCard: React.FC<SimpleKanaCardProps> = ({
                 { 'animate-gentle-bounce': firstUnvisited }
             )}
             asChild={true}>
-            <Link href={href}>
+            <Link to={href}>
                 <div
                     className={cn(
                         'flex w-full items-center',

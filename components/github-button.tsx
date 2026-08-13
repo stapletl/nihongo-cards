@@ -4,14 +4,49 @@ import { useEffect, useState } from 'react';
 import { StarIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { SITE_GITHUB_URL } from '@/lib/site';
+import { SITE_GITHUB_API_URL, SITE_GITHUB_URL } from '@/lib/site';
 
 const REPO_URL = SITE_GITHUB_URL;
-const STAR_COUNT_ENDPOINT = '/api/github-stars';
+const STAR_CACHE_KEY = 'github-stars';
+const STAR_CACHE_TTL_MS = 60 * 60 * 1000;
 
-type GithubStarsResponse = {
-    stars: number | null;
+type GithubStarsCache = {
+    stars: number;
+    fetchedAt: number;
 };
+
+/**
+ * The star count used to come from a cached API route. On a static host there is no
+ * server, so read GitHub directly and cache per browser instead. GitHub allows 60
+ * unauthenticated requests an hour per client IP, so one hourly call per visitor is
+ * well inside the limit.
+ */
+function readCachedStars(): number | null {
+    try {
+        const raw = window.localStorage.getItem(STAR_CACHE_KEY);
+
+        if (!raw) {
+            return null;
+        }
+
+        const cached = JSON.parse(raw) as GithubStarsCache;
+
+        return Date.now() - cached.fetchedAt < STAR_CACHE_TTL_MS ? cached.stars : null;
+    } catch {
+        return null;
+    }
+}
+
+function writeCachedStars(stars: number): void {
+    try {
+        window.localStorage.setItem(
+            STAR_CACHE_KEY,
+            JSON.stringify({ stars, fetchedAt: Date.now() } satisfies GithubStarsCache)
+        );
+    } catch {
+        // A full or unavailable localStorage only costs us the cache, not the feature.
+    }
+}
 
 export function GithubButton() {
     const [stars, setStars] = useState<number | null>(null);
@@ -21,9 +56,18 @@ export function GithubButton() {
         const controller = new AbortController();
 
         async function loadStars() {
+            const cached = readCachedStars();
+
+            if (cached !== null) {
+                setStars(cached);
+                setIsLoading(false);
+                return;
+            }
+
             try {
-                const res = await fetch(STAR_COUNT_ENDPOINT, {
+                const res = await fetch(SITE_GITHUB_API_URL, {
                     signal: controller.signal,
+                    headers: { Accept: 'application/vnd.github+json' },
                 });
 
                 if (!res.ok) {
@@ -31,10 +75,11 @@ export function GithubButton() {
                     return;
                 }
 
-                const data = (await res.json()) as GithubStarsResponse;
+                const data = (await res.json()) as { stargazers_count?: number };
 
-                if (typeof data.stars === 'number') {
-                    setStars(data.stars);
+                if (typeof data.stargazers_count === 'number') {
+                    setStars(data.stargazers_count);
+                    writeCachedStars(data.stargazers_count);
                 }
             } catch (error) {
                 if (error instanceof DOMException && error.name === 'AbortError') {

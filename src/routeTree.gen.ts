@@ -10,11 +10,49 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as R404RouteImport } from './routes/404'
+import { Route as ScratchProbeRouteImport } from './routes/scratch-probe'
+import { Route as FlashcardsIndexRouteImport } from './routes/flashcards/index'
+import { Route as FlashcardsStudyRouteImport } from './routes/flashcards/study'
+import { Route as HiraganaIndexRouteImport } from './routes/hiragana/index'
 import { Route as HiraganaCharacterRouteImport } from './routes/hiragana/$character'
+import { Route as KatakanaIndexRouteImport } from './routes/katakana/index'
+import { Route as KatakanaCharacterRouteImport } from './routes/katakana/$character'
+import { Route as QuizIndexRouteImport } from './routes/quiz/index'
+import { Route as QuizSessionRouteImport } from './routes/quiz/session'
+import { Route as SettingsIndexRouteImport } from './routes/settings/index'
+import { Route as SettingsPrivacyRouteImport } from './routes/settings/privacy'
+import { Route as SettingsTermsRouteImport } from './routes/settings/terms'
+import { Route as StatisticsIndexRouteImport } from './routes/statistics/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const R404Route = R404RouteImport.update({
+  id: '/404',
+  path: '/404',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScratchProbeRoute = ScratchProbeRouteImport.update({
+  id: '/scratch-probe',
+  path: '/scratch-probe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlashcardsIndexRoute = FlashcardsIndexRouteImport.update({
+  id: '/flashcards/',
+  path: '/flashcards/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlashcardsStudyRoute = FlashcardsStudyRouteImport.update({
+  id: '/flashcards/study',
+  path: '/flashcards/study',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HiraganaIndexRoute = HiraganaIndexRouteImport.update({
+  id: '/hiragana/',
+  path: '/hiragana/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HiraganaCharacterRoute = HiraganaCharacterRouteImport.update({
@@ -22,31 +60,169 @@ const HiraganaCharacterRoute = HiraganaCharacterRouteImport.update({
   path: '/hiragana/$character',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KatakanaIndexRoute = KatakanaIndexRouteImport.update({
+  id: '/katakana/',
+  path: '/katakana/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KatakanaCharacterRoute = KatakanaCharacterRouteImport.update({
+  id: '/katakana/$character',
+  path: '/katakana/$character',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizIndexRoute = QuizIndexRouteImport.update({
+  id: '/quiz/',
+  path: '/quiz/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuizSessionRoute = QuizSessionRouteImport.update({
+  id: '/quiz/session',
+  path: '/quiz/session',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsIndexRoute = SettingsIndexRouteImport.update({
+  id: '/settings/',
+  path: '/settings/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsPrivacyRoute = SettingsPrivacyRouteImport.update({
+  id: '/settings/privacy',
+  path: '/settings/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsTermsRoute = SettingsTermsRouteImport.update({
+  id: '/settings/terms',
+  path: '/settings/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatisticsIndexRoute = StatisticsIndexRouteImport.update({
+  id: '/statistics/',
+  path: '/statistics/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/404': typeof R404Route
+  '/scratch-probe': typeof ScratchProbeRoute
+  '/flashcards/study': typeof FlashcardsStudyRoute
   '/hiragana/$character': typeof HiraganaCharacterRoute
+  '/katakana/$character': typeof KatakanaCharacterRoute
+  '/quiz/session': typeof QuizSessionRoute
+  '/settings/privacy': typeof SettingsPrivacyRoute
+  '/settings/terms': typeof SettingsTermsRoute
+  '/flashcards/': typeof FlashcardsIndexRoute
+  '/hiragana/': typeof HiraganaIndexRoute
+  '/katakana/': typeof KatakanaIndexRoute
+  '/quiz/': typeof QuizIndexRoute
+  '/settings/': typeof SettingsIndexRoute
+  '/statistics/': typeof StatisticsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/404': typeof R404Route
+  '/scratch-probe': typeof ScratchProbeRoute
+  '/flashcards/study': typeof FlashcardsStudyRoute
   '/hiragana/$character': typeof HiraganaCharacterRoute
+  '/katakana/$character': typeof KatakanaCharacterRoute
+  '/quiz/session': typeof QuizSessionRoute
+  '/settings/privacy': typeof SettingsPrivacyRoute
+  '/settings/terms': typeof SettingsTermsRoute
+  '/flashcards': typeof FlashcardsIndexRoute
+  '/hiragana': typeof HiraganaIndexRoute
+  '/katakana': typeof KatakanaIndexRoute
+  '/quiz': typeof QuizIndexRoute
+  '/settings': typeof SettingsIndexRoute
+  '/statistics': typeof StatisticsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/404': typeof R404Route
+  '/scratch-probe': typeof ScratchProbeRoute
+  '/flashcards/study': typeof FlashcardsStudyRoute
   '/hiragana/$character': typeof HiraganaCharacterRoute
+  '/katakana/$character': typeof KatakanaCharacterRoute
+  '/quiz/session': typeof QuizSessionRoute
+  '/settings/privacy': typeof SettingsPrivacyRoute
+  '/settings/terms': typeof SettingsTermsRoute
+  '/flashcards/': typeof FlashcardsIndexRoute
+  '/hiragana/': typeof HiraganaIndexRoute
+  '/katakana/': typeof KatakanaIndexRoute
+  '/quiz/': typeof QuizIndexRoute
+  '/settings/': typeof SettingsIndexRoute
+  '/statistics/': typeof StatisticsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/hiragana/$character'
+  fullPaths:
+    | '/'
+    | '/404'
+    | '/scratch-probe'
+    | '/flashcards/study'
+    | '/hiragana/$character'
+    | '/katakana/$character'
+    | '/quiz/session'
+    | '/settings/privacy'
+    | '/settings/terms'
+    | '/flashcards/'
+    | '/hiragana/'
+    | '/katakana/'
+    | '/quiz/'
+    | '/settings/'
+    | '/statistics/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/hiragana/$character'
-  id: '__root__' | '/' | '/hiragana/$character'
+  to:
+    | '/'
+    | '/404'
+    | '/scratch-probe'
+    | '/flashcards/study'
+    | '/hiragana/$character'
+    | '/katakana/$character'
+    | '/quiz/session'
+    | '/settings/privacy'
+    | '/settings/terms'
+    | '/flashcards'
+    | '/hiragana'
+    | '/katakana'
+    | '/quiz'
+    | '/settings'
+    | '/statistics'
+  id:
+    | '__root__'
+    | '/'
+    | '/404'
+    | '/scratch-probe'
+    | '/flashcards/study'
+    | '/hiragana/$character'
+    | '/katakana/$character'
+    | '/quiz/session'
+    | '/settings/privacy'
+    | '/settings/terms'
+    | '/flashcards/'
+    | '/hiragana/'
+    | '/katakana/'
+    | '/quiz/'
+    | '/settings/'
+    | '/statistics/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  R404Route: typeof R404Route
+  ScratchProbeRoute: typeof ScratchProbeRoute
+  FlashcardsStudyRoute: typeof FlashcardsStudyRoute
   HiraganaCharacterRoute: typeof HiraganaCharacterRoute
+  KatakanaCharacterRoute: typeof KatakanaCharacterRoute
+  QuizSessionRoute: typeof QuizSessionRoute
+  SettingsPrivacyRoute: typeof SettingsPrivacyRoute
+  SettingsTermsRoute: typeof SettingsTermsRoute
+  FlashcardsIndexRoute: typeof FlashcardsIndexRoute
+  HiraganaIndexRoute: typeof HiraganaIndexRoute
+  KatakanaIndexRoute: typeof KatakanaIndexRoute
+  QuizIndexRoute: typeof QuizIndexRoute
+  SettingsIndexRoute: typeof SettingsIndexRoute
+  StatisticsIndexRoute: typeof StatisticsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +234,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/404': {
+      id: '/404'
+      path: '/404'
+      fullPath: '/404'
+      preLoaderRoute: typeof R404RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scratch-probe': {
+      id: '/scratch-probe'
+      path: '/scratch-probe'
+      fullPath: '/scratch-probe'
+      preLoaderRoute: typeof ScratchProbeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flashcards/': {
+      id: '/flashcards/'
+      path: '/flashcards'
+      fullPath: '/flashcards/'
+      preLoaderRoute: typeof FlashcardsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flashcards/study': {
+      id: '/flashcards/study'
+      path: '/flashcards/study'
+      fullPath: '/flashcards/study'
+      preLoaderRoute: typeof FlashcardsStudyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hiragana/': {
+      id: '/hiragana/'
+      path: '/hiragana'
+      fullPath: '/hiragana/'
+      preLoaderRoute: typeof HiraganaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hiragana/$character': {
       id: '/hiragana/$character'
       path: '/hiragana/$character'
@@ -65,12 +276,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HiraganaCharacterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/katakana/': {
+      id: '/katakana/'
+      path: '/katakana'
+      fullPath: '/katakana/'
+      preLoaderRoute: typeof KatakanaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/katakana/$character': {
+      id: '/katakana/$character'
+      path: '/katakana/$character'
+      fullPath: '/katakana/$character'
+      preLoaderRoute: typeof KatakanaCharacterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz/': {
+      id: '/quiz/'
+      path: '/quiz'
+      fullPath: '/quiz/'
+      preLoaderRoute: typeof QuizIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quiz/session': {
+      id: '/quiz/session'
+      path: '/quiz/session'
+      fullPath: '/quiz/session'
+      preLoaderRoute: typeof QuizSessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings/': {
+      id: '/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof SettingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings/privacy': {
+      id: '/settings/privacy'
+      path: '/settings/privacy'
+      fullPath: '/settings/privacy'
+      preLoaderRoute: typeof SettingsPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings/terms': {
+      id: '/settings/terms'
+      path: '/settings/terms'
+      fullPath: '/settings/terms'
+      preLoaderRoute: typeof SettingsTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/statistics/': {
+      id: '/statistics/'
+      path: '/statistics'
+      fullPath: '/statistics/'
+      preLoaderRoute: typeof StatisticsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  R404Route: R404Route,
+  ScratchProbeRoute: ScratchProbeRoute,
+  FlashcardsStudyRoute: FlashcardsStudyRoute,
   HiraganaCharacterRoute: HiraganaCharacterRoute,
+  KatakanaCharacterRoute: KatakanaCharacterRoute,
+  QuizSessionRoute: QuizSessionRoute,
+  SettingsPrivacyRoute: SettingsPrivacyRoute,
+  SettingsTermsRoute: SettingsTermsRoute,
+  FlashcardsIndexRoute: FlashcardsIndexRoute,
+  HiraganaIndexRoute: HiraganaIndexRoute,
+  KatakanaIndexRoute: KatakanaIndexRoute,
+  QuizIndexRoute: QuizIndexRoute,
+  SettingsIndexRoute: SettingsIndexRoute,
+  StatisticsIndexRoute: StatisticsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

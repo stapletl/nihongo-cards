@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://nihongo-cards.com
+Sitemap: https://nihongo-cards.com/sitemap.xml

@@ -11,6 +11,8 @@ export type SiteRoute = {
     path: string;
     /** Excluded from the sitemap — mirrors the noindex metadata on these pages. */
     noIndex?: boolean;
+    /** Emit as `<path>.html` rather than `<path>/index.html`. */
+    flatFile?: boolean;
 };
 
 const indexableStaticRoutes = [
@@ -38,6 +40,8 @@ const kanaRoutes = (scriptLabel: 'hiragana' | 'katakana'): SiteRoute[] => {
 export const siteRoutes: SiteRoute[] = [
     ...indexableStaticRoutes.map((path) => ({ path })),
     ...noIndexStaticRoutes.map((path) => ({ path, noIndex: true })),
+    // Static hosts serve this file for any unmatched path.
+    { path: '/404', noIndex: true, flatFile: true },
     ...kanaRoutes('hiragana'),
     ...kanaRoutes('katakana'),
 ];

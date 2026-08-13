@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@tanstack/react-router';
 import React, { useId, useRef, useState } from 'react';
 import { useHotkey } from '@tanstack/react-hotkeys';
 import { ChevronDown, ExternalLinkIcon } from 'lucide-react';
@@ -168,7 +168,7 @@ export const StudyFlashcard: React.FC<StudyFlashcardProps> = ({
                             className="absolute top-4 right-4 z-10"
                             asChild={true}>
                             <Link
-                                href={detailHref}
+                                to={detailHref}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={`Open ${item.character} details in a new tab`}

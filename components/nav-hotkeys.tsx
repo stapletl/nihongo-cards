@@ -1,8 +1,9 @@
 'use client';
 
 import { useHotkey } from '@tanstack/react-hotkeys';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from '@tanstack/react-router';
 import { useNavigationGuard } from '@/hooks/use-navigation-guard';
+import { hrefToNavigateOptions } from '@/lib/search';
 
 import { useSwipeNavigation } from '@/hooks/use-swipe-navigation';
 
@@ -12,15 +13,17 @@ type NavHotkeysProps = {
 };
 
 export function NavHotkeys({ prevHref, nextHref }: NavHotkeysProps) {
-    const router = useRouter();
+    const navigate = useNavigate();
     const { requestNavigation } = useNavigationGuard();
 
     const goToPrev = () => {
-        if (prevHref) requestNavigation(() => router.push(prevHref));
+        if (prevHref)
+            requestNavigation(() => void navigate(hrefToNavigateOptions(prevHref) as never));
     };
 
     const goToNext = () => {
-        if (nextHref) requestNavigation(() => router.push(nextHref));
+        if (nextHref)
+            requestNavigation(() => void navigate(hrefToNavigateOptions(nextHref) as never));
     };
 
     useHotkey('ArrowLeft', goToPrev);

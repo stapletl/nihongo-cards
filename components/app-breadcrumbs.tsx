@@ -8,8 +8,8 @@ import {
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { House } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link } from '@tanstack/react-router';
+import { usePathname } from '@/hooks/use-pathname';
 import React from 'react';
 import { breadcrumbTitles, getTopLevelNavItem } from '@/lib/app-navigation';
 
@@ -25,7 +25,7 @@ export default function AppBreadcrumbs() {
             <BreadcrumbList>
                 <BreadcrumbItem className="md:block">
                     <BreadcrumbLink asChild={true}>
-                        <Link href="/">
+                        <Link to="/">
                             <House className="h-4 w-4" />
                             <span className="sr-only">Home</span>
                         </Link>
@@ -36,7 +36,9 @@ export default function AppBreadcrumbs() {
                     const isLast = segmentPaths[index] === pathname;
                     const label = breadcrumbTitles[segment] ?? decodeURIComponent(segment);
                     const useTopLevelIcon = segments.length > 1 && index === 0;
-                    const topLevelNavItem = useTopLevelIcon ? getTopLevelNavItem(segment) : undefined;
+                    const topLevelNavItem = useTopLevelIcon
+                        ? getTopLevelNavItem(segment)
+                        : undefined;
 
                     const content =
                         useTopLevelIcon && topLevelNavItem ? (
@@ -57,7 +59,7 @@ export default function AppBreadcrumbs() {
                                 ) : (
                                     <BreadcrumbLink asChild={true}>
                                         <Link
-                                            href={segmentPaths[index]}
+                                            to={segmentPaths[index]}
                                             aria-label={useTopLevelIcon ? label : undefined}>
                                             {content}
                                         </Link>
