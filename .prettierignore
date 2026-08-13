@@ -3,6 +3,7 @@ build
 .next
 dist
 coverage
+generated
 node_modules
 bun.lock
 
