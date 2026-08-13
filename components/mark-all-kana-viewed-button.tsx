@@ -50,7 +50,7 @@ export function MarkAllKanaViewedButton({ characters, label }: MarkAllKanaViewed
             type="button"
             variant="outline"
             size="sm"
-            onClick={handleClick}
+            onClick={() => void handleClick()}
             disabled={isDisabled}
             className="shrink-0">
             <Eye aria-hidden={true} />

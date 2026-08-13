@@ -9,7 +9,7 @@ type MarkKanaVisitedProps = {
 
 export const MarkKanaVisited: React.FC<MarkKanaVisitedProps> = ({ character }) => {
     useEffect(() => {
-        incrementDetailView(character).catch((err) => {
+        incrementDetailView(character).catch((err: unknown) => {
             console.error('MarkKanaVisited: failed to record visit', err);
         });
     }, [character]);

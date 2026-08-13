@@ -2,7 +2,7 @@
 
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
-import { COLOR_THEMES, ColorTheme, useColorTheme } from '@/hooks/use-color-theme';
+import { COLOR_THEMES, useColorTheme } from '@/hooks/use-color-theme';
 import { Check } from 'lucide-react';
 
 export function ColorThemePicker() {
@@ -17,9 +17,7 @@ export function ColorThemePicker() {
                 return (
                     <button
                         key={t.id}
-                        onClick={(e) =>
-                            setColorTheme(t.id as ColorTheme, { x: e.clientX, y: e.clientY })
-                        }
+                        onClick={(e) => setColorTheme(t.id, { x: e.clientX, y: e.clientY })}
                         className={cn(
                             'flex items-center gap-2.5 rounded-lg border px-3 py-2 text-sm transition-all',
                             isActive

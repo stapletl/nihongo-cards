@@ -120,7 +120,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({ sessionState }) => {
         };
     }, [setNavigationGuard, shouldPreventNavigation]);
 
-    const handleAnswer = React.useEffectEvent((choiceIndex: number) => {
+    const handleAnswer = (choiceIndex: number) => {
         if (!currentQuestion || answerLockRef.current) {
             return;
         }
@@ -135,9 +135,9 @@ const QuizSession: React.FC<QuizSessionProps> = ({ sessionState }) => {
         });
 
         void recordQuizResult(currentQuestion.item.character, correct).catch(() => undefined);
-    });
+    };
 
-    const handleNext = React.useEffectEvent(() => {
+    const handleNext = () => {
         if (!hasAnswered) {
             return;
         }
@@ -158,20 +158,28 @@ const QuizSession: React.FC<QuizSessionProps> = ({ sessionState }) => {
             answerSelections,
             isFinished: false,
         });
-    });
+    };
 
-    const restartQuiz = React.useEffectEvent(
-        (nextIds: string[], nextDirection: QuizDirection = sessionState.direction) => {
-            replaceSessionState({
-                ids: nextIds,
-                direction: nextDirection,
-                index: 0,
-                nonce: sessionState.nonce + 1,
-                answerSelections: [],
-                isFinished: false,
-            });
-        }
-    );
+    const restartQuiz = (
+        nextIds: string[],
+        nextDirection: QuizDirection = sessionState.direction
+    ) => {
+        replaceSessionState({
+            ids: nextIds,
+            direction: nextDirection,
+            index: 0,
+            nonce: sessionState.nonce + 1,
+            answerSelections: [],
+            isFinished: false,
+        });
+    };
+
+    // Space is handled with a raw listener rather than `useHotkey` so the page-scroll
+    // default can be prevented. The Effect Event keeps that listener pointed at the
+    // latest `handleNext` without re-registering it on every render.
+    const handleSpaceKey = React.useEffectEvent(() => {
+        handleNext();
+    });
 
     useHotkey(
         '1',
@@ -227,7 +235,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({ sessionState }) => {
             }
 
             event.preventDefault();
-            handleNext();
+            handleSpaceKey();
         };
 
         window.addEventListener('keydown', handleKeyDown);

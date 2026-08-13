@@ -1,4 +1,8 @@
-/* eslint-disable arrow-body-style, eqeqeq */
+/* oxlint-disable arrow-body-style, eqeqeq */
+/* Vendored shadcn component — typed against Recharts' loose `any`-heavy props, so the
+   type-aware unsafe-* rules fire throughout. Suppressed here rather than rewritten so
+   `bunx shadcn add chart` stays re-runnable. */
+/* oxlint-disable typescript/no-unsafe-argument, typescript/no-unsafe-assignment, typescript/no-unsafe-member-access, typescript/no-unnecessary-type-assertion, typescript/restrict-template-expressions */
 'use client';
 
 import * as React from 'react';

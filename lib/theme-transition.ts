@@ -22,19 +22,24 @@ export function applyThemeWithTransition(
         flushSync(applyTheme);
     });
 
-    transition.ready.then(() => {
-        document.documentElement.animate(
-            {
-                clipPath: [
-                    `circle(0px at ${x}px ${y}px)`,
-                    `circle(${maxRadius}px at ${x}px ${y}px)`,
-                ],
-            },
-            {
-                duration: 400,
-                easing: 'ease-in-out',
-                pseudoElement: '::view-transition-new(root)',
-            }
-        );
-    });
+    // `ready` rejects when the browser skips the transition (a second theme toggle
+    // mid-animation, reduced motion, a backgrounded tab). The theme itself is already
+    // applied by then, so there is nothing to recover — just don't leak a rejection.
+    transition.ready
+        .then(() => {
+            document.documentElement.animate(
+                {
+                    clipPath: [
+                        `circle(0px at ${x}px ${y}px)`,
+                        `circle(${maxRadius}px at ${x}px ${y}px)`,
+                    ],
+                },
+                {
+                    duration: 400,
+                    easing: 'ease-in-out',
+                    pseudoElement: '::view-transition-new(root)',
+                }
+            );
+        })
+        .catch(() => undefined);
 }

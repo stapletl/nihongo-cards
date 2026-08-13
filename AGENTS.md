@@ -5,14 +5,16 @@ Japanese learning app built with TanStack Start. Covers hiragana, katakana, flas
 ## Commands
 
 ```bash
-bun run dev       # Vite dev server
-bun run build     # production build — prerenders every route to dist/client
-bun run start     # preview the production build
-bun run lint      # ESLint
-bun run format    # Prettier (auto-fix)
+bun run dev          # Vite dev server
+bun run build        # production build — typechecks, then prerenders every route to dist/client
+bun run start        # preview the production build
+bun run typecheck    # tsc --noEmit
+bun run lint         # oxlint
+bun run format       # oxfmt (auto-fix)
+bun run format:check # oxfmt --check — fails instead of rewriting
 ```
 
-No test suite exists yet. Agents should run `bun run lint` for any code change and verify their changes do not introduce lint errors. `bun run build` is the primary verification step — it typechecks, prerenders all 214 pages, and generates the sitemap.
+No test suite exists yet. Agents should run `bun run lint` for any code change and verify their changes do not introduce lint errors. `bun run build` is the primary verification step — it typechecks (`tsc --noEmit` runs before Vite, so a type error fails the build), prerenders all 214 pages, and generates the sitemap.
 
 `scripts/snapshot-seo.ts` extracts the SEO-relevant head tags of every prerendered page into a JSON snapshot (`bun run snapshot:seo dist/client out.json`). Diff two snapshots to prove a change did not alter page metadata.
 
@@ -21,7 +23,9 @@ No test suite exists yet. Agents should run `bun run lint` for any code change a
 - **TanStack Start 1.x** — file-based routing in `src/routes/`, full static prerendering, no server functions
 - **Vite 8** — build tool; config in `vite.config.ts`
 - **React 19** — every component is a client component; there is no RSC boundary
-- **TypeScript** — strict mode, path alias `@/` maps to repo root
+- **TypeScript 7** — the native (Go) compiler, strict mode, path alias `@/` maps to repo root. Its npm package ships no JS compiler API (`typescript` resolves to a version stub; the API moved to `typescript/unstable/*`), so tools that `require('typescript')` — typescript-eslint among them — cannot be used
+- **oxlint** — linting, config in `.oxlintrc.json`, with type-aware rules enabled via `options.typeAware` and the `oxlint-tsgolint` binary. Suppress with `oxlint-disable-next-line <plugin>/<rule>`; rules are namespaced by oxlint's plugin names (`typescript/no-explicit-any`, not `@typescript-eslint/no-explicit-any`)
+- **oxfmt** — formatting, config in `.oxfmtrc.json`, including Tailwind class sorting (native, no plugin)
 - **Tailwind CSS v4** — via `@tailwindcss/vite`, CSS variables for theming, config in `tailwind.config.mjs` + `src/styles/globals.css`
 - **shadcn/ui** — New York style, `components/ui/` — add new components via `bunx --bun shadcn@latest add <name>`
 - **idb** — thin IndexedDB wrapper for client-side persistence
@@ -91,6 +95,7 @@ hooks/
 - Avoid `useEffect` unless it is synchronizing with an external system (DOM APIs, subscriptions, timers, IndexedDB/network side effects). If logic can run during render or inside an event handler, do that instead
 - Before adding an effect, check whether the problem is better solved with derived state, a keyed remount, `useEffectEvent`, or moving the work into the user action that triggered it
 - Do not mirror props into state, recalculate derived data in effects, or use effects to keep two pieces of React state in sync
+- `useEffectEvent` is only for functions an Effect calls. Calling one from an event handler, a hotkey callback, or a JSX prop is a `react-hooks/rules-of-hooks` error under oxlint — write a plain function in the component body instead. When a plain function also needs to be reachable from an Effect, wrap the call site in a small `useEffectEvent` (see `handleSpaceKey` in `components/quiz/quiz-session-content.tsx`), which keeps the listener on the latest render's closure without re-registering it
 
 **Navigation**
 
@@ -129,10 +134,22 @@ hooks/
 - Custom animations defined in `src/styles/globals.css` (`@keyframes` + `--animate-*` in `@theme`) and mirrored in `tailwind.config.mjs`
 - `animate-gentle-bounce` — subtle 3px vertical bounce for the first unvisited kana card on list pages
 
+**Type-aware linting**
+
+- `bun run lint` runs type-aware rules through `oxlint-tsgolint`, which needs TypeScript 7 and reads `tsconfig.json`. It adds roughly 0.1s to the lint run at this repo's size
+- **`bun run lint` reports zero warnings and zero errors.** Every enabled rule is at `error`, so any hit is a regression, not a backlog item — fix it rather than downgrading the rule
+- Patterns the type-aware rules enforce, worth knowing before you write new code:
+    - Untyped browser boundaries get a validating parse, never a cast. `readHistoryState()` in `navigation-guard-provider.tsx` and `parseSpeechSettings`/`parseSavedVoice` in `hooks/use-speech.ts` are the models — localStorage and `history.state` are user-writable and outlive any type you declare
+    - An `async` function passed to a JSX prop must be wrapped: `onClick={() => void handleThing()}`. `no-misused-promises` is on for attributes, so the bare form fails
+    - `console.error` and `console.warn` are allowed; `console.log`/`debug` are not
+- Rules left off on purpose: `only-throw-error` (the router's `throw notFound()` idiom trips it), plus `strict-boolean-expressions`, `no-confusing-void-expression`, `no-unnecessary-condition`, and `no-unsafe-type-assertion` — ~200 findings of style preference the project has not adopted
+- `components/ui/chart.tsx` suppresses the unsafe-\* family in its header; it is vendored shadcn typed against Recharts' loose props, and should stay re-generatable
+
 **Styling**
 
-- Prettier: 4-space indent, single quotes, 100-char line width, trailing commas
-- Tailwind class order enforced by `prettier-plugin-tailwindcss`
+- oxfmt: 4-space indent, single quotes, 100-char line width, `es5` trailing commas — same output Prettier produced
+- Tailwind class order enforced by oxfmt's built-in `sortTailwindcss`, which resolves the theme from `tailwind.config.mjs`. Pointing it at `src/styles/globals.css` instead reorders classes in ~40 files, so leave `stylesheet` unset unless you intend that churn
+- JSON and JSONC are pinned to `trailingComma: "none"` via an override — `wrangler.jsonc` feeds the deploy and should stay plain JSON
 - Theme colors use CSS variables (`var(--color-primary)`, etc.) — reference these in custom CSS rather than hardcoding values
 - The dark variant is `@custom-variant dark (&:is([data-theme$='dark'] *))`, which boosts specificity to `(0,2,0)`. Plain utilities like `border-primary` are `(0,1,0)` and will lose to `dark:*` variants from component base classes (e.g. Button outline has `dark:border-input`). Always pair with `dark:border-primary` etc. when overriding — do NOT remove the `dark:` duplicate as it is not redundant
 

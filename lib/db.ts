@@ -40,7 +40,7 @@ export function getDB(): Promise<IDBPDatabase<NihongoCardsDB>> {
                     }
                 }
             },
-        }).catch((err) => {
+        }).catch((err: unknown) => {
             dbPromise = null;
             throw err;
         });

@@ -72,7 +72,7 @@ export const FlashcardStudyContent: React.FC = () => {
         });
     };
 
-    const goPrevious = React.useEffectEvent(() => {
+    const goPrevious = () => {
         if (index <= 0) {
             return;
         }
@@ -83,21 +83,21 @@ export const FlashcardStudyContent: React.FC = () => {
         }
 
         replaceState({ ids, index: Math.max(index - 1, 0), top });
-    });
+    };
 
-    const promptReveal = React.useEffectEvent(() => {
+    const promptReveal = () => {
         setRevealPromptSignal((current) => current + 1);
-    });
+    };
 
-    const restartStudySession = React.useEffectEvent((nextIds: string[]) => {
+    const restartStudySession = (nextIds: string[]) => {
         setIsFinishDialogOpen(false);
         setRevealedIds(new Set());
         viewedIdsRef.current = new Set();
         setDeckSessionKey((current) => current + 1);
         replaceState({ ids: nextIds, index: 0, top });
-    });
+    };
 
-    const goNext = React.useEffectEvent(() => {
+    const goNext = () => {
         if (!activeId) {
             return;
         }
@@ -118,7 +118,7 @@ export const FlashcardStudyContent: React.FC = () => {
         }
 
         replaceState({ ids, index: Math.min(index + 1, ids.length - 1), top });
-    });
+    };
 
     const handleCarouselSelect = React.useEffectEvent(() => {
         if (!carouselApi) {

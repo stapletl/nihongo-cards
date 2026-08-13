@@ -17,6 +17,9 @@ import { cn } from '@/lib/utils';
 
 export function NativeShareButton() {
     const [shareMode, setShareMode] = React.useState<'unknown' | 'native' | 'copy'>('unknown');
+    // Without the async Clipboard API there is no copy path left, so the button is hidden
+    // and the popover's select-on-focus input is the way to take the URL.
+    const [canCopy, setCanCopy] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const [copied, setCopied] = React.useState(false);
     const timeoutRef = React.useRef<number | null>(null);
@@ -26,6 +29,9 @@ export function NativeShareButton() {
             typeof navigator !== 'undefined' && typeof navigator.share === 'function'
                 ? 'native'
                 : 'copy'
+        );
+        setCanCopy(
+            typeof navigator !== 'undefined' && typeof navigator.clipboard?.writeText === 'function'
         );
 
         return () => {
@@ -68,37 +74,16 @@ export function NativeShareButton() {
         }, 1600);
     };
 
-    const copyWithFallback = (value: string) => {
-        const textarea = document.createElement('textarea');
-        textarea.value = value;
-        textarea.setAttribute('readonly', '');
-        textarea.style.position = 'absolute';
-        textarea.style.left = '-9999px';
-
-        document.body.appendChild(textarea);
-        textarea.select();
-        textarea.setSelectionRange(0, value.length);
-
-        try {
-            return document.execCommand('copy');
-        } finally {
-            document.body.removeChild(textarea);
-        }
-    };
-
     const handleCopy = async () => {
-        try {
-            if (typeof navigator.clipboard?.writeText === 'function') {
-                await navigator.clipboard.writeText(SITE_HOMEPAGE_URL);
-                animateCopied();
-                return;
-            }
-        } catch {
-            // Fall through to the legacy copy path.
+        if (typeof navigator.clipboard?.writeText !== 'function') {
+            return;
         }
 
-        if (copyWithFallback(SITE_HOMEPAGE_URL)) {
+        try {
+            await navigator.clipboard.writeText(SITE_HOMEPAGE_URL);
             animateCopied();
+        } catch {
+            // Denied clipboard permission or a non-secure context — nothing to recover.
         }
     };
 
@@ -118,7 +103,7 @@ export function NativeShareButton() {
                 type="button"
                 variant="ghost"
                 size="icon-sm"
-                onClick={handleShare}
+                onClick={() => void handleShare()}
                 aria-label="Share">
                 <Share2Icon />
             </Button>
@@ -148,28 +133,30 @@ export function NativeShareButton() {
                         aria-label="Nihongo Cards home page URL"
                         onFocus={(event) => event.currentTarget.select()}
                     />
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="icon-sm"
-                        className="relative shrink-0"
-                        onClick={handleCopy}
-                        aria-label={copied ? 'Copied link' : 'Copy link'}>
-                        <span
-                            className={cn(
-                                'absolute inset-0 flex items-center justify-center transition-all duration-200',
-                                copied ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
-                            )}>
-                            <CopyIcon />
-                        </span>
-                        <span
-                            className={cn(
-                                'absolute inset-0 flex items-center justify-center transition-all duration-200',
-                                copied ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
-                            )}>
-                            <CheckIcon />
-                        </span>
-                    </Button>
+                    {canCopy && (
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="icon-sm"
+                            className="relative shrink-0"
+                            onClick={() => void handleCopy()}
+                            aria-label={copied ? 'Copied link' : 'Copy link'}>
+                            <span
+                                className={cn(
+                                    'absolute inset-0 flex items-center justify-center transition-all duration-200',
+                                    copied ? 'scale-0 opacity-0' : 'scale-100 opacity-100'
+                                )}>
+                                <CopyIcon />
+                            </span>
+                            <span
+                                className={cn(
+                                    'absolute inset-0 flex items-center justify-center transition-all duration-200',
+                                    copied ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
+                                )}>
+                                <CheckIcon />
+                            </span>
+                        </Button>
+                    )}
                 </div>
             </PopoverContent>
         </Popover>

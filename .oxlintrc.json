@@ -1,0 +1,82 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "plugins": ["react", "typescript"],
+    "categories": {
+        "correctness": "error"
+    },
+    "env": {
+        "builtin": true,
+        "browser": true,
+        "es2024": true
+    },
+    "ignorePatterns": ["generated/**", "dist/**", "src/routeTree.gen.ts"],
+    "options": {
+        // Type-aware rules run through oxlint-tsgolint against tsconfig.json.
+        // They are the `typescript/*` entries below marked "type-aware".
+        "typeAware": true
+    },
+    "rules": {
+        "no-unused-vars": "warn",
+        "typescript/consistent-type-definitions": ["warn", "type"],
+        "typescript/no-explicit-any": "warn",
+        "typescript/no-non-null-assertion": "warn",
+        "typescript/no-empty-interface": "warn",
+
+        "react/jsx-boolean-value": ["warn", "always"],
+        "react/jsx-no-useless-fragment": "warn",
+        "react/jsx-no-duplicate-props": "error",
+        "react/self-closing-comp": "warn",
+        "react/rules-of-hooks": "error",
+        "react/exhaustive-deps": "warn",
+
+        "arrow-body-style": ["warn", "as-needed"],
+        "eqeqeq": ["error", "always"],
+        // `error`/`warn` are the diagnostic channel for failures the user cannot act on
+        // (a rejected IndexedDB write). `log`/`debug` are still treated as leftovers.
+        "no-console": ["warn", { "allow": ["error", "warn"] }],
+        "prefer-const": "warn",
+        "no-unused-expressions": "warn",
+        "no-duplicate-imports": "error",
+
+        // --- type-aware (require `options.typeAware` + oxlint-tsgolint) ---
+        // Bugs the type checker can prove. The codebase is clean on all of these, so any
+        // new hit is a regression rather than a backlog item.
+        "typescript/await-thenable": "error",
+        "typescript/no-array-delete": "error",
+        "typescript/no-floating-promises": "error",
+        "typescript/no-for-in-array": "error",
+        "typescript/no-implied-eval": "error",
+        "typescript/no-meaningless-void-operator": "error",
+        "typescript/no-misused-spread": "error",
+        "typescript/no-unnecessary-type-assertion": "error",
+        "typescript/no-unnecessary-type-conversion": "error",
+        "typescript/no-unsafe-enum-comparison": "error",
+        "typescript/no-unsafe-unary-minus": "error",
+        "typescript/no-useless-default-assignment": "error",
+        "typescript/prefer-promise-reject-errors": "error",
+        "typescript/require-array-sort-compare": "error",
+        "typescript/require-await": "error",
+        "typescript/restrict-plus-operands": "error",
+        "typescript/return-await": "error",
+        "typescript/switch-exhaustiveness-check": "error",
+        "typescript/unbound-method": "error",
+        "typescript/use-unknown-in-catch-callback-variable": "error",
+        "typescript/non-nullable-type-assertion-style": "error",
+        "typescript/no-duplicate-type-constituents": "error",
+        "typescript/no-redundant-type-constituents": "error",
+
+        "typescript/no-base-to-string": "error",
+        "typescript/no-deprecated": "error",
+        "typescript/no-misused-promises": "error",
+        "typescript/no-unsafe-argument": "error",
+        "typescript/no-unsafe-assignment": "error",
+        "typescript/no-unsafe-call": "error",
+        "typescript/no-unsafe-member-access": "error",
+        "typescript/no-unsafe-return": "error",
+        "typescript/restrict-template-expressions": "error"
+
+        // Deliberately left off — see AGENTS.md: only-throw-error (TanStack's
+        // `throw notFound()`), strict-boolean-expressions, no-confusing-void-expression,
+        // no-unnecessary-condition, no-unsafe-type-assertion.
+    }
+}

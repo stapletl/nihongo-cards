@@ -27,6 +27,21 @@ type PendingNavigationRequest =
 
 const HISTORY_SENTINEL_KEY = '__navigationGuardSentinel';
 
+/**
+ * `history.state` is typed `any` — anything that ever called `pushState` on this document
+ * owns part of it, including the router. Reading it through here keeps that `any` from
+ * spreading into the guard logic; the sentinel is the only key we claim.
+ */
+function readHistoryState(): Record<string, unknown> {
+    const state: unknown = window.history.state;
+
+    return typeof state === 'object' && state !== null ? (state as Record<string, unknown>) : {};
+}
+
+function hasHistorySentinel(state: Record<string, unknown>): boolean {
+    return state[HISTORY_SENTINEL_KEY] === true;
+}
+
 function isSameDocumentNavigation(targetUrl: URL, currentUrl: URL) {
     return (
         targetUrl.origin === currentUrl.origin &&
@@ -68,9 +83,9 @@ export function NavigationGuardProvider({ children }: NavigationGuardProviderPro
     );
 
     const collapseHistorySentinel = React.useCallback((onCollapsed: () => void) => {
-        const currentState = window.history.state ?? {};
+        const currentState = readHistoryState();
 
-        if (!currentState[HISTORY_SENTINEL_KEY]) {
+        if (!hasHistorySentinel(currentState)) {
             onCollapsed();
             return;
         }
@@ -124,9 +139,9 @@ export function NavigationGuardProvider({ children }: NavigationGuardProviderPro
     );
 
     const pushHistorySentinel = React.useCallback(() => {
-        const currentState = window.history.state ?? {};
+        const currentState = readHistoryState();
 
-        if (currentState[HISTORY_SENTINEL_KEY]) {
+        if (hasHistorySentinel(currentState)) {
             return;
         }
 
@@ -138,9 +153,9 @@ export function NavigationGuardProvider({ children }: NavigationGuardProviderPro
     }, []);
 
     const restoreHistorySentinel = React.useCallback(() => {
-        const currentState = window.history.state ?? {};
+        const currentState = readHistoryState();
 
-        if (currentState[HISTORY_SENTINEL_KEY]) {
+        if (hasHistorySentinel(currentState)) {
             return;
         }
 
@@ -148,9 +163,9 @@ export function NavigationGuardProvider({ children }: NavigationGuardProviderPro
     }, [pushHistorySentinel]);
 
     const removeHistorySentinel = React.useCallback(() => {
-        const currentState = window.history.state ?? {};
+        const currentState = readHistoryState();
 
-        if (!currentState[HISTORY_SENTINEL_KEY]) {
+        if (!hasHistorySentinel(currentState)) {
             return;
         }
 
@@ -166,9 +181,10 @@ export function NavigationGuardProvider({ children }: NavigationGuardProviderPro
 
         pushHistorySentinel();
 
+        // `preventDefault()` alone triggers the browser's leave-site prompt. The old
+        // `returnValue = ''` companion is deprecated and only mattered for Safari < 15.
         const handleBeforeUnload = (event: BeforeUnloadEvent) => {
             event.preventDefault();
-            event.returnValue = '';
         };
 
         const handleDocumentClick = (event: MouseEvent) => {

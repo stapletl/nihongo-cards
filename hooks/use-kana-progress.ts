@@ -21,7 +21,7 @@ export function useKanaProgressMap(): {
                 setProgressMap(new Map(records.map((r) => [r.character, r])));
                 setIsLoading(false);
             })
-            .catch((err) => {
+            .catch((err: unknown) => {
                 console.error('useKanaProgressMap: failed to load progress', err);
                 setIsLoading(false);
             });
