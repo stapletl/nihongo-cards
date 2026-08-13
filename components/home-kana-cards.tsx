@@ -1,7 +1,7 @@
 'use client';
 
 import { ClipboardListIcon, CreditCardIcon } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@tanstack/react-router';
 import { type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -34,7 +34,7 @@ function KanaNavCard({
             variant="outline"
             className="bg-card border-primary dark:border-primary h-28 w-full min-w-0 flex-col gap-1 border-2 px-3 py-2 transition-all duration-300 hover:scale-105 sm:h-32 lg:h-44 lg:gap-1.5"
             asChild={true}>
-            <Link href={href}>
+            <Link to={href}>
                 <span className="flex h-14 items-center justify-center text-5xl leading-none font-semibold sm:h-16 sm:text-6xl lg:h-24 lg:text-7xl">
                     {symbol}
                 </span>

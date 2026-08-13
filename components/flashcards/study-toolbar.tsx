@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@tanstack/react-router';
 import React from 'react';
 import {
     Check,
@@ -138,7 +138,7 @@ export const StudyToolbar: React.FC<StudyToolbarProps> = ({
                 </AlertDialogContent>
             </AlertDialog>
             <Button asChild={true} className="flex-1">
-                <Link href={editSelectionHref}>
+                <Link to={editSelectionHref}>
                     <Pencil data-icon="inline-start" aria-hidden="true" />
                     Edit Selection
                 </Link>
@@ -158,7 +158,7 @@ export const StudyToolbar: React.FC<StudyToolbarProps> = ({
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <div className="flex flex-col gap-2 sm:ml-auto sm:flex-row">
                         <AlertDialogAction asChild={true} variant="outline">
-                            <Link href={editSelectionHref}>Back to selection</Link>
+                            <Link to={editSelectionHref}>Back to selection</Link>
                         </AlertDialogAction>
                         <ButtonGroup className="w-full shrink-0 sm:w-fit">
                             <AlertDialogAction className="flex-1" onClick={onRestart}>

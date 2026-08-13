@@ -23,7 +23,9 @@ export type AppNavSection = {
 };
 
 const createKanaIcon = (char: string) => (
-    <span aria-hidden="true" className="flex size-4 items-center justify-center text-sm font-semibold">
+    <span
+        aria-hidden="true"
+        className="flex size-4 items-center justify-center text-sm font-semibold">
         {char}
     </span>
 );

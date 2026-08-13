@@ -17,6 +17,15 @@
 /.next/
 /out/
 
+# vite / tanstack start
+/dist/
+/.output/
+/.tanstack/
+/.nitro/
+
+# cloudflare
+/.wrangler/
+
 # production
 /build
 

@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
+import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { ArrowRightIcon, ExternalLinkIcon } from 'lucide-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { type StringSearch, searchFromQuery } from '@/lib/search';
 import { useHotkey } from '@tanstack/react-hotkeys';
 
 import { QuizShortcutsHint } from '@/components/quiz/quiz-shortcuts-hint';
@@ -40,8 +40,7 @@ function getOppositeDirection(direction: QuizDirection): QuizDirection {
 }
 
 const QuizSession: React.FC<QuizSessionProps> = ({ sessionState }) => {
-    const router = useRouter();
-    const pathname = usePathname();
+    const navigate = useNavigate();
     const questions = useMemo(
         () =>
             generateQuizQuestions(
@@ -85,12 +84,14 @@ const QuizSession: React.FC<QuizSessionProps> = ({ sessionState }) => {
     const answerLockRef = useRef(hasAnswered);
     const replaceSessionState = React.useCallback(
         (nextState: QuizSessionState) => {
-            const nextQuery = buildQuizSessionQuery(nextState).toString();
-            router.replace(nextQuery ? `${pathname}?${nextQuery}` : pathname, {
-                scroll: false,
+            void navigate({
+                to: '/quiz/session',
+                search: searchFromQuery(buildQuizSessionQuery(nextState)),
+                replace: true,
+                resetScroll: false,
             });
         },
-        [pathname, router]
+        [navigate]
     );
 
     useEffect(() => {
@@ -246,7 +247,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({ sessionState }) => {
                     </p>
                 </div>
                 <Button asChild={true}>
-                    <Link href="/quiz">Back to quiz setup</Link>
+                    <Link to="/quiz">Back to quiz setup</Link>
                 </Button>
             </div>
         );
@@ -400,7 +401,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({ sessionState }) => {
                                 </div>
                                 <Button variant="ghost" size="icon-xs" asChild={true}>
                                     <Link
-                                        href={detailHref}
+                                        to={detailHref}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         aria-label={`Open ${choice.character} details in a new tab`}
@@ -444,7 +445,7 @@ const QuizSession: React.FC<QuizSessionProps> = ({ sessionState }) => {
 };
 
 export const QuizSessionContent: React.FC = () => {
-    const searchParams = useSearchParams();
+    const searchParams = useSearch({ strict: false }) as StringSearch;
     const parsedState = useMemo(() => parseQuizSessionState(searchParams), [searchParams]);
 
     return <QuizSession sessionState={parsedState} />;

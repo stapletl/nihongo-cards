@@ -1,14 +1,13 @@
-import dynamic from 'next/dynamic';
-
+import { clientOnly } from '@/components/client-only';
 import { SpeechButton } from '@/components/speech-button';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const KanaRomanjiSwitch = dynamic(
+const KanaRomanjiSwitch = clientOnly(
     () =>
         import('@/components/romanji-section/kana-romanji-toggle').then((mod) => ({
             default: mod.KanaRomanjiSwitch,
         })),
-    { ssr: false, loading: () => <Skeleton className="h-8 w-34" /> }
+    <Skeleton className="h-8 w-34" />
 );
 
 export const RomanjiSection = () => (

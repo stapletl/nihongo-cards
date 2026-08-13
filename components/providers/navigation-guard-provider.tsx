@@ -1,9 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from '@tanstack/react-router';
 
 import { NavigationGuard, NavigationGuardContext } from '@/hooks/use-navigation-guard';
+import { hrefToNavigateOptions } from '@/lib/search';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -36,7 +37,7 @@ function isSameDocumentNavigation(targetUrl: URL, currentUrl: URL) {
 }
 
 export function NavigationGuardProvider({ children }: NavigationGuardProviderProps) {
-    const router = useRouter();
+    const navigate = useNavigate();
     const [navigationGuard, setNavigationGuard] = React.useState<NavigationGuard | null>(null);
     const navigationGuardRef = React.useRef<NavigationGuard | null>(null);
     const pendingNavigationRef = React.useRef<PendingNavigationRequest | null>(null);
@@ -57,9 +58,13 @@ export function NavigationGuardProvider({ children }: NavigationGuardProviderPro
                 return;
             }
 
-            router.push(`${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`);
+            void navigate(
+                hrefToNavigateOptions(
+                    `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`
+                ) as never
+            );
         },
-        [router]
+        [navigate]
     );
 
     const collapseHistorySentinel = React.useCallback((onCollapsed: () => void) => {

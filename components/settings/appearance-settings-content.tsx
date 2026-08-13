@@ -1,18 +1,15 @@
 'use client';
 
-import dynamic from 'next/dynamic';
+import { clientOnly } from '@/components/client-only';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { ThemePreview } from './theme-preview';
 
-const ColorThemePicker = dynamic(
+const ColorThemePicker = clientOnly(
     () => import('./color-theme-picker').then((mod) => ({ default: mod.ColorThemePicker })),
-    {
-        ssr: false,
-        loading: () => <Skeleton className="h-10 w-full" />,
-    }
+    <Skeleton className="h-10 w-full" />
 );
 
 export function AppearanceSettingsContent() {

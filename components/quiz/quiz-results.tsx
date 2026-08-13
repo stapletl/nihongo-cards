@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link, useNavigate } from '@tanstack/react-router';
 import React from 'react';
 import {
     ArrowLeftIcon,
@@ -10,7 +10,7 @@ import {
     RefreshCwIcon,
     RotateCcwIcon,
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { hrefToNavigateOptions } from '@/lib/search';
 import { Label, Pie, PieChart } from 'recharts';
 
 import { SpeechButton } from '@/components/speech-button';
@@ -83,7 +83,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
     onRetryAll,
     onRetryOppositeDirection,
 }) => {
-    const router = useRouter();
+    const navigate = useNavigate();
     const incorrectCount = Math.max(result.total - result.score, 0);
     const percentScore = result.total > 0 ? Math.round((result.score / result.total) * 100) : 0;
     const [lifetimeStats, setLifetimeStats] = React.useState<{
@@ -302,7 +302,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                         type="button"
                         variant="outline"
                         onClick={() => {
-                            router.push(backToSetupHref);
+                            void navigate(hrefToNavigateOptions(backToSetupHref) as never);
                         }}>
                         <ArrowLeftIcon data-icon="inline-start" aria-hidden="true" />
                         Back to setup
@@ -330,7 +330,7 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                                     className="absolute top-3 right-3"
                                     asChild={true}>
                                     <Link
-                                        href={getDetailHref(item)}
+                                        to={getDetailHref(item)}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         aria-label={`Open ${item.character} details in a new tab`}

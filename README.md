@@ -1,8 +1,8 @@
 # Nihongo Cards
 
-[![Vercel Deploy](https://deploy-badge.vercel.app/vercel/nihongo-cards?style=for-the-badge)](https://nihongo-cards.com/) [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](./LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](./LICENSE)
 
-A modern Japanese learning application built with Next.js for mastering Hiragana and Katakana through interactive flashcards and quizzes.
+A modern Japanese learning application for mastering Hiragana and Katakana through interactive flashcards and quizzes. The site is fully prerendered to static HTML, so it runs anywhere static files can be served.
 
 ## Features
 
@@ -30,7 +30,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to start l
 
 ## Tech Stack
 
-- [Next.js 16](https://nextjs.org/) - React framework with App Router
+- [TanStack Start](https://tanstack.com/start) - Type-safe routing with static prerendering
+- [Vite](https://vite.dev/) - Build tool
 - [Tailwind CSS](https://tailwindcss.com/) - For styling
 - [shadcn/ui](https://ui.shadcn.com/) - UI components
 - [Radix UI](https://www.radix-ui.com/) - Accessible component primitives
@@ -38,9 +39,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to start l
 
 ## Available Scripts
 
-- `bun run dev` - Start the development server with Turbopack
-- `bun run build` - Build the application for production
-- `bun run start` - Start the production server
+- `bun run dev` - Start the development server
+- `bun run build` - Build and prerender the site to `dist/client`
+- `bun run start` - Preview the production build
 - `bun run lint` - Run ESLint to check code quality
 - `bun run lint --fix` - Have the linter fix all auto-fixable problems
 - `bun run format` - Format all files using Prettier

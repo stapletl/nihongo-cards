@@ -16,9 +16,9 @@ import {
     SidebarRail,
     useSidebar,
 } from '@/components/ui/sidebar';
-import Link from 'next/link';
+import { Link } from '@tanstack/react-router';
 import { Badge } from './ui/badge';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '@/hooks/use-pathname';
 import { ThemeToggle } from './theme-toggle';
 import { hiraganaItems } from '@/lib/hiragana';
 import { katakanaItems } from '@/lib/katakana';
@@ -68,7 +68,7 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
         <Sidebar {...props}>
             <SidebarHeader>
                 <SidebarMenuButton className="h-12" asChild={true} isActive={pathname === '/'}>
-                    <Link href="/" className="block" onClick={handleNavigationClick}>
+                    <Link to="/" className="block" onClick={handleNavigationClick}>
                         <div className="flex items-center">
                             <h2 className="text-primary text-2xl font-semibold">Nihongo Cards</h2>
                         </div>
@@ -91,7 +91,7 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
                                                 asChild={true}
                                                 isActive={pathname === item.url}
                                                 onClick={handleNavigationClick}>
-                                                <Link href={item.url}>
+                                                <Link to={item.url}>
                                                     {item.icon}
                                                     {item.title}
                                                     {item.soon ? (
@@ -127,7 +127,7 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
                         asChild={true}
                         isActive={pathname === settingsNavItem.url}
                         onClick={handleNavigationClick}>
-                        <Link href={settingsNavItem.url} className="flex items-center gap-2">
+                        <Link to={settingsNavItem.url} className="flex items-center gap-2">
                             {settingsNavItem.icon}
                             {settingsNavItem.title}
                         </Link>

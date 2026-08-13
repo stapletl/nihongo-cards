@@ -1,7 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useNavigate } from '@tanstack/react-router';
+import { usePathname } from '@/hooks/use-pathname';
+import { hrefToNavigateOptions } from '@/lib/search';
 import { useHotkey } from '@tanstack/react-hotkeys';
 import {
     ArrowRightIcon,
@@ -40,7 +42,7 @@ export function CommandMenu() {
     const [search, setSearch] = React.useState('');
     const [pages, setPages] = React.useState<string[]>([]);
     const page = pages[pages.length - 1];
-    const router = useRouter();
+    const navigate = useNavigate();
     const pathname = usePathname();
     const { resolvedTheme, toggleTheme } = useThemeToggle();
     const { requestNavigation } = useNavigationGuard();
@@ -67,7 +69,7 @@ export function CommandMenu() {
     const handleSelect = (url: string) => {
         setOpen(false);
         requestNavigation(() => {
-            router.push(url);
+            void navigate(hrefToNavigateOptions(url) as never);
         });
     };
 

@@ -126,13 +126,7 @@ function buildSelectionSection(
 }
 
 export const hiraganaSelectionSection = buildSelectionSection('hiragana', 'Hiragana', [
-    buildSubsection(
-        'hiragana-gojuon',
-        'Gojūon',
-        5,
-        hiraganaGojuonGrid,
-        hiraganaIdByCharacter
-    ),
+    buildSubsection('hiragana-gojuon', 'Gojūon', 5, hiraganaGojuonGrid, hiraganaIdByCharacter),
     buildSubsection(
         'hiragana-dakuten-handakuten',
         'Dakuten / Handakuten',
@@ -144,13 +138,7 @@ export const hiraganaSelectionSection = buildSelectionSection('hiragana', 'Hirag
 ]);
 
 export const katakanaSelectionSection = buildSelectionSection('katakana', 'Katakana', [
-    buildSubsection(
-        'katakana-gojuon',
-        'Gojūon',
-        5,
-        katakanaGojuonGrid,
-        katakanaIdByCharacter
-    ),
+    buildSubsection('katakana-gojuon', 'Gojūon', 5, katakanaGojuonGrid, katakanaIdByCharacter),
     buildSubsection(
         'katakana-dakuten-handakuten',
         'Dakuten / Handakuten',

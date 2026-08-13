@@ -6,6 +6,7 @@ coverage
 generated
 node_modules
 bun.lock
+src/routeTree.gen.ts
 
 # Ignore config and lock files
 package-lock.json
