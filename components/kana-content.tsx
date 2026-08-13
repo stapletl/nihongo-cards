@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { KanaGrid } from '@/components/kana-card/kana-grid';

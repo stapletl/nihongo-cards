@@ -1,5 +1,3 @@
-'use client';
-
 import { useTheme } from 'next-themes';
 import { applyThemeWithTransition } from '@/lib/theme-transition';
 

@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { devtools } from '@tanstack/devtools-vite';
 import viteReact from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -9,6 +10,9 @@ import { getSiteOrigin } from './lib/site';
 
 export default defineConfig({
     plugins: [
+        // Must come first — it enhances the devtools with the dev-server event bus,
+        // clickable console source links, and strips devtools from production builds.
+        devtools(),
         tsconfigPaths(),
         tailwindcss(),
         tanstackStart({

@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import { CheckIcon, CopyIcon, Share2Icon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -25,14 +23,8 @@ export function NativeShareButton() {
     const timeoutRef = React.useRef<number | null>(null);
 
     React.useEffect(() => {
-        setShareMode(
-            typeof navigator !== 'undefined' && typeof navigator.share === 'function'
-                ? 'native'
-                : 'copy'
-        );
-        setCanCopy(
-            typeof navigator !== 'undefined' && typeof navigator.clipboard?.writeText === 'function'
-        );
+        setShareMode(typeof navigator.share === 'function' ? 'native' : 'copy');
+        setCanCopy(typeof navigator.clipboard?.writeText === 'function');
 
         return () => {
             if (timeoutRef.current !== null) {

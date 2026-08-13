@@ -1,5 +1,3 @@
-'use client';
-
 import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import React, { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { useHotkey } from '@tanstack/react-hotkeys';
@@ -309,13 +307,14 @@ export const FlashcardStudyContent: React.FC = () => {
             <Carousel
                 setApi={setCarouselApi}
                 opts={{ align: 'center', startIndex: index }}
+                // Replaces the primitive's own arrow handling, which scrolls the carousel
+                // directly and so would skip the reveal gate. Only the default is
+                // suppressed here: navigating is left to the ArrowLeft/ArrowRight hotkeys
+                // above, which fire wherever focus is. Calling goNext/goPrevious here too
+                // advanced twice whenever focus sat inside the carousel.
                 onKeyDownCapture={(event) => {
-                    if (event.key === 'ArrowLeft') {
+                    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
                         event.preventDefault();
-                        goPrevious();
-                    } else if (event.key === 'ArrowRight') {
-                        event.preventDefault();
-                        goNext();
                     }
                 }}
                 className="w-full max-w-3xl">

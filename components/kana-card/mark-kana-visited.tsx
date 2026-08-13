@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect } from 'react';
 import { incrementDetailView } from '@/lib/kana-db';
 

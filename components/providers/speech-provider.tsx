@@ -1,5 +1,3 @@
-'use client';
-
 import { ReactNode } from 'react';
 import { SpeechContext, useSpeechProvider } from '@/hooks/use-speech';
 

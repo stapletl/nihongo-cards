@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 import { CircleHelpIcon } from 'lucide-react';
 import { toast } from 'sonner';

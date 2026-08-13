@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useEffectEvent } from 'react';
 
 const MIN_HORIZONTAL_SWIPE_DISTANCE = 72;

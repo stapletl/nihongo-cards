@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { CircleHelpIcon } from 'lucide-react';
 
@@ -68,9 +66,12 @@ export const StudyShortcutsHint: React.FC = () => (
                         <h3 className="text-sm font-medium">Reveal answer</h3>
                         <KbdGroup>
                             <Kbd>F</Kbd>
+                            <Kbd>Space</Kbd>
                         </KbdGroup>
                     </div>
-                    <p className="text-muted-foreground text-sm">Reveal or hide the answer.</p>
+                    <p className="text-muted-foreground text-sm">
+                        Reveal or hide the answer on the current card.
+                    </p>
                 </div>
                 <Separator />
                 <div className="flex flex-col gap-2">

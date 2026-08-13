@@ -1,5 +1,3 @@
-'use client';
-
 import { useCallback, useEffect, useState } from 'react';
 import { KANA_PROGRESS_UPDATED_EVENT, KanaProgress, getAllKanaProgress } from '@/lib/kana-db';
 

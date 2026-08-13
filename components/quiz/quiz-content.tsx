@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useMemo } from 'react';
 import { PlayIcon } from 'lucide-react';
 import { useNavigate, useSearch } from '@tanstack/react-router';

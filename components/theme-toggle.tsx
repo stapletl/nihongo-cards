@@ -1,5 +1,3 @@
-'use client';
-
 import { useRef } from 'react';
 import { Moon, Sun } from 'lucide-react';
 

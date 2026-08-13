@@ -1,5 +1,3 @@
-'use client';
-
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 import { COLOR_THEMES, useColorTheme } from '@/hooks/use-color-theme';

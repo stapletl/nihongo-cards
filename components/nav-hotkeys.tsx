@@ -1,5 +1,3 @@
-'use client';
-
 import { useHotkey } from '@tanstack/react-hotkeys';
 import { useNavigate } from '@tanstack/react-router';
 import { useNavigationGuard } from '@/hooks/use-navigation-guard';

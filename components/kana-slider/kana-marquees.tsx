@@ -1,5 +1,3 @@
-'use client';
-
 import { Marquee } from '@/components/ui/marquee';
 import { KanaItem, gojuon as hiraganaGojuon } from '@/lib/hiragana';
 import { gojuon as katakanaGojuon } from '@/lib/katakana';

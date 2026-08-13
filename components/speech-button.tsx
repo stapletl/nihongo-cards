@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { useSpeech } from '@/hooks/use-speech';
 import { Volume2 } from 'lucide-react';
