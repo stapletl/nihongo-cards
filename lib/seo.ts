@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import type { KanaItem } from '@/lib/hiragana';
 import {
-    SITE_HOMEPAGE_URL,
     SITE_LOCALE,
     SITE_NAME,
     SITE_OG_IMAGE_ALT,
     SITE_OG_IMAGE_PATH,
+    createAbsoluteUrl,
 } from '@/lib/site';
+
+export { createAbsoluteUrl, getSiteOrigin } from '@/lib/site';
 
 type PageMetadataOptions = {
     title: string;
@@ -29,14 +31,6 @@ function buildFullTitle(title: string, absoluteTitle = false): string {
     }
 
     return `${title} | ${SITE_NAME}`;
-}
-
-export function createAbsoluteUrl(path: string): string {
-    return new URL(path, SITE_HOMEPAGE_URL).toString();
-}
-
-export function getSiteOrigin(): string {
-    return new URL(SITE_HOMEPAGE_URL).origin;
 }
 
 export function buildPageMetadata({

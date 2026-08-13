@@ -17,6 +17,12 @@
 /.next/
 /out/
 
+# vite / tanstack start
+/dist/
+/.output/
+/.tanstack/
+/.nitro/
+
 # production
 /build
 

@@ -3,10 +3,18 @@ import nextTypescript from 'eslint-config-next/typescript';
 
 const eslintConfig = [
     {
-        ignores: ['generated/**'],
+        ignores: ['generated/**', 'dist/**', 'src/routeTree.gen.ts'],
     },
     ...nextCoreWebVitals,
     ...nextTypescript,
+    {
+        // TanStack Start routes are not Next.js pages — its App Router rules don't apply.
+        files: ['src/**/*.ts', 'src/**/*.tsx'],
+        rules: {
+            '@next/next/no-head-element': 'off',
+            '@next/next/no-img-element': 'off',
+        },
+    },
     {
         files: ['**/*.ts', '**/*.tsx'],
         rules: {

@@ -16,7 +16,7 @@ type LayoutProps = {
     children: React.ReactNode;
 };
 
-export default async function DashboardLayout({ children }: LayoutProps) {
+export default function DashboardLayout({ children }: LayoutProps) {
     const currentYear = new Date().getFullYear();
 
     return (

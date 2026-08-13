@@ -1,6 +1,16 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+/*
+ * Font families for the self-hosted Geist faces. Under Next these are also set on
+ * <body> by next/font, which takes precedence; these :root values are what the Vite
+ * build uses.
+ */
+:root {
+    --font-geist-sans: 'Geist Variable';
+    --font-geist-mono: 'Geist Mono Variable';
+}
+
 @custom-variant dark (&:is([data-theme$='dark'] *));
 
 @layer base {

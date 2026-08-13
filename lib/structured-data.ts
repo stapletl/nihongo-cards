@@ -5,8 +5,8 @@ import {
     SITE_GITHUB_URL,
     SITE_NAME,
     SITE_OG_IMAGE_PATH,
+    createAbsoluteUrl,
 } from '@/lib/site';
-import { createAbsoluteUrl } from '@/lib/seo';
 
 type JsonLd = Record<string, unknown>;
 type KanaScript = 'hiragana' | 'katakana';
