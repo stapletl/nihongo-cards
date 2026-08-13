@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as R404RouteImport } from './routes/404'
-import { Route as ScratchProbeRouteImport } from './routes/scratch-probe'
 import { Route as FlashcardsIndexRouteImport } from './routes/flashcards/index'
 import { Route as FlashcardsStudyRouteImport } from './routes/flashcards/study'
 import { Route as HiraganaIndexRouteImport } from './routes/hiragana/index'
@@ -33,11 +32,6 @@ const IndexRoute = IndexRouteImport.update({
 const R404Route = R404RouteImport.update({
   id: '/404',
   path: '/404',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ScratchProbeRoute = ScratchProbeRouteImport.update({
-  id: '/scratch-probe',
-  path: '/scratch-probe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FlashcardsIndexRoute = FlashcardsIndexRouteImport.update({
@@ -104,7 +98,6 @@ const StatisticsIndexRoute = StatisticsIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/404': typeof R404Route
-  '/scratch-probe': typeof ScratchProbeRoute
   '/flashcards/study': typeof FlashcardsStudyRoute
   '/hiragana/$character': typeof HiraganaCharacterRoute
   '/katakana/$character': typeof KatakanaCharacterRoute
@@ -121,7 +114,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/404': typeof R404Route
-  '/scratch-probe': typeof ScratchProbeRoute
   '/flashcards/study': typeof FlashcardsStudyRoute
   '/hiragana/$character': typeof HiraganaCharacterRoute
   '/katakana/$character': typeof KatakanaCharacterRoute
@@ -139,7 +131,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/404': typeof R404Route
-  '/scratch-probe': typeof ScratchProbeRoute
   '/flashcards/study': typeof FlashcardsStudyRoute
   '/hiragana/$character': typeof HiraganaCharacterRoute
   '/katakana/$character': typeof KatakanaCharacterRoute
@@ -158,7 +149,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/404'
-    | '/scratch-probe'
     | '/flashcards/study'
     | '/hiragana/$character'
     | '/katakana/$character'
@@ -175,7 +165,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/404'
-    | '/scratch-probe'
     | '/flashcards/study'
     | '/hiragana/$character'
     | '/katakana/$character'
@@ -192,7 +181,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/404'
-    | '/scratch-probe'
     | '/flashcards/study'
     | '/hiragana/$character'
     | '/katakana/$character'
@@ -210,7 +198,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   R404Route: typeof R404Route
-  ScratchProbeRoute: typeof ScratchProbeRoute
   FlashcardsStudyRoute: typeof FlashcardsStudyRoute
   HiraganaCharacterRoute: typeof HiraganaCharacterRoute
   KatakanaCharacterRoute: typeof KatakanaCharacterRoute
@@ -239,13 +226,6 @@ declare module '@tanstack/react-router' {
       path: '/404'
       fullPath: '/404'
       preLoaderRoute: typeof R404RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/scratch-probe': {
-      id: '/scratch-probe'
-      path: '/scratch-probe'
-      fullPath: '/scratch-probe'
-      preLoaderRoute: typeof ScratchProbeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/flashcards/': {
@@ -338,7 +318,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   R404Route: R404Route,
-  ScratchProbeRoute: ScratchProbeRoute,
   FlashcardsStudyRoute: FlashcardsStudyRoute,
   HiraganaCharacterRoute: HiraganaCharacterRoute,
   KatakanaCharacterRoute: KatakanaCharacterRoute,

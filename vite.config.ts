@@ -3,6 +3,7 @@ import viteReact from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
+import { assertRoutesMatchManifest } from './scripts/assert-routes-match-manifest';
 import { siteRoutes } from './lib/routes-manifest';
 import { getSiteOrigin } from './lib/site';
 
@@ -34,5 +35,6 @@ export default defineConfig({
             },
         }),
         viteReact(),
+        assertRoutesMatchManifest(),
     ],
 });

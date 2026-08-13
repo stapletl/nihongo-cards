@@ -81,7 +81,7 @@ hooks/
 - One file per URL under `src/routes/`. `index.tsx` is the directory's own path; `$param.tsx` is dynamic
 - A route defines `head()` for metadata (built with `lib/head.ts`), optionally `loader()` for data, and `component`
 - Dynamic routes throw `notFound()` from their loader for unknown params
-- **Adding a route means adding it to `lib/routes-manifest.ts`** — that array is the single source of truth for what gets prerendered and what lands in the sitemap. A route missing from it will not be built
+- **Adding a route means adding it to `lib/routes-manifest.ts`** — that array is the single source of truth for what gets prerendered and what lands in the sitemap. A route missing from it compiles into the bundle but gets no HTML file, so it works when clicked but 404s on a direct visit. `scripts/assert-routes-match-manifest.ts` fails the build when the two disagree, so you get a clear error instead of a production 404
 - Mark pages that should stay out of search results with `noIndex: true` in the manifest _and_ `buildNoIndexHead` in the route
 
 **React guidance**
