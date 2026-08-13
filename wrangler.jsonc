@@ -1,0 +1,14 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "nihongo-cards",
+    "compatibility_date": "2026-08-13",
+    // No "main" entry: the site is fully prerendered, so this is an assets-only Worker
+    // with no server code at all. Adding "main" would deploy a script that isn't needed.
+    "assets": {
+        "directory": "./dist/client",
+        // Serves the prerendered 404.html with a 404 status for unmatched paths.
+        // Do NOT use "single-page-application" — that returns 200 with the app shell for
+        // every unknown URL, which tells crawlers those pages exist.
+        "not_found_handling": "404-page"
+    }
+}

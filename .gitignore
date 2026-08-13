@@ -23,6 +23,9 @@
 /.tanstack/
 /.nitro/
 
+# cloudflare
+/.wrangler/
+
 # production
 /build
 
