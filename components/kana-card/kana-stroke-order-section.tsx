@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Play } from 'lucide-react';
 
+import { KanaStrokeOrderInfo } from '@/components/kana-card/kana-stroke-order-info';
 import {
     CHARACTER_GAP_MS,
     KanaStrokeOrderSvg,
@@ -44,10 +45,11 @@ export const KanaStrokeOrderSection: React.FC<KanaStrokeOrderSectionProps> = ({
     return (
         <section className={cn('bg-card overflow-hidden rounded-xl border shadow-sm', className)}>
             <div className="flex items-center justify-between gap-4 p-6">
-                <div>
+                <div className="flex items-center gap-1">
                     <p className="text-muted-foreground text-sm font-medium uppercase">
                         Stroke Order
                     </p>
+                    <KanaStrokeOrderInfo />
                 </div>
                 <Button
                     variant="outline"
