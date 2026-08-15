@@ -6,7 +6,7 @@ import { SITE_GITHUB_API_URL, SITE_GITHUB_URL } from '@/lib/site';
 
 const REPO_URL = SITE_GITHUB_URL;
 const STAR_CACHE_KEY = 'github-stars';
-const STAR_CACHE_TTL_MS = 60 * 60 * 1000;
+const STAR_CACHE_TTL_MS = 60 * 60 * 1000; // one hour
 
 type GithubStarsCache = {
     stars: number;
@@ -14,10 +14,8 @@ type GithubStarsCache = {
 };
 
 /**
- * The star count used to come from a cached API route. On a static host there is no
- * server, so read GitHub directly and cache per browser instead. GitHub allows 60
- * unauthenticated requests an hour per client IP, so one hourly call per visitor is
- * well inside the limit.
+ * GitHub allows 60 unauthenticated requests an hour per client IP,
+ * so one hourly call per visitor is well inside the limit.
  */
 function readCachedStars(): number | null {
     try {

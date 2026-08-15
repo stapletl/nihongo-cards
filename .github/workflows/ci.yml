@@ -8,6 +8,15 @@ on:
         branches:
             - main
 
+# A superseded PR run is wasted work, but cancelling a production deploy halfway
+# through would leave the Worker in an unknown state — so only PRs get cancelled.
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+    contents: read
+
 jobs:
     lint:
         name: lint
@@ -53,3 +62,132 @@ jobs:
             # the only place CI runs `tsc --noEmit`.
             - name: Build
               run: bun run build
+
+            # The deploy jobs reuse this exact output rather than rebuilding. Deploying a
+            # second, separately-produced build would mean shipping something CI never
+            # checked, and the prerender is the slowest step in the run.
+            - name: Upload prerendered site
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dist-client
+                  path: dist/client
+                  retention-days: 7
+
+    deploy-production:
+        name: deploy (production)
+        needs: [lint, build]
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        runs-on: ubuntu-latest
+
+        environment:
+            name: production
+            url: https://nihongo-cards.com
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+
+            # wrangler is a devDependency, so the version that deploys is the version
+            # pinned in package.json rather than whatever `bunx` resolves today.
+            - name: Install dependencies
+              run: bun install --frozen-lockfile
+
+            - name: Download prerendered site
+              uses: actions/download-artifact@v4
+              with:
+                  name: dist-client
+                  path: dist/client
+
+            # Reads wrangler.jsonc: uploads ./dist/client as the asset payload and
+            # reconciles the two custom domains. No build step here — the artifact is
+            # the build.
+            - name: Deploy to Cloudflare Workers
+              run: bunx wrangler deploy
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+    deploy-preview:
+        name: deploy (preview)
+        needs: [lint, build]
+        # Fork PRs cannot read secrets, so the deploy would fail rather than be skipped.
+        if: >-
+            github.event_name == 'pull_request' &&
+            github.event.pull_request.head.repo.full_name == github.repository
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: read
+            pull-requests: write
+
+        environment:
+            name: preview
+            url: ${{ steps.upload.outputs.url }}
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+
+            - name: Install dependencies
+              run: bun install --frozen-lockfile
+
+            - name: Download prerendered site
+              uses: actions/download-artifact@v4
+              with:
+                  name: dist-client
+                  path: dist/client
+
+            # `versions upload` uploads a Worker version WITHOUT routing production
+            # traffic to it, and hands back a preview URL that serves just that version.
+            # This is what makes a PR previewable without touching the live site.
+            - name: Upload preview version
+              id: upload
+              shell: bash
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+              run: |
+                  set -euo pipefail
+                  bunx wrangler versions upload \
+                      --tag "pr-${{ github.event.pull_request.number }}" \
+                      --message "PR #${{ github.event.pull_request.number }} — ${{ github.sha }}" \
+                      | tee upload.log
+                  # Prefer the labelled line; fall back to any workers.dev URL in case
+                  # wrangler rewords its output.
+                  url=$(grep -i 'preview url' upload.log \
+                      | grep -oE 'https://[A-Za-z0-9.-]+\.workers\.dev' \
+                      | head -1 || true)
+                  if [ -z "$url" ]; then
+                      url=$(grep -oE 'https://[A-Za-z0-9.-]+\.workers\.dev' upload.log | head -1 || true)
+                  fi
+                  if [ -z "$url" ]; then
+                      echo "::error::Could not find a preview URL in the wrangler output."
+                      exit 1
+                  fi
+                  echo "url=$url" >> "$GITHUB_OUTPUT"
+
+            # --edit-last --create-if-none keeps one comment per PR that updates in place,
+            # instead of a new comment on every push.
+            - name: Comment the preview URL on the PR
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  PREVIEW_URL: ${{ steps.upload.outputs.url }}
+              run: |
+                  set -euo pipefail
+                  {
+                      echo "🔍 **Preview:** $PREVIEW_URL"
+                      echo
+                      echo "Built from \`${{ github.sha }}\`. This URL serves only this version — production is untouched."
+                  } > comment.md
+                  gh pr comment "${{ github.event.pull_request.number }}" \
+                      --edit-last --create-if-none --body-file comment.md
