@@ -136,10 +136,18 @@ jobs:
             - name: Comment the preview URL on the PR
               env:
                   GH_TOKEN: ${{ github.token }}
+                  HEAD_BRANCH: ${{ github.head_ref }}
+                  HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+                  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                  COMMIT_URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.pull_request.head.sha }}
               run: |
                   gh pr comment "${{ github.event.pull_request.number }}" \
                     --edit-last --create-if-none --body-file - <<EOF
-                  🔍 **Preview:** $PREVIEW_URL
+                  ### 🚀 Preview deployment
 
-                  Built from \`${{ github.sha }}\`. This URL serves only this version — production is untouched.
+                  | Status | Preview URL | Branch | Latest commit | Updated (UTC) |
+                  | :--- | :--- | :--- | :--- | :--- |
+                  | ✅ Deployed — [view logs]($RUN_URL) | [$PREVIEW_URL]($PREVIEW_URL) | \`$HEAD_BRANCH\` | [\`${HEAD_SHA:0:7}\`]($COMMIT_URL) | $(date -u '+%b %d %Y, %H:%M') |
+
+                  Version alias \`pr-${{ github.event.pull_request.number }}\` serves this build only
                   EOF
