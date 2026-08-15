@@ -33,7 +33,7 @@ export default defineConfig({
         command: 'bun run build && bun run start',
         url: BASE_URL,
         reuseExistingServer: !process.env.CI,
-        // The build prerenders every route in the manifest before the server comes up.
+        // The build prerenders all 214 pages before the server comes up.
         timeout: 300_000,
         stdout: 'ignore',
         stderr: 'pipe',

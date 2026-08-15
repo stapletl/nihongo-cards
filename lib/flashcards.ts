@@ -1,26 +1,13 @@
 import {
     type SearchParamsLike,
-    allStudyItemIds,
-    allStudyItems,
     clampIndex,
     dedupeAndFilterIds,
     getSearchParam,
-    hiraganaSelectionSection,
-    hiraganaStudyItems,
-    katakanaSelectionSection,
-    katakanaStudyItems,
     shuffleDeck,
     studyItemMap,
 } from './kana-items';
 
-export type { KanaItem } from './hiragana';
-export type {
-    KanaScript as FlashcardScript,
-    KanaStudyItem as FlashcardItem,
-    SelectionRow as FlashcardRow,
-    SelectionSection as FlashcardSelectionSection,
-    SelectionSubsection as FlashcardSubsection,
-} from './kana-items';
+export type { KanaStudyItem as FlashcardItem } from './kana-items';
 export type FlashcardTopSide = 'japanese' | 'romanji';
 export type FlashcardStudyState = {
     ids: string[];
@@ -29,13 +16,7 @@ export type FlashcardStudyState = {
 };
 
 export const FLASHCARD_TOP_SIDE_STORAGE_KEY = 'flashcard-top-side';
-export const hiraganaFlashcardItems = hiraganaStudyItems;
-export const katakanaFlashcardItems = katakanaStudyItems;
-export const allFlashcardItems = allStudyItems;
-export const allFlashcardIds = allStudyItemIds;
 export const flashcardItemMap = studyItemMap;
-export const hiraganaFlashcardSelectionSection = hiraganaSelectionSection;
-export const katakanaFlashcardSelectionSection = katakanaSelectionSection;
 
 export function isFlashcardTopSide(value: string | null | undefined): value is FlashcardTopSide {
     return value === 'japanese' || value === 'romanji';
@@ -81,4 +62,4 @@ export function buildFlashcardQuery(
     return params;
 }
 
-export { clampIndex, dedupeAndFilterIds, shuffleDeck };
+export { shuffleDeck };

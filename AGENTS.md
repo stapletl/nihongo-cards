@@ -19,14 +19,12 @@ bun run test:report  # open the HTML report from the last run
 
 Agents should run `bun run lint` for any code change and verify their changes do not introduce lint errors. `bun run build` is the primary verification step — it typechecks (`tsc --noEmit` runs before Vite, so a type error fails the build), prerenders all 214 pages, and generates the sitemap.
 
-`scripts/snapshot-seo.ts` extracts the SEO-relevant head tags of every prerendered page into a JSON snapshot (`bun run snapshot:seo dist/client out.json`). Diff two snapshots to prove a change did not alter page metadata.
-
 **Tests** — `tests/e2e/` runs in Playwright against the _production_ build, because that is the only place the behaviour it covers exists: prerendered HTML, hydration, and the browser-only values that replace the prerender fallbacks. `playwright.config.ts` runs `bun run build && bun run start` itself, so `bun run test` needs nothing set up first beyond the browser binary (`bunx playwright install chromium`, once per machine). The four specs are:
 
 - `prerender-guards.spec.ts` — every page hydrates without console or hydration errors, `useMediaQuery`/`useIsMobile` resolve correctly on both sides of their thresholds, `clientOnly()` panels swap in, and localStorage/IndexedDB writes work now that their `typeof window` guards are gone
 - `flashcard-hotkeys.spec.ts` — the study carousel mounts every card at once, which makes its keyboard handling easy to break; each past bug (Space following DOM focus instead of the active card, arrows double-advancing, one hotkey registration per card warning) has a test
 - `hotkeys.spec.ts` — the `useHotkey` call sites outside the deck: the command palette, kana page navigation, quiz answer keys
-- `theme-transition.spec.ts` — the circular theme reveal, which lives on a pseudo-element with no DOM node to assert against: it reads the WAAPI animation off `::view-transition-new(root)` to prove the circle is centred on the toggle, expressed in viewport percentages, and matched by the transition group's duration
+- `theme-transition.spec.ts` — the circular theme reveal, which lives on a pseudo-element with no DOM node to assert against: it reads the WAAPI animation off `::view-transition-new(root)` to prove the circle is centred on the toggle (on the viewport centre for the `T` hotkey, which has no element to open from), expressed in viewport percentages, and matched by the transition group's duration. A toggle pressed while a reveal is running is ignored — see `applyThemeWithTransition`
 
 Prefer adding to these over adding a new runner. When fixing a UI bug, add the failing case first and confirm it fails before the fix.
 
@@ -40,6 +38,7 @@ Prefer adding to these over adding a new runner. When fixing a UI bug, add the f
 - **oxfmt** — formatting, config in `.oxfmtrc.json`, including Tailwind class sorting (native, no plugin)
 - **Tailwind CSS v4** — via `@tailwindcss/vite`, CSS variables for theming, config in `tailwind.config.mjs` + `src/styles/globals.css`
 - **shadcn/ui** — New York style, `components/ui/` — add new components via `bunx --bun shadcn@latest add <name>`
+- **TanStack Charts** — `@tanstack/charts`, imported through its narrow subpaths (`/polar`, `/react`, `/scales/linear`) so a chart only pays for the geometry it uses. It replaced recharts, which cost ~250 kB for one donut
 - **idb** — thin IndexedDB wrapper for client-side persistence
 - **Geist** — self-hosted through `@fontsource-variable/geist`, wired to `--font-geist-sans` / `--font-geist-mono`
 
@@ -66,7 +65,6 @@ src/
 components/                 # all UI; unchanged by route structure
   kana-card/
     simple-kana-card.tsx    # card button used on list pages — accepts `visited` prop
-    full-kana-card.tsx      # expanded card for carousels
     kana-page-content.tsx   # detail page body (stroke order, example, speech)
     mark-kana-visited.tsx   # null-render component — fires incrementDetailView on mount
   client-only.tsx           # clientOnly() — lazy-loads a component in the browser only
@@ -78,7 +76,6 @@ components/                 # all UI; unchanged by route structure
 lib/
   hiragana.ts               # KanaItem type + all hiragana data arrays
   katakana.ts               # same for katakana
-  routes-manifest.ts        # every route the site serves — drives prerender + sitemap
   head.ts                   # head-tag builders for routes (buildPageHead, buildKanaHead, ...)
   search.ts                 # search-param helpers (validateStringSearch, hrefToNavigateOptions)
   kana-db.ts                # IndexedDB layer: KanaProgress schema, getAllKanaProgress, incrementDetailView, isVisited
@@ -97,8 +94,9 @@ hooks/
 - One file per URL under `src/routes/`. `index.tsx` is the directory's own path; `$param.tsx` is dynamic
 - A route defines `head()` for metadata (built with `lib/head.ts`), optionally `loader()` for data, and `component`
 - Dynamic routes throw `notFound()` from their loader for unknown params
-- **Adding a route means adding it to `lib/routes-manifest.ts`** — that array is the single source of truth for what gets prerendered and what lands in the sitemap. A route missing from it compiles into the bundle but gets no HTML file, so it works when clicked but 404s on a direct visit. `scripts/assert-routes-match-manifest.ts` fails the build when the two disagree, so you get a clear error instead of a production 404
-- Mark pages that should stay out of search results with `noIndex: true` in the manifest _and_ `buildNoIndexHead` in the route
+- **Adding a static route needs nothing beyond the route file.** TanStack Start's `autoStaticPathsDiscovery` (on by default) reads every non-dynamic path out of the generated route tree and prerenders it
+- **A new _dynamic_ route needs its concrete paths listed in `vite.config.ts`**, under `pages`. Auto-discovery skips anything with a `$` in it, so `/hiragana/$character` gets its list from the same kana arrays the route reads. A dynamic route with no `pages` entries compiles into the bundle but gets no HTML, so it works when clicked and 404s on a direct visit
+- `crawlLinks` is off on purpose. Letting the crawler find the kana pages does produce 214 files, but it writes crawled paths to disk exactly as they appear in the `href` — percent-encoded — so the directory is literally named `%E3%81%82` and a browser request for `/hiragana/あ` 404s on any host that decodes the path before looking up a file (Cloudflare, nginx, `python -m http.server`). `vite preview` does _not_ decode, so this failure passes local tests and only shows up in production. Paths listed under `pages` are decoded before they are written, which is what puts each page in a directory named for the character itself
 
 **React guidance**
 
@@ -135,12 +133,6 @@ hooks/
 - Detail pages include `<MarkKanaVisited character={...} />` to record the visit on mount
 - IndexedDB is scoped per origin, so **changing the site's domain wipes every user's progress**
 
-**SEO**
-
-- Page metadata comes from `lib/head.ts`; structured data from `lib/structured-data.ts`
-- `sitemap.xml` is generated by TanStack Start from the manifest — do not hand-write one
-- `robots.txt` and `opengraph-image.png` are static files in `public/`
-
 **Animations**
 
 - Custom animations defined in `src/styles/globals.css` (`@keyframes` + `--animate-*` in `@theme`) and mirrored in `tailwind.config.mjs`
@@ -155,7 +147,6 @@ hooks/
     - An `async` function passed to a JSX prop must be wrapped: `onClick={() => void handleThing()}`. `no-misused-promises` is on for attributes, so the bare form fails
     - `console.error` and `console.warn` are allowed; `console.log`/`debug` are not
 - Rules left off on purpose: `only-throw-error` (the router's `throw notFound()` idiom trips it), plus `strict-boolean-expressions`, `no-confusing-void-expression`, `no-unnecessary-condition`, and `no-unsafe-type-assertion` — ~200 findings of style preference the project has not adopted
-- `components/ui/chart.tsx` suppresses the unsafe-\* family in its header; it is vendored shadcn typed against Recharts' loose props, and should stay re-generatable
 
 **Styling**
 

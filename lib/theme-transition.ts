@@ -59,12 +59,18 @@ export function applyThemeWithTransition(
     const root = document.documentElement;
     const applyTheme = () => setTheme(newTheme);
 
+    // A reveal is already running. Neither alternative looks right: starting a second
+    // transition makes the browser skip the first, and swapping the theme underneath the
+    // running one repaints it unclipped against a snapshot of the theme it just left —
+    // the flash you get from holding down T. Ignore the request instead; the reveal is
+    // DURATION_MS long, so the next press is never far away.
+    if (root.dataset.themeTransition === 'active') {
+        return;
+    }
+
     if (
         typeof document.startViewTransition !== 'function' ||
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-        // A reveal is already running — swap the theme under it rather than starting a
-        // second transition, which the browser would resolve by skipping the first.
-        root.dataset.themeTransition === 'active'
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
     ) {
         applyTheme();
         return;

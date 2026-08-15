@@ -1,0 +1,4 @@
+{
+    "$schema": "https://unpkg.com/knip@6/schema.json",
+    "ignore": ["scripts/generate-kana-stroke-data.ts", "tests/e2e/helpers.ts"]
+}

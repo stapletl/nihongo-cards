@@ -2,24 +2,22 @@
     "$schema": "node_modules/wrangler/config-schema.json",
     "name": "nihongo-cards",
     "compatibility_date": "2026-08-13",
-    // No "main" entry: the site is fully prerendered, so this is an assets-only Worker
+    // No "main": the site is fully prerendered, so this is an assets-only Worker
     "assets": {
         "directory": "./dist/client",
-        // Canonical URLs and the sitemap use the no-trailing-slash form (/hiragana), but
-        // the default "auto-trailing-slash" redirects those to /hiragana/ — so every URL
-        // we advertise would answer with a redirect. Serve them at the canonical path.
+        // Canonical URLs and the sitemap omit the trailing slash
         "html_handling": "drop-trailing-slash",
-        // Serves the prerendered 404.html with a 404 status for unmatched paths.
-        // Do NOT use "single-page-application" — that returns 200 with the app shell for
-        // every unknown URL, which tells crawlers those pages exist.
         "not_found_handling": "404-page"
     },
-    // Both hostnames are served by this Worker. www does not serve a duplicate copy of the
-    // site — a Cloudflare Redirect Rule ("www to apex") 301s it to the bare domain, and
-    // redirect rules run ahead of the Worker, so the route below only ever sees the apex
-    // in practice. It still has to exist for the redirect to have something to attach to.
+    // www is 301'd to the apex by a Redirect Rule, which runs ahead of the Worker, but the
+    // route must exist for the redirect to attach to.
     "routes": [
         { "pattern": "nihongo-cards.com", "custom_domain": true },
         { "pattern": "www.nihongo-cards.com", "custom_domain": true }
-    ]
+    ],
+    // Both keys MUST stay declared — an unset key applies the default, silently overriding
+    // the dashboard. Off: workers.dev would duplicate the canonical site.
+    "workers_dev": false,
+    // Defaults to workers_dev, so it must be set explicitly or PR previews break.
+    "preview_urls": true
 }
