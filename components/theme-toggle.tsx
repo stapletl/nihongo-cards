@@ -21,6 +21,7 @@ export const ThemeToggle = () => {
     return (
         <Button
             ref={buttonRef}
+            data-theme-toggle=""
             variant="outline"
             size="icon"
             title="Toggle theme"

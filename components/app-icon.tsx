@@ -1,28 +1,42 @@
 import React from 'react';
 
+/**
+ * The カード mark, traced from the original 500x500 logo PNG as a single
+ * even-odd path: five outlines (カ, the circle, ト, and the two dakuten strokes)
+ * plus one reversed loop for the ー knocked out of the circle. The knockout is a
+ * real hole rather than a background-coloured stroke, so the tile shows through
+ * it and the mark stays correct on any theme.
+ *
+ * Drawn on a 0..500 artboard, which the viewBox below pads out to -32..532 so the
+ * dakuten at the right edge clears the tile's rounded corner. The カ's horizontal
+ * bar is the one stroke meant to bleed off-tile: the raster cut it flush at x=0,
+ * so its two edges are extrapolated along their own slopes to x=-32, keeping it
+ * running past the new edge instead of ending in mid-air inside the padding.
+ */
+const MARK_PATH =
+    'M84 13L85 13L85 14L86 14L86 15L96.8 27.2L122 53L123 53L123 54L124 54L124 53L125 53L142.2 35.2L148 28L148 27L149 27L149 28L150 28L154.8 33.3L169 47L169 48L170 48L170 49L169 49L169 50L168 50L165.8 51.8L156.8 59.8L147.7 68.7L144 71L144 72L143 72L143 74L144 74L144 75L172.8 103.2L181.6 110.4L188 127L188 130L187 130L181.3 134.3L156.7 156.7L127.2 181.2L107 195L100.9 197.9L93 200L87 200L83.6 199.4L78.7 197.3L73.8 194.2L58.3 178.7L48 167L48 166L47 166L47 165L48 165L48 163L50.7 160.7L60.8 147.8L63 146L63 145L64 145L64 144L65 144L65 145L66 145L66.4 146.6L72.8 155.2L78.8 162.2L84.8 168.2L87.4 169.6L90 170L93.8 169.8L97.6 168.6L106.6 163.6L118.2 155.2L135.7 140.7L155 123L155 122L156 122L156 121L155 121L155 120L150.8 116.3L125 90L124 90L124 89L122 89L122 90L121 90L115.6 94.6L106.6 100.6L93.3 108.3L75.6 116.6L63.6 120.6L43.8 124.8L36.1 125.1L31 126L21 126L15.9 125.1L-32 121.7L-32 90.5L2 95L17 97L40 97L49.6 95.6L63.1 92.1L76 87L84 83L94 77L99.2 73.2L102 72L102 71L103 71L103 70L104 70L104 69L103 69L103 68L72.7 38.3L67 34L67 33L66 33L66 31L67 31L67 30L71.3 26.3L83 14L84 14ZM248.4 157.4L261.9 158.1L268.8 159.2L277.6 161.4L285.6 164.4L296.3 169.7L302.6 173.4L315.7 184.3L322.2 191.8L327.6 199.4L330.3 203.7L335.3 213.7L338.4 221.6L340.8 231.2L341.9 237.1L342.1 244.9L342.9 250L342.1 255.1L341.9 262.9L340.8 268.8L338.4 278.4L335.6 285.6L329.2 298.2L322.2 308.2L316.1 315.1L302.6 326.6L292.5 332.5L286.3 335.3L278.4 338.4L268.8 340.8L261.9 341.9L254.1 342.1L250 342.8L245.9 342.1L238.1 341.9L231.2 340.8L221.6 338.4L213.7 335.3L207.5 332.5L197.4 326.6L183.9 315.1L177.8 308.2L170.8 298.2L164.4 285.6L161.6 278.4L159.2 268.8L158.1 262.9L157.9 255.1L157.1 250L157.9 244.9L158.1 237.1L159.2 231.2L161.6 221.6L164.7 213.7L169.7 203.7L172.4 199.4L177.8 191.8L184.3 184.3L197.4 173.4L213.7 164.7L222.4 161.4L231.2 159.2L238.1 158.1ZM203 179L202 179L202 180L201 180L197.3 184.3L181 200L181 201L180 201L180 203L181 203L181 204L185.2 206.8L188.3 209.8L290.7 312.3L296 319L297 319L297 320L299 320L299 319L300 319L303.8 314.8L320 299L320 298L321 298L321 297L320 297L320 296L319 296L317.8 295.2L306.8 285.3L215.3 193.7L211.7 189.3L204.8 182.2L204 181L204 180L203 180ZM419 306L421 306L421 307L422 307L425.8 311.3L441 326L441 327L442 327L442 329L441 329L439.8 329.8L426.8 340.8L403 364L403 365L402 365L402 366L403 366L403 368L406.7 373.3L423 407L434.3 432.7L438.4 443.6L440 446L440 449L439 449L439 450L434.4 451.4L419.7 457.7L416 460L413 460L413 461L412 461L412 459L411 459L408.9 451.1L397.3 421.7L389 403L382 389L382 388L381 388L381 387L380 387L380 388L379 388L337.8 429.8L324.8 444.8L323 448L322 448L322 449L320 449L320 448L319 448L315.3 443.8L300 429L300 428L299 428L299 426L300 426L300 425L304.2 422.2L313.3 414.3L410.7 316.7L416.2 310.2L418 307L419 307ZM457 363L460 363L462.4 364.6L473 369L474 369L472.6 378.6L467 402L466 402L466 404L463 404L453.9 400.1L449 399L449 398L448 398L448 395L449.6 391.6L453.6 378.6L455.8 368.8L456 365L457 365ZM484 374L485 374L485 375L499 379L499 380L500 380L499.8 390.8L494 414L494 416L493 416L493 415L491 415L481.4 411.6L478 411L478 410L476 410L476 407L477.6 402.6L481.8 385.8L482.9 379.9L483 375L484 375Z';
+
 type AppIconProps = {
     size: number; // Size in pixels
 };
 
 export const AppIcon: React.FC<AppIconProps> = ({ size }) => (
-    // Sized inline rather than with Tailwind classes: arbitrary values built from a
-    // template string are invisible to the class scanner and never get generated.
+    // Drawn rather than swapped between two PNGs: the mark inherits `--primary`
+    // and the tile `--background`, so it follows every theme instead of only
+    // light and dark. Nothing here reads the theme in JS, so the prerendered and
+    // hydrated markup stay identical.
+    //
+    // Decorative: every call site pairs it with the visible "Nihongo Cards"
+    // wordmark, so alt text here would just repeat the name to screen readers.
+    //
+    // Sized inline rather than with Tailwind classes: arbitrary values built from
+    // a template string are invisible to the class scanner and never get generated.
     <div
-        className="relative overflow-hidden rounded-md border"
+        aria-hidden="true"
+        className="bg-background text-primary shrink-0 overflow-hidden rounded-md border"
         style={{ width: size, height: size }}>
-        <img
-            src="/logo-light.png"
-            alt="Nihongo Cards Logo"
-            width={size}
-            height={size}
-            className="block dark:hidden"
-        />
-        <img
-            src="/logo-dark.png"
-            alt="Nihongo Cards Logo"
-            width={size}
-            height={size}
-            className="hidden dark:block"
-        />
+        <svg viewBox="-32 -32 564 564" width={size} height={size} className="block">
+            <path d={MARK_PATH} fill="currentColor" fillRule="evenodd" />
+        </svg>
     </div>
 );

@@ -2,18 +2,21 @@ import { defineConfig } from 'vite';
 import { devtools } from '@tanstack/devtools-vite';
 import viteReact from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
-import { assertRoutesMatchManifest } from './scripts/assert-routes-match-manifest';
-import { siteRoutes } from './lib/routes-manifest';
-import { getSiteOrigin } from './lib/site';
+import { assertRoutesMatchManifest } from './scripts/assert-routes-match-manifest.ts';
+import { siteRoutes } from './lib/routes-manifest.ts';
+import { getSiteOrigin } from './lib/site.ts';
 
 export default defineConfig({
+    // Resolves the `@/*` alias from tsconfig.json — native replacement for the
+    // vite-tsconfig-paths plugin.
+    resolve: {
+        tsconfigPaths: true,
+    },
     plugins: [
         // Must come first — it enhances the devtools with the dev-server event bus,
         // clickable console source links, and strips devtools from production builds.
         devtools(),
-        tsconfigPaths(),
         tailwindcss(),
         tanstackStart({
             // Every route is known ahead of time, so the whole site ships as static HTML

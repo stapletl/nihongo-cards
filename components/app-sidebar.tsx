@@ -16,6 +16,7 @@ import {
     useSidebar,
 } from '@/components/ui/sidebar';
 import { Link } from '@tanstack/react-router';
+import { AppIcon } from './app-icon';
 import { Badge } from './ui/badge';
 import { usePathname } from '@/hooks/use-pathname';
 import { ThemeToggle } from './theme-toggle';
@@ -68,7 +69,8 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
             <SidebarHeader>
                 <SidebarMenuButton className="h-12" asChild={true} isActive={pathname === '/'}>
                     <Link to="/" className="block" onClick={handleNavigationClick}>
-                        <div className="flex items-center">
+                        <div className="flex items-center gap-2">
+                            <AppIcon size={32} />
                             <h2 className="text-primary text-2xl font-semibold">Nihongo Cards</h2>
                         </div>
                     </Link>

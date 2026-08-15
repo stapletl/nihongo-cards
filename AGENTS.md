@@ -21,11 +21,12 @@ Agents should run `bun run lint` for any code change and verify their changes do
 
 `scripts/snapshot-seo.ts` extracts the SEO-relevant head tags of every prerendered page into a JSON snapshot (`bun run snapshot:seo dist/client out.json`). Diff two snapshots to prove a change did not alter page metadata.
 
-**Tests** — `tests/e2e/` runs in Playwright against the _production_ build, because that is the only place the behaviour it covers exists: prerendered HTML, hydration, and the browser-only values that replace the prerender fallbacks. `playwright.config.ts` runs `bun run build && bun run start` itself, so `bun run test` needs nothing set up first beyond the browser binary (`bunx playwright install chromium`, once per machine). The three specs are:
+**Tests** — `tests/e2e/` runs in Playwright against the _production_ build, because that is the only place the behaviour it covers exists: prerendered HTML, hydration, and the browser-only values that replace the prerender fallbacks. `playwright.config.ts` runs `bun run build && bun run start` itself, so `bun run test` needs nothing set up first beyond the browser binary (`bunx playwright install chromium`, once per machine). The four specs are:
 
 - `prerender-guards.spec.ts` — every page hydrates without console or hydration errors, `useMediaQuery`/`useIsMobile` resolve correctly on both sides of their thresholds, `clientOnly()` panels swap in, and localStorage/IndexedDB writes work now that their `typeof window` guards are gone
 - `flashcard-hotkeys.spec.ts` — the study carousel mounts every card at once, which makes its keyboard handling easy to break; each past bug (Space following DOM focus instead of the active card, arrows double-advancing, one hotkey registration per card warning) has a test
 - `hotkeys.spec.ts` — the `useHotkey` call sites outside the deck: the command palette, kana page navigation, quiz answer keys
+- `theme-transition.spec.ts` — the circular theme reveal, which lives on a pseudo-element with no DOM node to assert against: it reads the WAAPI animation off `::view-transition-new(root)` to prove the circle is centred on the toggle, expressed in viewport percentages, and matched by the transition group's duration
 
 Prefer adding to these over adding a new runner. When fixing a UI bug, add the failing case first and confirm it fails before the fix.
 

@@ -1,4 +1,4 @@
-import { KanaItem } from './hiragana';
+import { KanaItem } from './hiragana.ts';
 
 export const gojuonGrid = [
     ['ア', 'イ', 'ウ', 'エ', 'オ'],
