@@ -1,5 +1,3 @@
-import type { SearchParamsLike } from '@/lib/kana-items';
-
 /**
  * Search params normalized to plain strings.
  *
@@ -31,11 +29,6 @@ export function validateStringSearch(search: Record<string, unknown>): StringSea
     }
 
     return result;
-}
-
-/** Narrows a loosely-typed search object for the `lib/kana-items` helpers. */
-export function asSearchParams(search: unknown): SearchParamsLike {
-    return (search ?? {}) as SearchParamsLike;
 }
 
 /** Converts a built query string into the object form router navigation expects. */

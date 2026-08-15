@@ -12,12 +12,10 @@ import {
     yoonGrid as katakanaYoonGrid,
 } from './katakana';
 
-export type { KanaItem } from './hiragana';
-
 export type KanaScript = 'hiragana' | 'katakana';
 export type QuickSelectScope = 'all' | KanaScript;
 export type KanaStudyItem = KanaItem & { id: string; script: KanaScript };
-export type SelectionRow = {
+type SelectionRow = {
     key: string;
     ids: string[];
     cells: (KanaStudyItem | null)[];
@@ -41,13 +39,13 @@ export type SearchParamsLike =
     | Record<string, string | string[] | undefined>
     | undefined;
 
-export const hiraganaStudyItems: KanaStudyItem[] = hiraganaItems.map((item, index) => ({
+const hiraganaStudyItems: KanaStudyItem[] = hiraganaItems.map((item, index) => ({
     ...item,
     id: `h${index}`,
     script: 'hiragana',
 }));
 
-export const katakanaStudyItems: KanaStudyItem[] = katakanaItems.map((item, index) => ({
+const katakanaStudyItems: KanaStudyItem[] = katakanaItems.map((item, index) => ({
     ...item,
     id: `k${index}`,
     script: 'katakana',

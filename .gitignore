@@ -36,6 +36,9 @@
 # generated at build time by scripts/generate-kana-stroke-data.ts
 /generated/
 
+# bundle analysis — written only by `bun run analyze`
+/stats.html
+
 # misc
 .DS_Store
 *.pem

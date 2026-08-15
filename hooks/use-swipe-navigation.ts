@@ -6,7 +6,7 @@ const HORIZONTAL_DOMINANCE_RATIO = 1.2;
 
 export type SwipeDirection = 'left' | 'right' | null;
 
-export function getHorizontalSwipeDirection(
+function getHorizontalSwipeDirection(
     startX: number,
     startY: number,
     endX: number,

@@ -417,7 +417,7 @@ export const gojuon: KanaItem[] = [
     },
 ];
 
-export const dakutenHandakuten: KanaItem[] = [
+const dakutenHandakuten: KanaItem[] = [
     // Dakuten - G-row
     {
         character: 'ガ',
@@ -625,7 +625,7 @@ export const dakutenHandakuten: KanaItem[] = [
     },
 ];
 
-export const yoon: KanaItem[] = [
+const yoon: KanaItem[] = [
     // K-yoon
     {
         character: 'キャ',

@@ -65,7 +65,6 @@ src/
 components/                 # all UI; unchanged by route structure
   kana-card/
     simple-kana-card.tsx    # card button used on list pages — accepts `visited` prop
-    full-kana-card.tsx      # expanded card for carousels
     kana-page-content.tsx   # detail page body (stroke order, example, speech)
     mark-kana-visited.tsx   # null-render component — fires incrementDetailView on mount
   client-only.tsx           # clientOnly() — lazy-loads a component in the browser only

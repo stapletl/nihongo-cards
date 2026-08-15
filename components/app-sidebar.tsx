@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-// import { SearchForm } from '@/components/search-form';
 import {
     Sidebar,
     SidebarContent,
@@ -76,7 +75,6 @@ export const AppSidebar = ({ ...props }: AppSidebarProps) => {
                     </Link>
                 </SidebarMenuButton>
                 {/* todo: implement app search */}
-                {/* <SearchForm /> */}
             </SidebarHeader>
             <SidebarContent>
                 {/* We create a SidebarGroup for each parent. */}

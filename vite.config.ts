@@ -1,8 +1,9 @@
-import { defineConfig } from 'vite';
+import { defineConfig, perEnvironmentPlugin } from 'vite';
 import { devtools } from '@tanstack/devtools-vite';
 import viteReact from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 // Relative imports (not the `@/` alias) because Vite's config loader does not apply
 // tsconfig path mapping.
 import { hiraganaItems } from './lib/hiragana.ts';
@@ -18,6 +19,12 @@ const kanaPages = [
     ...hiraganaItems.map((item) => `/hiragana/${item.character}`),
     ...katakanaItems.map((item) => `/katakana/${item.character}`),
 ].map((path) => ({ path }));
+
+/**
+ * Bundle-composition report, off by default. `bun run analyze` sets ANALYZE=1; a plain
+ * `bun run build` never loads the plugin and never writes stats.html.
+ */
+const analyze = process.env.ANALYZE === '1';
 
 export default defineConfig({
     // Resolves the `@/*` alias from tsconfig.json — native replacement for the
@@ -56,5 +63,26 @@ export default defineConfig({
             },
         }),
         viteReact(),
+        // Last in the array, after tanstackStart(), so the treemap reflects the chunks as
+        // they are actually emitted rather than an intermediate state. A Start build runs
+        // the client and server environments in turn and both would write the same file —
+        // the server pass finishing last and overwriting it. Only the client bundle is what
+        // users download, so that is the one stats.html reports on.
+        ...(analyze
+            ? [
+                  perEnvironmentPlugin(
+                      'visualizer-client-only',
+                      (environment) =>
+                          environment.name === 'client' &&
+                          visualizer({
+                              filename: './stats.html',
+                              template: 'treemap',
+                              gzipSize: true,
+                              brotliSize: true,
+                              open: false,
+                          })
+                  ),
+              ]
+            : []),
     ],
 });
