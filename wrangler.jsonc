@@ -3,7 +3,6 @@
     "name": "nihongo-cards",
     "compatibility_date": "2026-08-13",
     // No "main" entry: the site is fully prerendered, so this is an assets-only Worker
-    // with no server code at all. Adding "main" would deploy a script that isn't needed.
     "assets": {
         "directory": "./dist/client",
         // Canonical URLs and the sitemap use the no-trailing-slash form (/hiragana), but
