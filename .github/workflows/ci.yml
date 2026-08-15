@@ -8,48 +8,146 @@ on:
         branches:
             - main
 
+# A superseded PR run is wasted work, but cancelling a production deploy halfway
+# through would leave the Worker in an unknown state — so only PRs get cancelled.
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+    contents: read
+
 jobs:
     lint:
         name: lint
         runs-on: ubuntu-latest
-
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+            - uses: actions/checkout@v4
+            - uses: ./.github/actions/setup
 
-            - name: Setup Bun
-              uses: oven-sh/setup-bun@v2
-              with:
-                  bun-version: latest
-
-            - name: Install dependencies
-              run: bun install --frozen-lockfile
+            # oxfmt --check, so CI fails on unformatted code instead of rewriting it.
+            # Needs no codegen, so it runs first and fails in a quarter of a second.
+            - run: bun run format:check
 
             # generated/ is gitignored, so a fresh checkout has no @/generated/kana-stroke-data.
             # oxlint's type-aware rules resolve the missing module to `error` and fail.
-            - name: Generate kana stroke data
-              run: bun run generate:kana-stroke-data
-
-            - name: Run lint
-              run: bun run lint
+            - run: bun run generate:kana-stroke-data
+            - run: bun run lint
 
     build:
         name: build
         runs-on: ubuntu-latest
-
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Setup Bun
-              uses: oven-sh/setup-bun@v2
-              with:
-                  bun-version: latest
-
-            - name: Install dependencies
-              run: bun install --frozen-lockfile
+            - uses: actions/checkout@v4
+            - uses: ./.github/actions/setup
 
             # `build` chains generate:kana-stroke-data and typecheck itself, so this is also
             # the only place CI runs `tsc --noEmit`.
-            - name: Build
-              run: bun run build
+            - run: bun run build
+
+            # The deploy jobs reuse this exact output rather than rebuilding. Deploying a
+            # second, separately-produced build would mean shipping something CI never
+            # checked, and the prerender is the slowest step in the run.
+            - name: Upload prerendered site
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dist-client
+                  path: dist/client
+                  retention-days: 7
+
+    deploy-production:
+        name: deploy (production)
+        needs: [lint, build]
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        runs-on: ubuntu-latest
+
+        environment:
+            name: production
+            url: https://nihongo-cards.com
+
+        steps:
+            - uses: actions/checkout@v4
+            # wrangler is a devDependency, so the version that deploys is the version
+            # pinned in package.json rather than whatever `bunx` resolves today.
+            - uses: ./.github/actions/setup
+
+            - uses: actions/download-artifact@v4
+              with:
+                  name: dist-client
+                  path: dist/client
+
+            - run: bunx wrangler deploy
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+    deploy-preview:
+        name: deploy (preview)
+        needs: [lint, build]
+        # Fork PRs cannot read secrets, so the deploy would fail rather than be skipped.
+        if: >-
+            github.event_name == 'pull_request' &&
+            github.event.pull_request.head.repo.full_name == github.repository
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: read
+            pull-requests: write
+
+        environment:
+            name: preview
+            url: https://pr-${{ github.event.pull_request.number }}-nihongo-cards.lojostapleton.workers.dev
+
+        # `--preview-alias <alias>` serves the uploaded version at a fixed
+        # https://<alias>-<worker>.<subdomain>.workers.dev, so the URL is known before the
+        # upload runs and stays put across pushes to the PR. Nothing has to parse wrangler's
+        # output. Keep this in sync with `environment.url` above — job `env` is not readable
+        # from there.
+        env:
+            PREVIEW_URL: https://pr-${{ github.event.pull_request.number }}-nihongo-cards.lojostapleton.workers.dev
+
+        steps:
+            - uses: actions/checkout@v4
+            - uses: ./.github/actions/setup
+
+            - uses: actions/download-artifact@v4
+              with:
+                  name: dist-client
+                  path: dist/client
+
+            # `versions upload` uploads a Worker version WITHOUT routing production traffic to
+            # it, which is what makes a PR previewable without touching the live site.
+            - name: Upload preview version
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+              run: |
+                  bunx wrangler versions upload \
+                    --preview-alias "pr-${{ github.event.pull_request.number }}" \
+                    --message "PR #${{ github.event.pull_request.number }} — ${{ github.sha }}"
+
+            # Catches the setup miss where the upload succeeds but nothing ever serves the
+            # version: Preview URLs disabled under Settings → Domains & Routes.
+            - name: Wait for the preview to answer
+              run: curl -sfS --retry 8 --retry-all-errors --retry-delay 5 -o /dev/null "$PREVIEW_URL"
+
+            # --edit-last --create-if-none keeps one comment per PR that updates in place,
+            # instead of a new comment on every push.
+            - name: Comment the preview URL on the PR
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  HEAD_BRANCH: ${{ github.head_ref }}
+                  HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+                  RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+                  COMMIT_URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.event.pull_request.head.sha }}
+              run: |
+                  gh pr comment "${{ github.event.pull_request.number }}" \
+                    --edit-last --create-if-none --body-file - <<EOF
+                  ### 🚀 Preview deployment
+
+                  | Status | Preview URL | Branch | Latest commit | Updated (UTC) |
+                  | :--- | :--- | :--- | :--- | :--- |
+                  | ✅ Deployed — [view logs]($RUN_URL) | [$PREVIEW_URL]($PREVIEW_URL) | \`$HEAD_BRANCH\` | [\`${HEAD_SHA:0:7}\`]($COMMIT_URL) | $(date -u '+%b %d %Y, %H:%M') |
+
+                  Version alias \`pr-${{ github.event.pull_request.number }}\` serves this build only
+                  EOF
