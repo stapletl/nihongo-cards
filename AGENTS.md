@@ -12,11 +12,22 @@ bun run typecheck    # tsc --noEmit
 bun run lint         # oxlint
 bun run format       # oxfmt (auto-fix)
 bun run format:check # oxfmt --check — fails instead of rewriting
+bun run test         # Playwright end-to-end suite (builds, then runs against the preview)
+bun run test:ui      # the same suite in Playwright's watch UI
+bun run test:report  # open the HTML report from the last run
 ```
 
-No test suite exists yet. Agents should run `bun run lint` for any code change and verify their changes do not introduce lint errors. `bun run build` is the primary verification step — it typechecks (`tsc --noEmit` runs before Vite, so a type error fails the build), prerenders all 214 pages, and generates the sitemap.
+Agents should run `bun run lint` for any code change and verify their changes do not introduce lint errors. `bun run build` is the primary verification step — it typechecks (`tsc --noEmit` runs before Vite, so a type error fails the build), prerenders all 214 pages, and generates the sitemap.
 
 `scripts/snapshot-seo.ts` extracts the SEO-relevant head tags of every prerendered page into a JSON snapshot (`bun run snapshot:seo dist/client out.json`). Diff two snapshots to prove a change did not alter page metadata.
+
+**Tests** — `tests/e2e/` runs in Playwright against the _production_ build, because that is the only place the behaviour it covers exists: prerendered HTML, hydration, and the browser-only values that replace the prerender fallbacks. `playwright.config.ts` runs `bun run build && bun run start` itself, so `bun run test` needs nothing set up first beyond the browser binary (`bunx playwright install chromium`, once per machine). The three specs are:
+
+- `prerender-guards.spec.ts` — every page hydrates without console or hydration errors, `useMediaQuery`/`useIsMobile` resolve correctly on both sides of their thresholds, `clientOnly()` panels swap in, and localStorage/IndexedDB writes work now that their `typeof window` guards are gone
+- `flashcard-hotkeys.spec.ts` — the study carousel mounts every card at once, which makes its keyboard handling easy to break; each past bug (Space following DOM focus instead of the active card, arrows double-advancing, one hotkey registration per card warning) has a test
+- `hotkeys.spec.ts` — the `useHotkey` call sites outside the deck: the command palette, kana page navigation, quiz answer keys
+
+Prefer adding to these over adding a new runner. When fixing a UI bug, add the failing case first and confirm it fails before the fix.
 
 ## Stack
 

@@ -3,8 +3,8 @@ import {
     SITE_LOCALE,
     SITE_NAME,
     SITE_OG_IMAGE_ALT,
-    SITE_OG_IMAGE_PATH,
     createAbsoluteUrl,
+    createOgImageUrl,
 } from '@/lib/site';
 
 /**
@@ -87,7 +87,7 @@ export function buildPageHead({
 }: PageHeadOptions): RouteHead {
     const fullTitle = buildFullTitle(title, absoluteTitle);
     const url = canonicalUrl(path);
-    const imageUrl = createAbsoluteUrl(SITE_OG_IMAGE_PATH);
+    const imageUrl = createOgImageUrl();
 
     const meta: MetaTag[] = [
         { title: absoluteTitle ? title : fullTitle },
@@ -99,6 +99,7 @@ export function buildPageHead({
         { name: 'twitter:title', content: fullTitle },
         { name: 'twitter:description', content: description },
         { name: 'twitter:image', content: imageUrl },
+        { name: 'twitter:url', content: url },
     ];
 
     if (keywords?.length) {
