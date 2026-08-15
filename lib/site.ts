@@ -21,3 +21,13 @@ export function createAbsoluteUrl(path: string): string {
 export function getSiteOrigin(): string {
     return new URL(SITE_HOMEPAGE_URL).origin;
 }
+
+/**
+ * URL for the Open Graph / Twitter card image. Absolute in the prerendered output, since
+ * crawlers require it, but origin-relative in dev — the canonical origin serves the deployed
+ * image, not the local one, so an absolute URL leaves preview tooling loading the wrong file
+ * (or a 404) while iterating.
+ */
+export function createOgImageUrl(): string {
+    return import.meta.env.DEV ? SITE_OG_IMAGE_PATH : createAbsoluteUrl(SITE_OG_IMAGE_PATH);
+}

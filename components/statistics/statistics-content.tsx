@@ -1,5 +1,3 @@
-'use client';
-
 import { type ReactNode, useDeferredValue, useMemo, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { ArrowUpRight, BarChart3, BookOpen, Search, Trophy } from 'lucide-react';

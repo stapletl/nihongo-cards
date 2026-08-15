@@ -1,0 +1,55 @@
+name: CI
+
+on:
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - main
+
+jobs:
+    lint:
+        name: lint
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+
+            - name: Install dependencies
+              run: bun install --frozen-lockfile
+
+            # generated/ is gitignored, so a fresh checkout has no @/generated/kana-stroke-data.
+            # oxlint's type-aware rules resolve the missing module to `error` and fail.
+            - name: Generate kana stroke data
+              run: bun run generate:kana-stroke-data
+
+            - name: Run lint
+              run: bun run lint
+
+    build:
+        name: build
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Bun
+              uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+
+            - name: Install dependencies
+              run: bun install --frozen-lockfile
+
+            # `build` chains generate:kana-stroke-data and typecheck itself, so this is also
+            # the only place CI runs `tsc --noEmit`.
+            - name: Build
+              run: bun run build

@@ -1,5 +1,3 @@
-'use client';
-
 import { useCallback, useEffect, useState } from 'react';
 import { KANA_PROGRESS_UPDATED_EVENT, KanaProgress, getAllKanaProgress } from '@/lib/kana-db';
 
@@ -21,7 +19,7 @@ export function useKanaProgressMap(): {
                 setProgressMap(new Map(records.map((r) => [r.character, r])));
                 setIsLoading(false);
             })
-            .catch((err) => {
+            .catch((err: unknown) => {
                 console.error('useKanaProgressMap: failed to load progress', err);
                 setIsLoading(false);
             });

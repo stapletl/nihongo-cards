@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 
 import { SelectableKanaCard } from '@/components/selectable-kana-card';

@@ -1,5 +1,3 @@
-'use client';
-
 import { ClipboardListIcon, CreditCardIcon } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { type ReactNode } from 'react';

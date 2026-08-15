@@ -21,9 +21,6 @@ const DB_VERSION = 3;
 let dbPromise: Promise<IDBPDatabase<NihongoCardsDB>> | null = null;
 
 export function getDB(): Promise<IDBPDatabase<NihongoCardsDB>> {
-    if (typeof window === 'undefined') {
-        throw new Error('app-db: IndexedDB is only available in the browser');
-    }
     if (!dbPromise) {
         dbPromise = openDB<NihongoCardsDB>(DB_NAME, DB_VERSION, {
             upgrade(db, oldVersion) {
@@ -40,7 +37,7 @@ export function getDB(): Promise<IDBPDatabase<NihongoCardsDB>> {
                     }
                 }
             },
-        }).catch((err) => {
+        }).catch((err: unknown) => {
             dbPromise = null;
             throw err;
         });

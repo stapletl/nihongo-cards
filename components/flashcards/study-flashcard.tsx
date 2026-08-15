@@ -1,5 +1,3 @@
-'use client';
-
 import { Link } from '@tanstack/react-router';
 import React, { useId, useRef, useState } from 'react';
 import { useHotkey } from '@tanstack/react-hotkeys';
@@ -72,19 +70,68 @@ export const StudyFlashcard: React.FC<StudyFlashcardProps> = ({
         }
     };
 
+    // Every deck card is mounted at once, and `enabled: false` still registers — the
+    // manager suppresses execution, not registration. So 'F' and 'R' always hold one
+    // registration per card, plus the command menu's own 'F'. That is intended, and only
+    // the active card's handler runs, so opt out of the conflict warning rather than
+    // trying to eliminate the duplicate registrations.
     useHotkey(
         'F',
         () => {
             handleRevealChange(!isRevealed);
         },
-        { enabled: isActive }
+        { enabled: isActive, conflictBehavior: 'allow' }
     );
+
+    // Space is handled with a raw listener rather than `useHotkey` so the page-scroll
+    // default can be prevented. It has to be keyed off `isActive` rather than the card's
+    // own `onKeyDown`: every deck card is mounted at once, so a focused-element handler
+    // fires for whichever card was last clicked, not the one on screen. The Effect Event
+    // keeps the listener on the latest reveal state without re-registering it.
+    const handleSpaceKey = React.useEffectEvent(() => {
+        handleRevealChange(!isRevealed);
+    });
+
+    React.useEffect(() => {
+        if (!isActive) {
+            return;
+        }
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.code !== 'Space') {
+                return;
+            }
+
+            // A focused control owns Space — buttons activate on it and text fields
+            // need the character. Only claim it when nothing else would use it.
+            const target = event.target;
+
+            if (
+                target instanceof HTMLElement &&
+                target.closest('button, input, textarea, select, [contenteditable="true"]')
+            ) {
+                return;
+            }
+
+            event.preventDefault();
+            handleSpaceKey();
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isActive]);
     useHotkey(
         'R',
         () => {
             speak(item.character);
         },
-        { enabled: isActive && isPronunciationVisible && !isSpeaking }
+        {
+            enabled: isActive && isPronunciationVisible && !isSpeaking,
+            conflictBehavior: 'allow',
+        }
     );
 
     const renderJapanese = (sizeClassName: string, labelClassName: string) => (
@@ -149,7 +196,9 @@ export const StudyFlashcard: React.FC<StudyFlashcardProps> = ({
                         return;
                     }
 
-                    if (event.key === 'Enter' || event.key === ' ') {
+                    // Space is deliberately absent — the window listener above routes it
+                    // to the active card, and handling it here too would toggle twice.
+                    if (event.key === 'Enter') {
                         event.preventDefault();
                         handleRevealChange(!isRevealed);
                     }

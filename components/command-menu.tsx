@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { usePathname } from '@/hooks/use-pathname';
@@ -19,6 +17,7 @@ import {
     SunIcon,
 } from 'lucide-react';
 import { useThemeToggle } from '@/hooks/use-theme-toggle';
+import { themeToggleOrigin } from '@/lib/theme-transition';
 import { useNavigationGuard } from '@/hooks/use-navigation-guard';
 import { COLOR_THEMES, useColorTheme } from '@/hooks/use-color-theme';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -96,9 +95,7 @@ export function CommandMenu() {
     useHotkey('S', () => handleSelect('/statistics'));
     useHotkey(',', () => handleSelect('/settings'));
     useHotkey('.', () => handleSelect('/'));
-    useHotkey('T', () => {
-        toggleTheme();
-    });
+    useHotkey('T', () => toggleTheme());
 
     return (
         <>
@@ -191,7 +188,7 @@ export function CommandMenu() {
                                 <CommandItem
                                     onSelect={() => {
                                         setOpen(false);
-                                        toggleTheme();
+                                        toggleTheme(themeToggleOrigin());
                                     }}>
                                     {isDarkTheme ? <SunIcon /> : <MoonIcon />}
                                     <span>Light / Dark Mode Toggle</span>

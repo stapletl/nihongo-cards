@@ -3,7 +3,7 @@ import path from 'node:path';
 import type { Plugin } from 'vite';
 // Relative import (not the `@/` alias) because vite.config.ts loads this file directly,
 // and Vite's config loader does not apply tsconfig path mapping.
-import { siteRoutes } from '../lib/routes-manifest';
+import { siteRoutes } from '../lib/routes-manifest.ts';
 
 /**
  * Fails the build when the router and `lib/routes-manifest.ts` disagree.

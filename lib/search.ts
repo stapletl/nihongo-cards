@@ -14,11 +14,20 @@ export function validateStringSearch(search: Record<string, unknown>): StringSea
     const result: StringSearch = {};
 
     for (const [key, value] of Object.entries(search)) {
-        if (value === undefined || value === null) {
+        // Search params arrive from the URL, so anything non-primitive is malformed input.
+        // Stringifying it would put a literal "[object Object]" into the query.
+        // `Array.isArray` narrows `unknown` to `any[]`, so re-state the element type.
+        const primitive: unknown = Array.isArray(value) ? ((value as unknown[])[0] ?? '') : value;
+
+        if (
+            typeof primitive !== 'string' &&
+            typeof primitive !== 'number' &&
+            typeof primitive !== 'boolean'
+        ) {
             continue;
         }
 
-        result[key] = Array.isArray(value) ? String(value[0] ?? '') : String(value);
+        result[key] = String(primitive);
     }
 
     return result;
@@ -31,7 +40,7 @@ export function asSearchParams(search: unknown): SearchParamsLike {
 
 /** Converts a built query string into the object form router navigation expects. */
 export function searchFromQuery(query: URLSearchParams): StringSearch {
-    return Object.fromEntries(query) as StringSearch;
+    return Object.fromEntries(query);
 }
 
 /** Serializes a search object back to a query string for comparison. */

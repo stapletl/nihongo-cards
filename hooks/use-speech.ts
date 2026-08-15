@@ -8,6 +8,71 @@ type SpeechSettings = {
     rate: number;
 };
 
+/** Matches the slider bounds in `components/settings/voice-settings-content.tsx`. */
+const SPEECH_RANGE = { min: 0.1, max: 2 } as const;
+const DEFAULT_SPEECH_SETTINGS: SpeechSettings = { pitch: 1, rate: 0.7 };
+
+function clampSpeechValue(value: unknown, fallback: number): number {
+    if (typeof value !== 'number' || !Number.isFinite(value)) {
+        return fallback;
+    }
+
+    return Math.min(Math.max(value, SPEECH_RANGE.min), SPEECH_RANGE.max);
+}
+
+/**
+ * localStorage is user-writable and outlives any change to `SpeechSettings`, so a stored
+ * blob is untrusted input. An out-of-range pitch or rate makes `speechSynthesis.speak`
+ * throw, which would break speech everywhere until the key is cleared by hand.
+ */
+function parseSpeechSettings(raw: string | null): SpeechSettings {
+    if (!raw) {
+        return DEFAULT_SPEECH_SETTINGS;
+    }
+
+    let parsed: unknown;
+    try {
+        parsed = JSON.parse(raw);
+    } catch {
+        return DEFAULT_SPEECH_SETTINGS;
+    }
+
+    if (typeof parsed !== 'object' || parsed === null) {
+        return DEFAULT_SPEECH_SETTINGS;
+    }
+
+    const record = parsed as Record<string, unknown>;
+
+    return {
+        pitch: clampSpeechValue(record.pitch, DEFAULT_SPEECH_SETTINGS.pitch),
+        rate: clampSpeechValue(record.rate, DEFAULT_SPEECH_SETTINGS.rate),
+    };
+}
+
+/** Returns the stored voice identity, or null when nothing usable is stored. */
+function parseSavedVoice(raw: string | null): { name: string; lang: string } | null {
+    if (!raw) {
+        return null;
+    }
+
+    let parsed: unknown;
+    try {
+        parsed = JSON.parse(raw);
+    } catch {
+        return null;
+    }
+
+    if (typeof parsed !== 'object' || parsed === null) {
+        return null;
+    }
+
+    const record = parsed as Record<string, unknown>;
+
+    return typeof record.name === 'string' && typeof record.lang === 'string'
+        ? { name: record.name, lang: record.lang }
+        : null;
+}
+
 type SpeechContextType = {
     selectedVoice: SpeechSynthesisVoice | null;
     setSelectedVoice: (voice: SpeechSynthesisVoice | null) => void;
@@ -31,17 +96,9 @@ export function useSpeechProvider() {
     const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
     const [isSpeaking, setSpeaking] = useState(false);
     const [settings, setSettings] = useState<SpeechSettings>(() => {
-        if (typeof window === 'undefined') return { pitch: 1, rate: 0.7 };
+        if (typeof window === 'undefined') return DEFAULT_SPEECH_SETTINGS;
 
-        const savedSettings = localStorage.getItem(SPEECH_SETTINGS_STORAGE_KEY);
-        if (savedSettings) {
-            try {
-                return JSON.parse(savedSettings);
-            } catch {
-                return { pitch: 1, rate: 0.7 };
-            }
-        }
-        return { pitch: 1, rate: 0.7 };
+        return parseSpeechSettings(localStorage.getItem(SPEECH_SETTINGS_STORAGE_KEY));
     });
 
     // Function to persist voice selection to localStorage
@@ -61,22 +118,19 @@ export function useSpeechProvider() {
             if (voices.length === 0) return;
 
             // Try to get voice from localStorage
-            const savedVoiceData = localStorage.getItem(SPEECH_VOICE_STORAGE_KEY);
+            const savedVoice = parseSavedVoice(localStorage.getItem(SPEECH_VOICE_STORAGE_KEY));
 
-            if (savedVoiceData) {
-                try {
-                    const savedVoice = JSON.parse(savedVoiceData);
-                    const matchedVoice = voices.find(
-                        (v) => v.name === savedVoice.name && v.lang === savedVoice.lang
-                    );
-                    if (matchedVoice) {
-                        setSelectedVoice(matchedVoice);
-                        return;
-                    }
-                } catch {
-                    // If JSON parsing fails, remove the invalid data
-                    localStorage.removeItem(SPEECH_VOICE_STORAGE_KEY);
+            if (savedVoice) {
+                const matchedVoice = voices.find(
+                    (v) => v.name === savedVoice.name && v.lang === savedVoice.lang
+                );
+                if (matchedVoice) {
+                    setSelectedVoice(matchedVoice);
+                    return;
                 }
+            } else {
+                // Unreadable or malformed — drop it so it stops being reconsidered.
+                localStorage.removeItem(SPEECH_VOICE_STORAGE_KEY);
             }
 
             // If no stored voice or voice not found, try to select

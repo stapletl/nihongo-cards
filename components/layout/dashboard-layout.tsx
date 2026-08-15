@@ -1,6 +1,6 @@
 import { AppSidebar } from '@/components/app-sidebar';
 import { Separator } from '@/components/ui/separator';
-import { ThemeProvider } from '@/components/providers/theme-provider';
+import { ThemeProvider } from 'next-themes';
 import { SpeechProvider } from '@/components/providers/speech-provider';
 import { NavigationGuardProvider } from '@/components/providers/navigation-guard-provider';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';

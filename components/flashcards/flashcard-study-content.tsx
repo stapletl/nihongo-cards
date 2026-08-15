@@ -1,5 +1,3 @@
-'use client';
-
 import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import React, { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { useHotkey } from '@tanstack/react-hotkeys';
@@ -72,7 +70,7 @@ export const FlashcardStudyContent: React.FC = () => {
         });
     };
 
-    const goPrevious = React.useEffectEvent(() => {
+    const goPrevious = () => {
         if (index <= 0) {
             return;
         }
@@ -83,21 +81,21 @@ export const FlashcardStudyContent: React.FC = () => {
         }
 
         replaceState({ ids, index: Math.max(index - 1, 0), top });
-    });
+    };
 
-    const promptReveal = React.useEffectEvent(() => {
+    const promptReveal = () => {
         setRevealPromptSignal((current) => current + 1);
-    });
+    };
 
-    const restartStudySession = React.useEffectEvent((nextIds: string[]) => {
+    const restartStudySession = (nextIds: string[]) => {
         setIsFinishDialogOpen(false);
         setRevealedIds(new Set());
         viewedIdsRef.current = new Set();
         setDeckSessionKey((current) => current + 1);
         replaceState({ ids: nextIds, index: 0, top });
-    });
+    };
 
-    const goNext = React.useEffectEvent(() => {
+    const goNext = () => {
         if (!activeId) {
             return;
         }
@@ -118,7 +116,7 @@ export const FlashcardStudyContent: React.FC = () => {
         }
 
         replaceState({ ids, index: Math.min(index + 1, ids.length - 1), top });
-    });
+    };
 
     const handleCarouselSelect = React.useEffectEvent(() => {
         if (!carouselApi) {
@@ -309,13 +307,14 @@ export const FlashcardStudyContent: React.FC = () => {
             <Carousel
                 setApi={setCarouselApi}
                 opts={{ align: 'center', startIndex: index }}
+                // Replaces the primitive's own arrow handling, which scrolls the carousel
+                // directly and so would skip the reveal gate. Only the default is
+                // suppressed here: navigating is left to the ArrowLeft/ArrowRight hotkeys
+                // above, which fire wherever focus is. Calling goNext/goPrevious here too
+                // advanced twice whenever focus sat inside the carousel.
                 onKeyDownCapture={(event) => {
-                    if (event.key === 'ArrowLeft') {
+                    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
                         event.preventDefault();
-                        goPrevious();
-                    } else if (event.key === 'ArrowRight') {
-                        event.preventDefault();
-                        goNext();
                     }
                 }}
                 className="w-full max-w-3xl">

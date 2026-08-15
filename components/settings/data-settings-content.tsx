@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
@@ -205,7 +203,7 @@ function validateEnvelope(
 
     return {
         ok: false,
-        error: `Unsupported file version: ${env.version}. Expected version 1 or 2.`,
+        error: `Unsupported file version: ${JSON.stringify(env.version)}. Expected version 1 or 2.`,
     };
 }
 
@@ -324,7 +322,7 @@ export function DataSettingsContent() {
                         Download all your progress as a JSON backup file.
                     </p>
                 </div>
-                <Button variant="outline" onClick={handleExport}>
+                <Button variant="outline" onClick={() => void handleExport()}>
                     Export
                 </Button>
             </div>
@@ -376,7 +374,7 @@ export function DataSettingsContent() {
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                                 <AlertDialogAction
-                                    onClick={handleConfirmImport}
+                                    onClick={() => void handleConfirmImport()}
                                     disabled={isLoading}>
                                     Import
                                 </AlertDialogAction>
@@ -420,7 +418,7 @@ export function DataSettingsContent() {
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
                                 variant="destructive"
-                                onClick={handleConfirmDelete}
+                                onClick={() => void handleConfirmDelete()}
                                 disabled={isLoading}>
                                 Delete
                             </AlertDialogAction>

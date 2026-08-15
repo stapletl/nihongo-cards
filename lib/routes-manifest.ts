@@ -1,7 +1,7 @@
 // Relative imports (not the `@/` alias) because vite.config.ts loads this file directly,
 // and Vite's config loader does not apply tsconfig path mapping.
-import { hiraganaItems } from './hiragana';
-import { katakanaItems } from './katakana';
+import { hiraganaItems } from './hiragana.ts';
+import { katakanaItems } from './katakana.ts';
 
 /**
  * Every route the site serves. This is the single source of truth for both static

@@ -1,5 +1,3 @@
-'use client';
-
 import { useRef } from 'react';
 import { Moon, Sun } from 'lucide-react';
 
@@ -23,6 +21,7 @@ export const ThemeToggle = () => {
     return (
         <Button
             ref={buttonRef}
+            data-theme-toggle=""
             variant="outline"
             size="icon"
             title="Toggle theme"

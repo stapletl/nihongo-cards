@@ -1,5 +1,3 @@
-'use client';
-
 export function ThemePreview() {
     return (
         <div className="bg-background border-border rounded-lg border p-4">

@@ -9,6 +9,9 @@
         "esModuleInterop": true,
         "module": "esnext",
         "moduleResolution": "bundler",
+        // Files pulled into vite.config.ts's own module graph must spell out the `.ts`
+        // extension for Vite's native config loader.
+        "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         "isolatedModules": true,
         "jsx": "react-jsx",

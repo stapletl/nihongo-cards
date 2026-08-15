@@ -1,4 +1,5 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router';
+import { Devtools } from '@/components/devtools';
 import DashboardLayout from '@/components/layout/dashboard-layout';
 import { NotFound } from '@/components/not-found';
 import { StructuredData } from '@/components/structured-data';
@@ -35,6 +36,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <body className="antialiased">
                 <StructuredData id="site-schema" data={buildSiteStructuredData()} />
                 <DashboardLayout>{children}</DashboardLayout>
+                {import.meta.env.DEV && <Devtools />}
                 <Scripts />
             </body>
         </html>

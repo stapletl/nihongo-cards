@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState } from 'react';
 import { Eye, EyeOff, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';

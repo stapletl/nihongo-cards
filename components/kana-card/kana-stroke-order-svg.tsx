@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 
 import { useMediaQuery } from '@/hooks/use-media-query';
@@ -96,7 +94,7 @@ export const KanaStrokeOrderSvg: React.FC<KanaStrokeOrderSvgProps> = ({
                     ))}
                 </g>
             </svg>
-            <style jsx={true}>{`
+            <style>{`
                 @keyframes kana-stroke-show {
                     from {
                         opacity: 0;

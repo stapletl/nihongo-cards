@@ -1,5 +1,3 @@
-'use client';
-
 import { KanaItem } from '@/lib/hiragana';
 import React from 'react';
 import { Button } from '../ui/button';

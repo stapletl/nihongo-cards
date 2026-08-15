@@ -1,5 +1,3 @@
-'use client';
-
 import { clientOnly } from '@/components/client-only';
 import { Link } from '@tanstack/react-router';
 import { AppearanceSettingsContent } from '@/components/settings/appearance-settings-content';

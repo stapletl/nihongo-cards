@@ -1,5 +1,3 @@
-'use client';
-
 import { clientOnly } from '@/components/client-only';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';

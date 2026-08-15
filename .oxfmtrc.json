@@ -1,0 +1,43 @@
+{
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "printWidth": 100,
+    "tabWidth": 4,
+    "singleQuote": true,
+    "bracketSameLine": true,
+    "trailingComma": "es5",
+    "sortPackageJson": false,
+    "sortTailwindcss": {
+        // No `stylesheet` here on purpose: it makes oxfmt sort against the Tailwind v4
+        // CSS theme, which reorders classes in ~40 files relative to what
+        // prettier-plugin-tailwindcss produced from tailwind.config.mjs.
+        "attributes": ["className"]
+    },
+    "overrides": [
+        {
+            // Prettier never emitted trailing commas in JSON; oxfmt does for .jsonc.
+            // wrangler.jsonc is read by the deploy tooling, so keep it plain JSON.
+            "files": ["**/*.json", "**/*.jsonc"],
+            "options": {
+                "trailingComma": "none"
+            }
+        }
+    ],
+    "ignorePatterns": [
+        "build",
+        ".next",
+        "dist",
+        "coverage",
+        "generated",
+        "node_modules",
+        "bun.lock",
+        "src/routeTree.gen.ts",
+        "package-lock.json",
+        "yarn.lock",
+        "pnpm-lock.yaml",
+        "*.log",
+        "*.tmp",
+        ".env",
+        ".env.*",
+        "public/*.svg"
+    ]
+}

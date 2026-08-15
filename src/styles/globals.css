@@ -19,6 +19,25 @@
         animation: none;
         mix-blend-mode: normal;
     }
+
+    /*
+     * Scoped to a theme toggle in flight — `lib/theme-transition.ts` sets the attribute
+     * and both variables for the length of the reveal, so no other view transition sees
+     * these rules.
+     *
+     * The group carries the UA's 250ms animation, which is what keeps the transition
+     * alive; without stretching it to the clip-path duration the pseudo-elements tear
+     * down while the circle is still expanding. The pinned clip-path covers the frames
+     * between the snapshot and the JS animation attaching on `ready`, which otherwise
+     * paint the new theme unclipped.
+     */
+    html[data-theme-transition='active']::view-transition-group(root) {
+        animation-duration: var(--theme-transition-duration, 400ms);
+    }
+
+    html[data-theme-transition='active']::view-transition-new(root) {
+        clip-path: var(--theme-transition-clip-from, none);
+    }
 }
 
 @theme inline {
