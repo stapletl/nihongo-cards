@@ -20,13 +20,12 @@ export function KanaStrokeOrderInfo() {
                     size="icon-sm"
                     title="Stroke order help"
                     variant="ghost">
-                    <InfoIcon className='text-muted-foreground'/>
-                    <span className="sr-only">Show stroke order help</span>
+                    <InfoIcon className="text-muted-foreground" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="flex flex-col gap-4" sideOffset={8}>
                 <PopoverHeader>
-                    <PopoverTitle>Stroke Order</PopoverTitle>
+                    <PopoverTitle>Stroke order</PopoverTitle>
                     <PopoverDescription>How the character is written by hand.</PopoverDescription>
                 </PopoverHeader>
                 <div className="flex flex-col gap-3">
@@ -34,21 +33,18 @@ export function KanaStrokeOrderInfo() {
                     <div className="flex flex-col gap-2">
                         <h3 className="text-sm font-medium">Handwritten vs. typed</h3>
                         <p className="text-muted-foreground text-sm">
-                            The handwritten character can look slightly different from the typed one
-                            above. It is the same character, much like a handwritten{' '}
-                            <span className="text-foreground font-bold">ɑ</span> looks different
-                            from the <span className="text-foreground font-medium">a</span> in most
-                            fonts.
+                            Same character, different look, like a handwritten{' '}
+                            <span className="text-foreground font-bold">ɑ</span> vs. the{' '}
+                            <span className="text-foreground font-medium">a</span> in most fonts.
                         </p>
                     </div>
                     <Separator />
                     <div className="flex flex-col gap-2">
-                        <h3 className="text-sm font-medium">Why stroke order matters</h3>
+                        <h3 className="text-sm font-medium">Why it matters</h3>
                         <p className="text-muted-foreground text-sm">
-                            The order and direction of strokes shape how the character looks — the
-                            same way writing an{' '}
-                            <span className="text-foreground font-medium">H</span> backwards would
-                            look off, even if the finished letter is recognizable.
+                            Order and direction shape the result, similar to how writing a{' '}
+                            <span className="text-foreground font-medium">B</span> from the bottom
+                            would likely appear different.
                         </p>
                     </div>
                 </div>

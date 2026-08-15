@@ -34,7 +34,7 @@ export function KanaDetailPage({
     const detailHref = (item: KanaItem) => `${backHref}/${encodeURIComponent(item.character)}`;
 
     return (
-        <div className="flex h-full flex-col overflow-hidden">
+        <div className="flex min-h-0 flex-1 flex-col">
             <MarkKanaVisited character={kanaItem.character} />
             <NavHotkeys
                 prevHref={prevItem ? detailHref(prevItem) : undefined}
@@ -62,7 +62,8 @@ export function KanaDetailPage({
                     ) : null}
                 </div>
             </div>
-            <div className="flex-1 overflow-y-auto pt-4">
+            {/* The nav bar above is shrink-0, so this is the only part that scrolls. */}
+            <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto pt-4">
                 <KanaPageContent
                     kanaItem={kanaItem}
                     strokeOrderCharacters={strokeOrderCharacters}

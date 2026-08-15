@@ -51,7 +51,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
                 <NavigationGuardProvider>
                     <SidebarProvider>
                         <AppSidebar />
-                        <SidebarInset className="h-dvh w-full overflow-x-hidden">
+                        <SidebarInset className="h-dvh w-full overflow-hidden">
                             <header className="bg-background flex h-16 shrink-0 items-center gap-2 border-b px-4">
                                 <SidebarTrigger className="-ml-1" />
                                 <Separator
@@ -65,35 +65,37 @@ export default function DashboardLayout({ children }: LayoutProps) {
                                     <CommandMenu />
                                 </div>
                             </header>
-                            <div className="w-full flex-1 overflow-x-hidden overflow-y-auto">
-                                <div className="flex min-h-full min-w-[375px] flex-col">
-                                    <div className="flex flex-1 flex-col gap-4">{children}</div>
-                                    <footer className="border-t px-4 py-3">
-                                        <div className="text-muted-foreground flex flex-wrap items-center justify-between gap-3 text-sm">
-                                            <span>© {currentYear} Nihongo Cards</span>
-                                            <div className="flex flex-wrap items-center gap-4">
-                                                <Link
-                                                    to="/settings/privacy"
-                                                    className="hover:text-foreground underline-offset-4 hover:underline">
-                                                    Privacy
-                                                </Link>
-                                                <Link
-                                                    to="/settings/terms"
-                                                    className="hover:text-foreground underline-offset-4 hover:underline">
-                                                    Terms
-                                                </Link>
-                                                <a
-                                                    href={SITE_GITHUB_URL}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="hover:text-foreground underline-offset-4 hover:underline">
-                                                    GitHub
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </footer>
+                            <div className="relative min-h-0 w-full flex-1 overflow-x-hidden overflow-y-auto">
+                                <div className="flex h-full min-w-[375px] flex-col">
+                                    <div className="flex min-h-0 flex-1 flex-col gap-4">
+                                        {children}
+                                    </div>
                                 </div>
                             </div>
+                            <footer className="shrink-0 border-t px-4 py-3">
+                                <div className="text-muted-foreground flex flex-wrap items-center justify-between gap-3 text-sm">
+                                    <span>© {currentYear} Nihongo Cards</span>
+                                    <div className="flex flex-wrap items-center gap-4">
+                                        <Link
+                                            to="/settings/privacy"
+                                            className="hover:text-foreground underline-offset-4 hover:underline">
+                                            Privacy
+                                        </Link>
+                                        <Link
+                                            to="/settings/terms"
+                                            className="hover:text-foreground underline-offset-4 hover:underline">
+                                            Terms
+                                        </Link>
+                                        <a
+                                            href={SITE_GITHUB_URL}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="hover:text-foreground underline-offset-4 hover:underline">
+                                            GitHub
+                                        </a>
+                                    </div>
+                                </div>
+                            </footer>
                         </SidebarInset>
                     </SidebarProvider>
                 </NavigationGuardProvider>
