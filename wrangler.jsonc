@@ -14,5 +14,13 @@
         // Do NOT use "single-page-application" — that returns 200 with the app shell for
         // every unknown URL, which tells crawlers those pages exist.
         "not_found_handling": "404-page"
-    }
+    },
+    // Both hostnames are served by this Worker. www does not serve a duplicate copy of the
+    // site — a Cloudflare Redirect Rule ("www to apex") 301s it to the bare domain, and
+    // redirect rules run ahead of the Worker, so the route below only ever sees the apex
+    // in practice. It still has to exist for the redirect to have something to attach to.
+    "routes": [
+        { "pattern": "nihongo-cards.com", "custom_domain": true },
+        { "pattern": "www.nihongo-cards.com", "custom_domain": true }
+    ]
 }
