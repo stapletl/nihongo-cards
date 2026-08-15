@@ -3,44 +3,29 @@ import { useNavigate } from '@tanstack/react-router';
 import { usePathname } from '@/hooks/use-pathname';
 import { hrefToNavigateOptions } from '@/lib/search';
 import { useHotkey } from '@tanstack/react-hotkeys';
-import {
-    ArrowRightIcon,
-    BarChartIcon,
-    CheckIcon,
-    ClipboardListIcon,
-    CreditCardIcon,
-    HomeIcon,
-    MoonIcon,
-    PaletteIcon,
-    SearchIcon,
-    SettingsIcon,
-    SunIcon,
-} from 'lucide-react';
+import { SearchIcon } from 'lucide-react';
 import { useThemeToggle } from '@/hooks/use-theme-toggle';
 import { themeToggleOrigin } from '@/lib/theme-transition';
 import { useNavigationGuard } from '@/hooks/use-navigation-guard';
-import { COLOR_THEMES, useColorTheme } from '@/hooks/use-color-theme';
+import { useColorTheme } from '@/hooks/use-color-theme';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useKanaProgressMap } from '@/hooks/use-kana-progress';
 import { isVisited } from '@/lib/kana-db';
 import { hiraganaItems } from '@/lib/hiragana';
 import { katakanaItems } from '@/lib/katakana';
-import {
-    CommandDialog,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-    CommandSeparator,
-    CommandShortcut,
-} from '@/components/ui/command';
+
+/**
+ * cmdk and its dialog are worth roughly a third of this component's weight and are only
+ * reachable through the trigger or Mod+K, so the body loads on first open. The hotkeys and
+ * the trigger button below stay eager — they have to work on the first keystroke.
+ */
+const CommandMenuDialog = React.lazy(() => import('@/components/command-menu-dialog'));
 
 export function CommandMenu() {
     const [open, setOpen] = React.useState(false);
-    const [search, setSearch] = React.useState('');
-    const [pages, setPages] = React.useState<string[]>([]);
-    const page = pages[pages.length - 1];
+    // Latches on first open so the dialog keeps its state (and its close animation) after
+    // the palette is dismissed, instead of unmounting and refetching on the next open.
+    const [hasOpened, setHasOpened] = React.useState(false);
     const navigate = useNavigate();
     const pathname = usePathname();
     const { resolvedTheme, toggleTheme } = useThemeToggle();
@@ -51,18 +36,19 @@ export function CommandMenu() {
     const isFlashcardStudyPage = pathname === '/flashcards/study';
     const isDarkTheme = resolvedTheme?.endsWith('dark') || resolvedTheme === 'dark';
 
-    React.useEffect(() => {
-        if (!open) {
-            setPages([]);
-            setSearch('');
-        }
-    }, [open]);
-
     const nextHiragana = hiraganaItems.find((item) => !isVisited(progressMap.get(item.character)));
     const nextKatakana = katakanaItems.find((item) => !isVisited(progressMap.get(item.character)));
 
+    const changeOpen = (next: boolean) => {
+        setOpen(next);
+
+        if (next) {
+            setHasOpened(true);
+        }
+    };
+
     useHotkey('Mod+K', () => {
-        setOpen((prev) => !prev);
+        changeOpen(!open);
     });
 
     const handleSelect = (url: string) => {
@@ -101,7 +87,7 @@ export function CommandMenu() {
         <>
             {/* Trigger button */}
             <button
-                onClick={() => setOpen(true)}
+                onClick={() => changeOpen(true)}
                 className="text-muted-foreground hover:bg-accent hover:text-accent-foreground md:border-input md:bg-background flex h-9 w-9 items-center justify-center rounded-md transition-colors md:w-42 md:justify-start md:gap-2 md:border md:px-3 md:text-sm">
                 <SearchIcon className="h-4 w-4 shrink-0" />
                 <span className="hidden flex-1 text-left md:block">Search...</span>
@@ -110,171 +96,22 @@ export function CommandMenu() {
                 </kbd>
             </button>
 
-            <CommandDialog
-                open={open}
-                onOpenChange={setOpen}
-                className={isMobile ? 'top-4 translate-y-0' : undefined}>
-                <CommandInput
-                    placeholder={
-                        page === 'color-theme'
-                            ? 'Search color themes...'
-                            : 'Type a command or search...'
-                    }
-                    value={search}
-                    onValueChange={setSearch}
-                    onKeyDown={(e) => {
-                        if (
-                            pages.length > 0 &&
-                            (e.key === 'Escape' || (e.key === 'Backspace' && !search))
-                        ) {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setPages((prev) => prev.slice(0, -1));
-                            setSearch('');
-                        }
-                    }}
-                />
-                <CommandList>
-                    <CommandEmpty>No results found.</CommandEmpty>
-                    {!page && (
-                        <>
-                            <CommandGroup heading="Commands">
-                                {nextHiragana && (
-                                    <CommandItem
-                                        onSelect={() =>
-                                            handleSelect(
-                                                `/hiragana/${encodeURIComponent(nextHiragana.character)}`
-                                            )
-                                        }>
-                                        <ArrowRightIcon className="text-primary" />
-                                        <span>
-                                            View Next Hiragana —{' '}
-                                            <span className="text-primary font-semibold">
-                                                {nextHiragana.character}
-                                            </span>{' '}
-                                            ({nextHiragana.romanji})
-                                        </span>
-                                        <CommandShortcut>⇧H</CommandShortcut>
-                                    </CommandItem>
-                                )}
-                                {nextKatakana && (
-                                    <CommandItem
-                                        onSelect={() =>
-                                            handleSelect(
-                                                `/katakana/${encodeURIComponent(nextKatakana.character)}`
-                                            )
-                                        }>
-                                        <ArrowRightIcon className="text-primary" />
-                                        <span>
-                                            View Next Katakana —{' '}
-                                            <span className="text-primary font-semibold">
-                                                {nextKatakana.character}
-                                            </span>{' '}
-                                            ({nextKatakana.romanji})
-                                        </span>
-                                        <CommandShortcut>⇧K</CommandShortcut>
-                                    </CommandItem>
-                                )}
-                                <CommandItem onSelect={() => handleSelect('/flashcards')}>
-                                    <CreditCardIcon />
-                                    <span>Study Flash Cards</span>
-                                    <CommandShortcut>F</CommandShortcut>
-                                </CommandItem>
-                                <CommandItem onSelect={() => handleSelect('/quiz')}>
-                                    <ClipboardListIcon />
-                                    <span>Start Quiz</span>
-                                    <CommandShortcut>Q</CommandShortcut>
-                                </CommandItem>
-                                <CommandItem
-                                    onSelect={() => {
-                                        setOpen(false);
-                                        toggleTheme(themeToggleOrigin());
-                                    }}>
-                                    {isDarkTheme ? <SunIcon /> : <MoonIcon />}
-                                    <span>Light / Dark Mode Toggle</span>
-                                    <CommandShortcut>T</CommandShortcut>
-                                </CommandItem>
-                                <CommandItem
-                                    onSelect={() => {
-                                        setPages([...pages, 'color-theme']);
-                                        setSearch('');
-                                    }}>
-                                    <PaletteIcon />
-                                    <span>Color Theme…</span>
-                                </CommandItem>
-                            </CommandGroup>
-                            <CommandGroup heading="Navigation">
-                                <CommandSeparator />
-                                <CommandItem onSelect={() => handleSelect('/')}>
-                                    <HomeIcon />
-                                    <span>Home</span>
-                                    <CommandShortcut>.</CommandShortcut>
-                                </CommandItem>
-                                <CommandItem onSelect={() => handleSelect('/hiragana')}>
-                                    <span className="text-muted-foreground flex size-4 items-center justify-center text-sm font-semibold">
-                                        あ
-                                    </span>
-                                    <span>Hiragana</span>
-                                    <CommandShortcut>H</CommandShortcut>
-                                </CommandItem>
-                                <CommandItem onSelect={() => handleSelect('/katakana')}>
-                                    <span className="text-muted-foreground flex size-4 items-center justify-center text-sm font-semibold">
-                                        ア
-                                    </span>
-                                    <span>Katakana</span>
-                                    <CommandShortcut>K</CommandShortcut>
-                                </CommandItem>
-                                <CommandItem onSelect={() => handleSelect('/flashcards')}>
-                                    <CreditCardIcon />
-                                    <span>Flashcards</span>
-                                    <CommandShortcut>F</CommandShortcut>
-                                </CommandItem>
-                                <CommandItem onSelect={() => handleSelect('/quiz')}>
-                                    <ClipboardListIcon />
-                                    <span>Quiz</span>
-                                    <CommandShortcut>Q</CommandShortcut>
-                                </CommandItem>
-                                <CommandItem onSelect={() => handleSelect('/statistics')}>
-                                    <BarChartIcon />
-                                    <span>Statistics</span>
-                                    <CommandShortcut>S</CommandShortcut>
-                                </CommandItem>
-                                <CommandItem onSelect={() => handleSelect('/settings')}>
-                                    <SettingsIcon />
-                                    <span>Settings</span>
-                                    <CommandShortcut>,</CommandShortcut>
-                                </CommandItem>
-                            </CommandGroup>
-                        </>
-                    )}
-                    {page === 'color-theme' && (
-                        <CommandGroup heading="Color Theme">
-                            {COLOR_THEMES.map((theme) => (
-                                <CommandItem
-                                    key={theme.id}
-                                    onSelect={() => {
-                                        setColorTheme(theme.id);
-                                        setOpen(false);
-                                    }}>
-                                    <span
-                                        className="flex size-4 shrink-0 rounded-full"
-                                        style={{
-                                            backgroundColor: isDarkTheme ? theme.dark : theme.light,
-                                        }}
-                                    />
-                                    <span>{theme.name}</span>
-                                    <span className="text-muted-foreground text-xs">
-                                        {theme.japanese}
-                                    </span>
-                                    {colorTheme === theme.id && (
-                                        <CheckIcon className="text-primary ml-auto" />
-                                    )}
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    )}
-                </CommandList>
-            </CommandDialog>
+            {hasOpened && (
+                <React.Suspense fallback={null}>
+                    <CommandMenuDialog
+                        open={open}
+                        onOpenChange={changeOpen}
+                        isMobile={isMobile}
+                        isDarkTheme={isDarkTheme}
+                        nextHiragana={nextHiragana}
+                        nextKatakana={nextKatakana}
+                        colorTheme={colorTheme}
+                        setColorTheme={setColorTheme}
+                        onSelectHref={handleSelect}
+                        onToggleTheme={() => toggleTheme(themeToggleOrigin())}
+                    />
+                </React.Suspense>
+            )}
         </>
     );
 }

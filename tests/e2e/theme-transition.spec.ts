@@ -23,8 +23,14 @@ declare global {
     }
 }
 
-/** Records the reveal animation the next theme toggle starts, then pauses it. */
-async function captureReveal(page: Page): Promise<Capture> {
+/**
+ * Arms the recorder for the next theme toggle's reveal, and resolves to a function that
+ * waits for it. Installing the patch is awaited separately from waiting for the capture on
+ * purpose: `keyboard.press` is dispatched through the browser's input path rather than the
+ * renderer's task queue, so a press issued while this `evaluate` is still pending can reach
+ * the page first and toggle the theme before anything is watching.
+ */
+async function watchReveal(page: Page): Promise<() => Promise<Capture>> {
     await page.evaluate(() => {
         const original = document.startViewTransition.bind(document);
         document.startViewTransition = (callback) => {
@@ -65,10 +71,12 @@ async function captureReveal(page: Page): Promise<Capture> {
         };
     });
 
-    await page.waitForFunction(() => window.__reveal !== undefined);
-    const reveal = await page.evaluate(() => window.__reveal);
-    if (!reveal) throw new Error('no reveal animation was captured');
-    return reveal;
+    return async () => {
+        await page.waitForFunction(() => window.__reveal !== undefined);
+        const reveal = await page.evaluate(() => window.__reveal);
+        if (!reveal) throw new Error('no reveal animation was captured');
+        return reveal;
+    };
 }
 
 /** `circle(<radius>% at <x>% <y>%)` -> the three values, as numbers. */
@@ -93,9 +101,9 @@ test('the theme toggle reveals from the button, in viewport percentages', async 
     await page.goto('/', { waitUntil: 'networkidle' });
 
     const centre = await toggleCentrePercent(page);
-    const capture = captureReveal(page);
+    const capture = await watchReveal(page);
     await page.locator('[data-theme-toggle]').first().click();
-    const reveal = await capture;
+    const reveal = await capture();
 
     const start = parseCircle(reveal.keyframes[0]);
     const end = parseCircle(reveal.keyframes[1]);
@@ -120,35 +128,51 @@ test('the theme toggle reveals from the button, in viewport percentages', async 
     expect(reveal.groupDuration).toBe(`${reveal.duration / 1000}s`);
 });
 
-test('the T hotkey reveals from the toggle, not the viewport centre', async ({ page }) => {
+test('the T hotkey reveals from the viewport centre', async ({ page }) => {
     await page.goto('/', { waitUntil: 'networkidle' });
 
-    const centre = await toggleCentrePercent(page);
-    const capture = captureReveal(page);
+    const capture = await watchReveal(page);
     await page.keyboard.press('t');
-    const reveal = await capture;
+    const reveal = await capture();
 
+    // A hotkey has no element to open from, so `applyThemeWithTransition` falls back to the
+    // middle of the viewport rather than borrowing the toggle's position.
     const start = parseCircle(reveal.keyframes[0]);
-    expect(start.x).toBeCloseTo(centre.x, 1);
-    expect(start.y).toBeCloseTo(centre.y, 1);
+    expect(start.x).toBeCloseTo(50, 1);
+    expect(start.y).toBeCloseTo(50, 1);
 });
 
-test('the theme still changes when the toggle is pressed twice in a row', async ({ page }) => {
+test('a toggle pressed inside a running reveal is ignored, and the next one works', async ({
+    page,
+}) => {
     await page.goto('/', { waitUntil: 'networkidle' });
 
     const root = page.locator('html');
     const button = page.locator('[data-theme-toggle]').first();
     const before = await root.getAttribute('data-theme');
     expect(before).toBeTruthy();
+    const toggled = before === 'dark' ? 'light' : 'dark';
 
-    // The second click lands inside the first reveal, which drops the competing
-    // transition — the theme it asks for still has to apply.
-    await button.click();
-    await expect(root).toHaveAttribute('data-theme', before === 'dark' ? 'light' : 'dark');
-    await button.click();
+    // Both presses in one page task, so the second is guaranteed to land inside the first
+    // reveal rather than racing its 400ms: `applyThemeWithTransition` marks the root before
+    // it starts the transition, so the flag is already up when the second click is
+    // dispatched. Applying that second theme here would repaint it under a snapshot of the
+    // one being revealed away — the flash from spamming the toggle.
+    const flagDuringSecondPress = await button.evaluate((element: HTMLElement) => {
+        element.click();
+        const flag = document.documentElement.dataset.themeTransition;
+        element.click();
 
-    await expect(root).toHaveAttribute('data-theme', String(before));
+        return flag;
+    });
+
+    expect(flagDuringSecondPress).toBe('active');
+    await expect(root).toHaveAttribute('data-theme', toggled);
+
+    // Once the reveal has torn itself down, the toggle answers again.
     await expect
         .poll(() => root.evaluate((element) => element.dataset.themeTransition))
         .toBeUndefined();
+    await button.click();
+    await expect(root).toHaveAttribute('data-theme', String(before));
 });

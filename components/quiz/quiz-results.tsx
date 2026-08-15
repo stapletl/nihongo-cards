@@ -9,12 +9,14 @@ import {
     RotateCcwIcon,
 } from 'lucide-react';
 import { hrefToNavigateOptions } from '@/lib/search';
-import { Label, Pie, PieChart } from 'recharts';
+import { defineChart } from '@tanstack/charts';
+import { pie, polar, radialArc, radialText } from '@tanstack/charts/polar';
+import { Chart } from '@tanstack/charts/react';
+import { scaleLinear } from '@tanstack/charts/scales/linear';
 
 import { SpeechButton } from '@/components/speech-button';
 import { Button } from '@/components/ui/button';
 import { ButtonGroup } from '@/components/ui/button-group';
-import { type ChartConfig, ChartContainer } from '@/components/ui/chart';
 import {
     Card,
     CardContent,
@@ -61,16 +63,72 @@ function getOppositeDirection(direction: QuizDirection): QuizDirection {
     return direction === 'kana-to-romanji' ? 'romanji-to-kana' : 'kana-to-romanji';
 }
 
-const scoreChartConfig = {
-    correct: {
-        label: 'Correct',
-        color: 'var(--color-primary)',
-    },
-    remaining: {
-        label: 'Remaining',
-        color: 'var(--color-muted)',
-    },
-} satisfies ChartConfig;
+/** Scene size of the score donut, in pixels. Matches the `size-32` box it renders into. */
+const SCORE_CHART_SIZE = 128;
+/** 50px outer radius out of the 64px the 128px scene allows. */
+const SCORE_CHART_RADIUS_RATIO = 0.78;
+/** 32px inner radius out of that 50px outer radius. */
+const SCORE_CHART_INNER_RATIO = 0.64;
+
+/**
+ * Donut showing the session score, with the score itself in the hole. The polar container
+ * has to be given explicit angle and radius domains: the arcs carry their own angles from
+ * `pie`, so the only marks that consult those scales are the centre labels, and inferring a
+ * domain from labels that all sit at zero would leave nothing to map.
+ */
+function buildScoreChart(score: number, total: number) {
+    const slices = pie(
+        [
+            { key: 'correct', value: score },
+            { key: 'remaining', value: Math.max(total - score, 0) },
+        ],
+        { value: 'value' }
+    );
+
+    return defineChart({
+        marks: [
+            polar({
+                radiusRatio: SCORE_CHART_RADIUS_RATIO,
+                angle: { scale: scaleLinear().domain([0, Math.PI * 2]) },
+                radius: { scale: scaleLinear().domain([0, 1]) },
+                marks: [
+                    radialArc(slices, {
+                        key: 'key',
+                        color: 'key',
+                        innerRadius: ({ radius }) => radius * SCORE_CHART_INNER_RATIO,
+                    }),
+                    radialText([{ id: 'score', angle: 0, radius: 0, text: `${score}` }], {
+                        key: 'id',
+                        angle: 'angle',
+                        radius: 'radius',
+                        text: 'text',
+                        baseline: 'middle',
+                        dy: -3,
+                        fill: 'var(--color-foreground)',
+                        fontSize: 18,
+                        fontWeight: 700,
+                    }),
+                    radialText([{ id: 'total', angle: 0, radius: 0, text: `/${total}` }], {
+                        key: 'id',
+                        angle: 'angle',
+                        radius: 'radius',
+                        text: 'text',
+                        baseline: 'middle',
+                        dy: 13,
+                        fill: 'var(--color-foreground)',
+                        fontSize: 14,
+                        fontWeight: 700,
+                    }),
+                ],
+            }),
+        ],
+        color: {
+            domain: ['correct', 'remaining'],
+            range: ['var(--color-primary)', 'var(--color-muted)'],
+        },
+        margin: 0,
+    });
+}
 
 export const QuizResults: React.FC<QuizResultsProps> = ({
     result,
@@ -88,18 +146,10 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
         correct: number;
         incorrect: number;
     } | null>(null);
-    const scoreChartData = [
-        {
-            key: 'correct',
-            value: result.score,
-            fill: 'var(--color-correct)',
-        },
-        {
-            key: 'remaining',
-            value: Math.max(result.total - result.score, 0),
-            fill: 'var(--color-remaining)',
-        },
-    ];
+    const scoreChart = React.useMemo(
+        () => buildScoreChart(result.score, result.total),
+        [result.score, result.total]
+    );
     const missedQuestionIndexes = new Set(
         result.answers.filter((answer) => !answer.correct).map((answer) => answer.questionIndex)
     );
@@ -173,49 +223,14 @@ export const QuizResults: React.FC<QuizResultsProps> = ({
                 </CardHeader>
                 <CardContent className="grid items-center gap-4 sm:grid-cols-[auto_1fr]">
                     <div className="mx-auto flex items-center gap-3 sm:flex-col sm:gap-2">
-                        <ChartContainer
-                            config={scoreChartConfig}
-                            className="aspect-square size-32 shrink-0"
-                            initialDimension={{ width: 128, height: 128 }}>
-                            <PieChart>
-                                <Pie
-                                    data={scoreChartData}
-                                    dataKey="value"
-                                    nameKey="key"
-                                    innerRadius={32}
-                                    outerRadius={50}
-                                    strokeWidth={0}>
-                                    <Label
-                                        content={({ viewBox }) => {
-                                            if (
-                                                !viewBox ||
-                                                !('cx' in viewBox) ||
-                                                !('cy' in viewBox)
-                                            ) {
-                                                return null;
-                                            }
-
-                                            return (
-                                                <foreignObject
-                                                    x={viewBox.cx - 42}
-                                                    y={viewBox.cy - 24}
-                                                    width={84}
-                                                    height={48}>
-                                                    <div className="text-foreground flex h-full flex-col items-center justify-center leading-none font-bold tabular-nums">
-                                                        <span className="text-lg">
-                                                            {result.score}
-                                                        </span>
-                                                        <span className="text-sm">
-                                                            /{result.total}
-                                                        </span>
-                                                    </div>
-                                                </foreignObject>
-                                            );
-                                        }}
-                                    />
-                                </Pie>
-                            </PieChart>
-                        </ChartContainer>
+                        <Chart
+                            definition={scoreChart}
+                            width={SCORE_CHART_SIZE}
+                            height={SCORE_CHART_SIZE}
+                            className="shrink-0"
+                            tabIndex={-1}
+                            ariaLabel={`Score: ${result.score} of ${result.total} correct`}
+                        />
                         <p className="text-muted-foreground text-lg font-medium tabular-nums sm:hidden">
                             {percentScore}%
                         </p>

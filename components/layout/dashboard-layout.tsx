@@ -4,7 +4,7 @@ import { ThemeProvider } from 'next-themes';
 import { SpeechProvider } from '@/components/providers/speech-provider';
 import { NavigationGuardProvider } from '@/components/providers/navigation-guard-provider';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { Toaster } from '@/components/ui/sonner';
+import { clientOnly } from '@/components/client-only';
 import { Link } from '@tanstack/react-router';
 import AppBreadcrumbs from '../app-breadcrumbs';
 import { CommandMenu } from '@/components/command-menu';
@@ -15,6 +15,16 @@ import { SITE_GITHUB_URL } from '@/lib/site';
 type LayoutProps = {
     children: React.ReactNode;
 };
+
+/**
+ * Keeps sonner out of the entry chunk. The toast host renders nothing until a toast fires,
+ * and every caller of `toast()` sits behind a user action, so it has ample time to arrive
+ * after hydration.
+ */
+const Toaster = clientOnly(
+    () => import('@/components/ui/sonner').then((module) => ({ default: module.Toaster })),
+    null
+);
 
 export default function DashboardLayout({ children }: LayoutProps) {
     const currentYear = new Date().getFullYear();
