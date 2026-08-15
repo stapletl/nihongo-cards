@@ -167,3 +167,7 @@ hooks/
 ## Deployment
 
 Static output lands in `dist/client` and can be served by any static host. `404.html` is picked up automatically for unmatched paths. There is no server component to the deployment — no functions, no runtime environment variables.
+
+Deploys are automatic and run entirely on Cloudflare's side via Workers Builds, which builds from the repo. **Merging to `main` publishes to production; nothing else does.** Pushing to a PR branch uploads a preview version and comments the preview URL on the PR, without touching production traffic.
+
+There is deliberately no deploy script and no CLI deploy path — do not add one, and do not run `wrangler deploy` by hand. `wrangler.jsonc` is config for Cloudflare's build, not something a human invokes.

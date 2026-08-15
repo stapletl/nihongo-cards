@@ -10,7 +10,6 @@
         "generate:kana-stroke-data": "bun run scripts/generate-kana-stroke-data.ts",
         "start": "vite preview",
         "snapshot:seo": "bun run scripts/snapshot-seo.ts",
-        "deploy": "bun run build && wrangler deploy",
         "typecheck": "tsc --noEmit",
         "lint": "oxlint .",
         "format": "oxfmt .",
