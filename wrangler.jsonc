@@ -21,5 +21,16 @@
     "routes": [
         { "pattern": "nihongo-cards.com", "custom_domain": true },
         { "pattern": "www.nihongo-cards.com", "custom_domain": true }
-    ]
+    ],
+    // Both of these MUST stay declared. `wrangler deploy` applies this file as the Worker's
+    // complete desired state, so an unset key is not "leave it alone" — it is "apply the
+    // default", and a deploy from main will silently undo whatever the dashboard says.
+    //
+    // Production is reachable only through the custom domains above. Serving all 210 pages
+    // a second time on workers.dev would be a duplicate of the canonical site.
+    "workers_dev": false,
+    // Defaults to whatever `workers_dev` is, so with the line above it would default to
+    // false and break the PR preview job. The preview job needs
+    // https://pr-<n>-nihongo-cards.<subdomain>.workers.dev to resolve.
+    "preview_urls": true
 }
