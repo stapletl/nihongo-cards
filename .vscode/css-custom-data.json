@@ -1,0 +1,95 @@
+{
+    "version": 1.1,
+    "atDirectives": [
+        {
+            "name": "@theme",
+            "description": "Defines Tailwind's design tokens as CSS variables. `@theme inline` emits the variables without wrapping them in a `:root` layer, so they resolve against values defined later in the file.",
+            "references": [
+                {
+                    "name": "Tailwind docs",
+                    "url": "https://tailwindcss.com/docs/functions-and-directives#theme-directive"
+                }
+            ]
+        },
+        {
+            "name": "@custom-variant",
+            "description": "Registers a custom variant, e.g. `@custom-variant dark (&:is([data-theme$='dark'] *));`.",
+            "references": [
+                {
+                    "name": "Tailwind docs",
+                    "url": "https://tailwindcss.com/docs/functions-and-directives#custom-variant-directive"
+                }
+            ]
+        },
+        {
+            "name": "@apply",
+            "description": "Inlines the declarations of existing utility classes into a custom rule.",
+            "references": [
+                {
+                    "name": "Tailwind docs",
+                    "url": "https://tailwindcss.com/docs/functions-and-directives#apply-directive"
+                }
+            ]
+        },
+        {
+            "name": "@utility",
+            "description": "Registers a custom utility that works with Tailwind's variants.",
+            "references": [
+                {
+                    "name": "Tailwind docs",
+                    "url": "https://tailwindcss.com/docs/functions-and-directives#utility-directive"
+                }
+            ]
+        },
+        {
+            "name": "@variant",
+            "description": "Applies a Tailwind variant to styles in your own CSS.",
+            "references": [
+                {
+                    "name": "Tailwind docs",
+                    "url": "https://tailwindcss.com/docs/functions-and-directives#variant-directive"
+                }
+            ]
+        },
+        {
+            "name": "@source",
+            "description": "Adds a path for Tailwind's class detection to scan, beyond what it finds automatically.",
+            "references": [
+                {
+                    "name": "Tailwind docs",
+                    "url": "https://tailwindcss.com/docs/functions-and-directives#source-directive"
+                }
+            ]
+        },
+        {
+            "name": "@plugin",
+            "description": "Loads a legacy JavaScript-based Tailwind plugin.",
+            "references": [
+                {
+                    "name": "Tailwind docs",
+                    "url": "https://tailwindcss.com/docs/functions-and-directives#plugin-directive"
+                }
+            ]
+        },
+        {
+            "name": "@config",
+            "description": "Loads a legacy JavaScript config file, as this project does for `tailwind.config.mjs`.",
+            "references": [
+                {
+                    "name": "Tailwind docs",
+                    "url": "https://tailwindcss.com/docs/functions-and-directives#config-directive"
+                }
+            ]
+        },
+        {
+            "name": "@reference",
+            "description": "Imports a stylesheet for its theme/utility definitions only, so `@apply` works inside a file that isn't the main entry point.",
+            "references": [
+                {
+                    "name": "Tailwind docs",
+                    "url": "https://tailwindcss.com/docs/functions-and-directives#reference-directive"
+                }
+            ]
+        }
+    ]
+}
