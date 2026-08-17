@@ -66,6 +66,6 @@ The goal for this app is to have an extremely narrow scope and be virtually no w
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+The source code is licensed under the [MIT License](LICENSE).
 
-Nihongo Cards uses [KanjiVG](http://kanjivg.tagaini.net) by Ulrich Apel, licensed under [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/).
+Stroke-order data in `public/kana-svgs/` is from [KanjiVG](http://kanjivg.tagaini.net) by Ulrich Apel and is licensed separately under [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/). Those files, and any work derived from them, stay under CC BY-SA 3.0 — if you fork this project, they are not covered by the MIT grant.
