@@ -6,10 +6,15 @@
 
 ## Features
 
-- Interactive flashcards for Japanese learning
-- Hiragana and Katakana practice
-- Modern, responsive UI built with shadcn/ui components
-- Light/Dark mode support
+- Reference pages for all Hiragana and Katakana characters — gojūon, dakuten/handakuten, and yōon
+- Animated stroke-order diagrams (KanjiVG)
+- Interactive flashcard study sessions
+- Quizzes in both directions — kana to romanji and romanji to kana
+- Native Japanese text-to-speech with selectable voices
+- Progress tracking and statistics, stored locally in your browser — no account, no server
+- Export, import, or delete your progress at any time
+- Keyboard shortcuts throughout, plus a ⌘K command palette
+- Light, dark, and color themes; responsive on phone and desktop
 
 ## Getting Started
 
@@ -48,6 +53,12 @@ Open [http://localhost:5173](http://localhost:5173) with your browser to start l
 - `bun run format` - Format all files using oxfmt
 - `bun run format:check` - Check formatting without rewriting files
 - `bun run test` - Run the Playwright end-to-end suite against a production build
+
+## Deployment
+
+The build writes static output to `dist/client` — there is no server component, no functions, and no runtime environment variables, so any static host can serve it. `404.html` is picked up automatically for unmatched paths.
+
+Deploys run on Cloudflare's side via Workers Builds, which builds from the repo. Merging to `main` publishes to production; pushing to a PR branch uploads a preview version and comments the preview URL on the PR without touching production traffic. There is deliberately no CLI deploy path — `wrangler.jsonc` is config for Cloudflare's build, not something to invoke by hand.
 
 ## Contributing
 
