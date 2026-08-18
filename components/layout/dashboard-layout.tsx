@@ -10,6 +10,7 @@ import AppBreadcrumbs from '../app-breadcrumbs';
 import { CommandMenu } from '@/components/command-menu';
 import { GithubButton } from '@/components/github-button';
 import { NativeShareButton } from '@/components/native-share-button';
+import { StorageUnavailableNotice } from '@/components/storage-unavailable-notice';
 import { SITE_GITHUB_URL } from '@/lib/site';
 
 type LayoutProps = {
@@ -18,13 +19,10 @@ type LayoutProps = {
 
 /**
  * Keeps sonner out of the entry chunk. The toast host renders nothing until a toast fires,
- * and every caller of `toast()` sits behind a user action, so it has ample time to arrive
- * after hydration.
+ * so it can arrive well after hydration; `toaster-host` replays anything queued by a
+ * caller that fired before it got here (see `lib/toast-queue.ts`).
  */
-const Toaster = clientOnly(
-    () => import('@/components/ui/sonner').then((module) => ({ default: module.Toaster })),
-    null
-);
+const Toaster = clientOnly(() => import('@/components/toaster-host'), null);
 
 export default function DashboardLayout({ children }: LayoutProps) {
     const currentYear = new Date().getFullYear();
@@ -100,6 +98,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
                     </SidebarProvider>
                 </NavigationGuardProvider>
                 <Toaster />
+                <StorageUnavailableNotice />
             </SpeechProvider>
         </ThemeProvider>
     );

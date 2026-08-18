@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { KANA_PATH, collectPageProblems } from './helpers';
+import { KANA_PATH, collectPageProblems, expectRenderedKana } from './helpers';
 
 /** The `useHotkey` call sites outside the flashcard deck, which has its own spec. */
 
@@ -31,6 +31,30 @@ test('A, D and the arrow keys move between kana detail pages', async ({ page }) 
     await expect.poll(() => new URL(page.url()).pathname).not.toBe(start);
 
     expect(problems).toEqual([]);
+});
+
+/**
+ * The window between `navigate()` updating the URL and React re-rendering, made
+ * deterministic: throttled this hard, the render that hands `NavHotkeys` the new kana lands
+ * well after the path does, so the second key is guaranteed to arrive while the previous
+ * page is still mounted. Resolving the target from the rendered props instead of the live
+ * URL sent it two kana away — from あ, back wrapped to the end of the list.
+ */
+test('a key pressed before the next render still moves exactly one kana', async ({ page }) => {
+    await page.goto(KANA_PATH, { waitUntil: 'networkidle' });
+
+    const start = new URL(page.url()).pathname;
+    const cdp = await page.context().newCDPSession(page);
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 8 });
+
+    await page.keyboard.press('d');
+    await expect.poll(() => new URL(page.url()).pathname).not.toBe(start);
+
+    await page.keyboard.press('a');
+    await expect.poll(() => new URL(page.url()).pathname).toBe(start);
+    await expectRenderedKana(page);
+
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
 });
 
 test('number keys answer a quiz question', async ({ page }) => {

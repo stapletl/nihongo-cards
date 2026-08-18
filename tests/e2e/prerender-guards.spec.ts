@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { KANA_PATH, collectPageProblems } from './helpers';
+import { KANA_PATH, collectPageProblems, studyDeckUrl } from './helpers';
 
 /**
  * The site is prerendered in Node, where `window`/`document`/`navigator` do not exist, and
@@ -233,6 +233,143 @@ test.describe('browser-only storage works without its prerender guards', () => {
 
         expect(problems).toEqual([]);
     });
+});
+
+/**
+ * A browser that blocks site data does not hand back an empty store — it throws
+ * `SecurityError` on every access, the `window.localStorage` property read included.
+ * That is what a macOS Preview web view does, and it used to take down every page,
+ * because a `useState` initializer read speech settings straight off `localStorage`.
+ */
+const BLOCK_SITE_STORAGE = `Object.defineProperty(window, 'localStorage', {
+    configurable: true,
+    get() {
+        throw new DOMException('The operation is insecure.', 'SecurityError');
+    },
+});`;
+
+/** The same refusal, applied to the store the kana progress lives in. */
+const BLOCK_PROGRESS_DATABASE = `Object.defineProperty(window, 'indexedDB', {
+    configurable: true,
+    get() {
+        throw new DOMException('The operation is insecure.', 'SecurityError');
+    },
+});`;
+
+/**
+ * With the database refused, every reader reports it — the sidebar, the command menu and
+ * each progress panel hold their own instance of the hook. That reporting is the intended
+ * behaviour, so it is filtered rather than allowed to fail these tests.
+ */
+const UNREADABLE_DATABASE = /useKanaProgressMap|MarkKanaVisited/;
+
+test.describe('a browser that blocks site storage', () => {
+    test.beforeEach(async ({ context }) => {
+        await context.addInitScript(BLOCK_SITE_STORAGE);
+    });
+
+    const routes = [
+        '/',
+        KANA_PATH,
+        '/flashcards?top=romanji',
+        '/quiz?direction=romanji-to-kana',
+        '/settings',
+        studyDeckUrl(3),
+    ];
+
+    for (const route of routes) {
+        test(`${route} still renders`, async ({ page }) => {
+            const problems = collectPageProblems(page);
+
+            await page.goto(route, { waitUntil: 'networkidle' });
+
+            // The router's error boundary, i.e. the crash this whole block exists to catch.
+            await expect(page.getByText('Something went wrong')).toHaveCount(0);
+            expect(problems).toEqual([]);
+        });
+    }
+
+    test('the notice appears wherever the visit starts, not only on the home page', async ({
+        page,
+    }) => {
+        await page.goto('/settings', { waitUntil: 'networkidle' });
+
+        await expect(page.getByText('Saving is turned off')).toBeVisible();
+    });
+
+    test('the notice is shown once, not once per page', async ({ page }) => {
+        await page.goto('/', { waitUntil: 'networkidle' });
+        await expect(page.getByText('Saving is turned off')).toHaveCount(1);
+
+        // In-app navigation keeps the layout, and with it the notice, mounted.
+        await page.getByRole('link', { name: 'Flashcards' }).first().click();
+        await page.waitForURL('**/flashcards');
+
+        await expect(page.getByText('Saving is turned off')).toHaveCount(1);
+    });
+});
+
+/**
+ * The rarer half, and the more alarming one: preferences still persist, so nothing looks
+ * wrong, while a returning visitor's progress reads as zero everywhere it is counted.
+ */
+test.describe('a browser that blocks only the progress database', () => {
+    test.beforeEach(async ({ context }) => {
+        await context.addInitScript(BLOCK_PROGRESS_DATABASE);
+    });
+
+    for (const route of ['/', '/statistics', KANA_PATH]) {
+        test(`${route} still renders`, async ({ page }) => {
+            const problems = collectPageProblems(page, UNREADABLE_DATABASE);
+
+            await page.goto(route, { waitUntil: 'networkidle' });
+
+            await expect(page.getByText('Something went wrong')).toHaveCount(0);
+            expect(problems).toEqual([]);
+        });
+    }
+
+    test('the notice names progress rather than settings', async ({ page }) => {
+        await page.goto('/', { waitUntil: 'networkidle' });
+
+        await expect(page.getByText("Progress can't be saved")).toBeVisible();
+        await expect(page.getByText('Saving is turned off')).toHaveCount(0);
+    });
+});
+
+test.describe('a browser that blocks both stores', () => {
+    test.beforeEach(async ({ context }) => {
+        await context.addInitScript(BLOCK_SITE_STORAGE);
+        await context.addInitScript(BLOCK_PROGRESS_DATABASE);
+    });
+
+    test('says so once, rather than stacking a notice per store', async ({ page }) => {
+        const problems = collectPageProblems(page, UNREADABLE_DATABASE);
+
+        await page.goto('/', { waitUntil: 'networkidle' });
+
+        await expect(page.getByText('Saving is turned off')).toHaveCount(1);
+        await expect(page.getByText("Progress can't be saved")).toHaveCount(0);
+        expect(problems).toEqual([]);
+    });
+});
+
+test('nothing is announced when both stores work', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'networkidle' });
+
+    await expect(page.getByText('Saving is turned off')).toHaveCount(0);
+    await expect(page.getByText("Progress can't be saved")).toHaveCount(0);
+});
+
+/**
+ * sonner publishes to the subscribers it has at that moment, and the toast host is loaded
+ * lazily. Reached by in-app navigation the host is already mounted and this lands on its
+ * own; on a cold load like this one it does not, unless `lib/toast-queue.ts` holds it.
+ */
+test('a toast fired during hydration survives the lazy toast host', async ({ page }) => {
+    await page.goto(KANA_PATH, { waitUntil: 'networkidle' });
+
+    await expect(page.getByText('Keyboard navigation available')).toBeVisible();
 });
 
 test('the share control appears once feature detection has run', async ({ page }) => {

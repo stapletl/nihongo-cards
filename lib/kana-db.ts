@@ -17,6 +17,29 @@ function createEmptyKanaProgress(character: string): KanaProgress {
     };
 }
 
+/**
+ * Whether the progress database can be opened at all — false when the browser refuses site
+ * data, when the store is full, or when the database is corrupt.
+ *
+ * Stays `async` to normalise two failure shapes: `openDB` calls `indexedDB.open()` during
+ * its own synchronous body, so a browser that throws on the `indexedDB` property throws
+ * straight *out of* `getDB()` rather than rejecting.
+ *
+ * Opening is the whole probe. `getDB()` memoises its promise and the sidebar opens the same
+ * database moments later on every page, so this costs nothing the page was not already
+ * paying. Writes are left uncovered: a store that opens can still refuse to persist, and
+ * every write path already handles that itself.
+ */
+export async function isDatabaseAvailable(): Promise<boolean> {
+    try {
+        await getDB();
+
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 export async function getAllKanaProgress(): Promise<KanaProgress[]> {
     const db = await getDB();
     return db.getAll('kanaProgress');

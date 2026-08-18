@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { getStoredString, removeStoredValue, setStoredValue } from '@/lib/local-storage';
 
 const SPEECH_VOICE_STORAGE_KEY = 'selected_voice';
 const SPEECH_SETTINGS_STORAGE_KEY = 'speech_settings';
@@ -95,19 +96,16 @@ export function useSpeech() {
 export function useSpeechProvider() {
     const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
     const [isSpeaking, setSpeaking] = useState(false);
-    const [settings, setSettings] = useState<SpeechSettings>(() => {
-        if (typeof window === 'undefined') return DEFAULT_SPEECH_SETTINGS;
-
-        return parseSpeechSettings(localStorage.getItem(SPEECH_SETTINGS_STORAGE_KEY));
-    });
+    const [settings, setSettings] = useState<SpeechSettings>(() =>
+        parseSpeechSettings(getStoredString(SPEECH_SETTINGS_STORAGE_KEY))
+    );
 
     // Function to persist voice selection to localStorage
     const persistVoiceSelection = useCallback((voice: SpeechSynthesisVoice | null) => {
         if (voice) {
-            const voiceData = { name: voice.name, lang: voice.lang };
-            localStorage.setItem(SPEECH_VOICE_STORAGE_KEY, JSON.stringify(voiceData));
+            setStoredValue(SPEECH_VOICE_STORAGE_KEY, { name: voice.name, lang: voice.lang });
         } else {
-            localStorage.removeItem(SPEECH_VOICE_STORAGE_KEY);
+            removeStoredValue(SPEECH_VOICE_STORAGE_KEY);
         }
     }, []);
 
@@ -118,7 +116,7 @@ export function useSpeechProvider() {
             if (voices.length === 0) return;
 
             // Try to get voice from localStorage
-            const savedVoice = parseSavedVoice(localStorage.getItem(SPEECH_VOICE_STORAGE_KEY));
+            const savedVoice = parseSavedVoice(getStoredString(SPEECH_VOICE_STORAGE_KEY));
 
             if (savedVoice) {
                 const matchedVoice = voices.find(
@@ -130,7 +128,7 @@ export function useSpeechProvider() {
                 }
             } else {
                 // Unreadable or malformed — drop it so it stops being reconsidered.
-                localStorage.removeItem(SPEECH_VOICE_STORAGE_KEY);
+                removeStoredValue(SPEECH_VOICE_STORAGE_KEY);
             }
 
             // If no stored voice or voice not found, try to select
@@ -172,7 +170,7 @@ export function useSpeechProvider() {
     const updateSettings = useCallback((newSettings: Partial<SpeechSettings>) => {
         setSettings((prev) => {
             const updated = { ...prev, ...newSettings };
-            localStorage.setItem(SPEECH_SETTINGS_STORAGE_KEY, JSON.stringify(updated));
+            setStoredValue(SPEECH_SETTINGS_STORAGE_KEY, updated);
             return updated;
         });
     }, []);
