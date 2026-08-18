@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { CircleHelpIcon } from 'lucide-react';
-import { toast } from 'sonner';
-
 import { Button } from '@/components/ui/button';
 import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import {
@@ -13,6 +11,8 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
+import { getStoredString, setStoredValue } from '@/lib/local-storage';
+import { queueToast } from '@/lib/toast-queue';
 
 type NavigationMode = 'keyboard' | 'touch';
 
@@ -62,26 +62,30 @@ export function KanaNavigationHint() {
         const storageKey =
             navigationMode === 'touch' ? TOUCH_HINT_STORAGE_KEY : KEYBOARD_HINT_STORAGE_KEY;
 
-        if (window.localStorage.getItem(storageKey) === 'true') return;
+        if (getStoredString(storageKey) === 'true') return;
 
-        window.localStorage.setItem(storageKey, 'true');
+        setStoredValue(storageKey, true);
 
         if (navigationMode === 'touch') {
-            toast('Swipe to navigate', {
-                description: 'Swipe left for the next kana and right for the previous kana.',
-                duration: 6000,
+            queueToast((toast) => {
+                toast('Swipe to navigate', {
+                    description: 'Swipe left for the next kana and right for the previous kana.',
+                    duration: 6000,
+                });
             });
             return;
         }
 
-        toast('Keyboard navigation available', {
-            description: (
-                <div className="flex flex-col gap-2">
-                    <p>Use these keys to move between kana.</p>
-                    <KeyboardShortcuts />
-                </div>
-            ),
-            duration: 6000,
+        queueToast((toast) => {
+            toast('Keyboard navigation available', {
+                description: (
+                    <div className="flex flex-col gap-2">
+                        <p>Use these keys to move between kana.</p>
+                        <KeyboardShortcuts />
+                    </div>
+                ),
+                duration: 6000,
+            });
         });
     }, [navigationMode]);
 

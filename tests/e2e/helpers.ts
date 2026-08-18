@@ -15,15 +15,17 @@ export function studyDeckUrl(size: number, top: 'japanese' | 'romanji' = 'japane
  * uncaught exceptions, and the warnings React uses to report hydration mismatches.
  *
  * The GitHub star fetch is filtered out — it hits a rate-limited public API and its
- * failure says nothing about the code under test.
+ * failure says nothing about the code under test. `ignore` filters further, for tests that
+ * break a browser API on purpose and expect the app to report it; keep those patterns
+ * narrow, so an unrelated error still fails the test.
  */
-export function collectPageProblems(page: Page): string[] {
+export function collectPageProblems(page: Page, ignore?: RegExp): string[] {
     const problems: string[] = [];
 
     page.on('console', (message) => {
         const text = message.text();
 
-        if (/api\.github\.com|Failed to load resource/i.test(text)) {
+        if (/api\.github\.com|Failed to load resource/i.test(text) || ignore?.test(text)) {
             return;
         }
 
@@ -38,10 +40,29 @@ export function collectPageProblems(page: Page): string[] {
     });
 
     page.on('pageerror', (error) => {
+        if (ignore?.test(error.message)) {
+            return;
+        }
+
         problems.push(`pageerror: ${error.message}`);
     });
 
     return problems;
+}
+
+/**
+ * Waits until a kana detail page has *rendered* the character its URL now points at.
+ *
+ * `navigate()` updates the path before React re-renders, so a key pressed the instant the
+ * URL changes still reaches the previous page's `NavHotkeys`, whose neighbour hrefs are one
+ * page behind — it navigates from the old character and lands two kana away. This is the
+ * same trap `expectActiveCard` covers for the flashcard deck: the URL is not the signal
+ * that the handlers have moved, the render is.
+ */
+export async function expectRenderedKana(page: Page): Promise<void> {
+    const character = decodeURIComponent(new URL(page.url()).pathname).split('/').pop() ?? '';
+
+    await expect(page.getByText(character, { exact: true }).first()).toBeVisible();
 }
 
 /** Reveal state of every flashcard in the deck, in slide order. */

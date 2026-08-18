@@ -21,9 +21,9 @@ Agents should run `bun run lint` for any code change and verify their changes do
 
 **Tests** — `tests/e2e/` runs in Playwright against the _production_ build, because that is the only place the behaviour it covers exists: prerendered HTML, hydration, and the browser-only values that replace the prerender fallbacks. `playwright.config.ts` runs `bun run build && bun run start` itself, so `bun run test` needs nothing set up first beyond the browser binary (`bunx playwright install chromium`, once per machine). The four specs are:
 
-- `prerender-guards.spec.ts` — every page hydrates without console or hydration errors, `useMediaQuery`/`useIsMobile` resolve correctly on both sides of their thresholds, `clientOnly()` panels swap in, and localStorage/IndexedDB writes work now that their `typeof window` guards are gone
+- `prerender-guards.spec.ts` — every page hydrates without console or hydration errors, `useMediaQuery`/`useIsMobile` resolve correctly on both sides of their thresholds, `clientOnly()` panels swap in, and localStorage/IndexedDB writes work now that their `typeof window` guards are gone. It also blocks storage the way a browser does — a `window.localStorage` or `window.indexedDB` getter that throws `SecurityError` — and asserts every page still renders, that the app explains itself once wherever the visit starts, with wording matching which store was refused, and that a toast fired during hydration still reaches the lazy toast host
 - `flashcard-hotkeys.spec.ts` — the study carousel mounts every card at once, which makes its keyboard handling easy to break; each past bug (Space following DOM focus instead of the active card, arrows double-advancing, one hotkey registration per card warning) has a test
-- `hotkeys.spec.ts` — the `useHotkey` call sites outside the deck: the command palette, kana page navigation, quiz answer keys
+- `hotkeys.spec.ts` — the `useHotkey` call sites outside the deck: the command palette, kana page navigation, quiz answer keys. Its last test presses a key inside the window between `navigate()` and the re-render, under CPU throttling; it is a race, so it fails most runs rather than every run against the bug it covers
 - `theme-transition.spec.ts` — the circular theme reveal, which lives on a pseudo-element with no DOM node to assert against: it reads the WAAPI animation off `::view-transition-new(root)` to prove the circle is centred on the toggle (on the viewport centre for the `T` hotkey, which has no element to open from), expressed in viewport percentages, and matched by the transition group's duration. A toggle pressed while a reveal is running is ignored — see `applyThemeWithTransition`
 
 Prefer adding to these over adding a new runner. When fixing a UI bug, add the failing case first and confirm it fails before the fix.
@@ -112,6 +112,7 @@ hooks/
 - Use `<Link to="/path">` from `@tanstack/react-router`; `to` takes a resolved absolute path, never a relative one
 - Use `useNavigate()` for programmatic navigation. For a fully-formed href string, pass it through `hrefToNavigateOptions()` from `lib/search.ts` — a query string left inside `to` is treated as part of the path
 - Use `usePathname()` from `hooks/use-pathname.ts` rather than reading `location.pathname` directly, so trailing slashes don't break equality checks
+- Keyboard and swipe navigation must resolve its target **when the key fires**, not from an href a render captured — `NavHotkeys` takes `resolvePrevHref`/`resolveNextHref`, and `neighbourHref()` in `kana-detail-page.tsx` reads the live `window.location`. `navigate()` moves the URL before React re-renders, so a second key pressed inside that window reaches a component still holding the previous page's neighbours, and leaves from the wrong kana. This is the one place `location.pathname` is read directly on purpose: it is the only value that is current at that moment
 
 **Search params**
 
@@ -125,10 +126,21 @@ hooks/
 - `KanaItem` type: `{ character, romanji, example, exampleRomanji, exampleTranslation, emoji }`
 - Grid arrays (`gojuonGrid`, `dakutenHandakutenGrid`, `yoonGrid`) contain `string | null` rows — null means empty cell
 
+**Browser storage**
+
+- **Never touch `localStorage` directly** — go through `lib/local-storage.ts` (`getStoredString`, `setStoredValue`, `removeStoredValue`, `isStorageAvailable`). A browser set to block site data throws `SecurityError` on _every_ access, the `window.localStorage` property read included, so an unguarded read in a render path takes the whole app down. `typeof window` does not catch this; only `try`/`catch` does
+- `usehooks-ts` (`useLocalStorage`, `useReadLocalStorage`) and `next-themes` guard themselves, so those are safe to use as-is
+- The layout renders `<StorageUnavailableNotice />`, which probes both stores after hydration and toasts once per page load — on whichever page the visit starts from, since the layout stays mounted across in-app navigation. It is the only thing that says so out loud: everything else degrades silently, with preferences applying for the session and progress reading as empty
+
+**Toasts**
+
+- The toast host is lazily mounted in `dashboard-layout.tsx`, and sonner publishes only to the subscribers it has at that moment. Once a visitor has loaded any page, the host is mounted and stays mounted across in-app navigation, so a `toast()` behind a user action is always fine. A toast fired **on mount** is not: on the first, cold load of a session its chunk is still in flight, and the toast is dropped without a trace. Those go through `queueToast()` from `lib/toast-queue.ts`, which holds them until the host arrives
+
 **IndexedDB progress tracking**
 
 - `KanaProgress` in `lib/kana-db.ts` tracks per-character stats: `detailsViewCount`, `flashcardViewCount`, `quizCorrectCount`, `quizIncorrectCount`, `lastVisited`, `lastStudied`, `lastQuizzed`
 - Use `isVisited(progress)` to check if a character has been visited — don't inline `detailsViewCount > 0`
+- `isDatabaseAvailable()` reports whether the store can be opened at all. It is `async` on purpose: `openDB` calls `indexedDB.open()` synchronously, so a browser blocking site data throws out of `getDB()` rather than rejecting
 - List pages load the full map with `useKanaProgressMap()` and pass `visited` down to `SimpleKanaCard`
 - Detail pages include `<MarkKanaVisited character={...} />` to record the visit on mount
 - IndexedDB is scoped per origin, so **changing the site's domain wipes every user's progress**

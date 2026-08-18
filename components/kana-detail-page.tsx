@@ -33,12 +33,33 @@ export function KanaDetailPage({
     const strokeOrderCharacters = resolveKanaStrokeGlyphs(kanaItem.character);
     const detailHref = (item: KanaItem) => `${backHref}/${encodeURIComponent(item.character)}`;
 
+    /**
+     * The neighbour of whichever kana the URL points at *now*, which is not always the one
+     * this render was built for — see the note on `NavHotkeys`. Returns undefined when the
+     * path is not one of these items, so a key that arrives after the visitor has left the
+     * script does nothing.
+     */
+    const neighbourHref = (step: -1 | 1) => {
+        const path = decodeURIComponent(window.location.pathname).replace(/\/$/, '');
+        const liveCharacter = path.slice(path.lastIndexOf('/') + 1);
+        const liveIdx = items.findIndex((item) => item.character === liveCharacter);
+
+        if (liveIdx === -1) {
+            return undefined;
+        }
+
+        // Both ends wrap, matching the arrows in the header.
+        const target = step === -1 ? items.at(liveIdx - 1) : (items.at(liveIdx + 1) ?? items[0]);
+
+        return target ? detailHref(target) : undefined;
+    };
+
     return (
         <div className="flex min-h-0 flex-1 flex-col">
             <MarkKanaVisited character={kanaItem.character} />
             <NavHotkeys
-                prevHref={prevItem ? detailHref(prevItem) : undefined}
-                nextHref={nextItem ? detailHref(nextItem) : undefined}
+                resolvePrevHref={() => neighbourHref(-1)}
+                resolveNextHref={() => neighbourHref(1)}
             />
             <div className="grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-2 border-b p-2">
                 <div className="flex justify-start">
