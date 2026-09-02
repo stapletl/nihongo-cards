@@ -13,6 +13,27 @@
 
 @custom-variant dark (&:is([data-theme$='dark'] *));
 
+/*
+ * Viewport-height tiers, for content sized against the room between the layout header and
+ * footer rather than against the window's width — the homepage stack is the case that needs
+ * them. None of that room is a width, so `sm`/`md`/`lg` cannot describe it, and a stack that
+ * only answers to width has no way to step down on a short screen.
+ *
+ * Both are plain media queries, so they carry equal specificity and the later declaration
+ * wins where they overlap: `shorter` is declared second on purpose. Against the width
+ * variants the same rule applies — `short:h-24` overrides a bare `sm:h-32`, so a desktop
+ * size that should survive a short viewport has to restate itself as `short:sm:h-28`.
+ *
+ * oxfmt's class sorter resolves the theme from `tailwind.config.mjs`, which knows nothing
+ * about variants declared here, so it hoists `short:`/`shorter:` to the front of every
+ * class list it touches. That reads backwards — the overrides land before the base
+ * utilities they override — but it is only the attribute's text order, which has no
+ * bearing on the cascade; precedence comes from the generated stylesheet. Mirroring these
+ * into the config as `screens` does not teach the sorter about them, so don't bother.
+ */
+@custom-variant short (@media (max-height: 799px));
+@custom-variant shorter (@media (max-height: 679px));
+
 @layer base {
     ::view-transition-old(root),
     ::view-transition-new(root) {

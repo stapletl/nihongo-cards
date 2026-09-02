@@ -31,8 +31,8 @@ export const KanaPageContent: React.FC<KanaPageContentProps> = ({
     strokeOrderCharacters,
     scriptLabel,
 }) => (
-    <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="grid gap-5 lg:grid-cols-5 lg:grid-rows-[minmax(0,1fr)_auto]">
+    <main className="mx-auto max-w-6xl px-4 pt-4 pb-8">
+        <div className="grid gap-4 lg:grid-cols-5 lg:grid-rows-[minmax(0,1fr)_auto]">
             <section className="bg-card overflow-hidden rounded-xl border shadow-sm lg:col-span-2">
                 <div className="flex min-h-[18rem] flex-col gap-4 p-6 sm:p-8">
                     <p className="text-muted-foreground text-sm font-medium uppercase">

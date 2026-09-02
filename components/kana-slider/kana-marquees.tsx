@@ -15,12 +15,12 @@ function KanaMarquee({ items, basePath, reverse }: KanaMarqueeProps) {
     const { progressMap, isLoading } = useKanaProgressMap();
 
     return (
-        <div className="w-full overflow-hidden">
+        <div className="w-full shrink-0 overflow-hidden" data-slot="kana-marquee">
             <Marquee
                 repeat={2}
                 pauseOnHover={true}
                 reverse={reverse}
-                className="max-w-full [--duration:80s] [--gap:8px]">
+                className="short:p-1 max-w-full [--duration:80s] [--gap:8px]">
                 {items.map((item) => (
                     <div key={item.character} className="w-14 sm:w-16 md:w-20">
                         <SimpleKanaCard
