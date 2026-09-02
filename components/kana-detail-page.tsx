@@ -84,7 +84,7 @@ export function KanaDetailPage({
                 </div>
             </div>
             {/* The nav bar above is shrink-0, so this is the only part that scrolls. */}
-            <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto pt-4">
+            <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
                 <KanaPageContent
                     kanaItem={kanaItem}
                     strokeOrderCharacters={strokeOrderCharacters}
